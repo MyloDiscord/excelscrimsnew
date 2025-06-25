@@ -17,13 +17,6 @@ type DiscordGuild = {
   icon?: string | null;
 };
 
-type DiscordRole = {
-  id: string;
-  name: string;
-  color: number;
-  position: number;
-};
-
 type AdminGuildsResponse = {
   known: DiscordGuild[];
   unknown?: DiscordGuild[];
