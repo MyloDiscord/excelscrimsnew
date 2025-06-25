@@ -53,7 +53,13 @@ export async function GET() {
         const unknown = adminGuilds.filter((guild: any) => !botGuildIds.has(guild.id));
 
         return NextResponse.json({ known, unknown });
-    } catch (error) {
-        return NextResponse.json({ message: "Error fetching admin guilds" }, { status: 500 });
+
+    } catch (error: unknown) {
+        const err = error as Error;
+
+        return NextResponse.json({
+            message: "Error fetching admin guilds",
+            error: err.message,
+        }, { status: 500 });
     }
 }

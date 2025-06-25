@@ -41,7 +41,14 @@ export async function GET() {
         }];
 
         return NextResponse.json({ me });
-    } catch (error) {
-        return NextResponse.json({ message: "Error fetching Discord user data" }, { status: 500 });
+
+    } catch (error: unknown) {
+        const err = error as Error;
+
+        return NextResponse.json({
+            message: "Error fetching Discord user data",
+            error: err.message,
+
+        }, { status: 500 });
     }
 }
