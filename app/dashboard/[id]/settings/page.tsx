@@ -39,7 +39,7 @@ type DiscordRole = {
   id: string;
   name: string;
   position: number;
-  color: number; // Discord hex color int
+  color: number;
 };
 
 type AdminGuildsResponse = {
@@ -125,13 +125,11 @@ export default function SettingsGuildPage() {
 
   const intToHex = (int: number) => "#" + int.toString(16).padStart(6, "0");
 
-  // Cancel clears selection and closes dialog
   const handleCancel = () => {
     setSelectedRoles([]);
     setOpen(false);
   };
 
-  // Save simulates saving with a delay and then closes dialog
   const handleSave = () => {
     setSaving(true);
     setTimeout(() => {
@@ -204,7 +202,6 @@ export default function SettingsGuildPage() {
                   </DialogDescription>
                 </DialogHeader>
 
-                {/* Dropdown Menu Trigger */}
                 <DropdownMenu onOpenChange={(open) => setDropdownOpen(open)}>
                   <DropdownMenuTrigger asChild>
                     <button
@@ -239,7 +236,7 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                         <DropdownMenuItem
                           key={role.id}
                           onSelect={(e) => {
-                            e.preventDefault(); // Prevent closing the menu
+                            e.preventDefault();
                             toggleRole(role);
                           }}
                           className={`
@@ -269,7 +266,6 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Selected roles pills with removable X */}
                 {selectedRoles.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2 items-center">
                     {selectedRoles.map((role) => {
@@ -299,19 +295,16 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                       );
                     })}
 
-                    {/* Clear All Button */}
-                    <button
+                    <Button
                       onClick={() => setSelectedRoles([])}
-                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
+                      className="ml-4 bg-red-700/60 hover:bg-red-700/80 text-white transition px-4 py-2 rounded-md text-sm font-semibold cursor-pointer"
                     >
                       Clear All
-                    </button>
+                    </Button>
                   </div>
                 )}
 
-                {/* Buttons */}
                 <div className="mt-6 flex justify-end gap-4">
-                  {/* Cancel Button */}
                   <button
                     onClick={handleCancel}
                     disabled={saving}
@@ -322,7 +315,6 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                     Cancel
                   </button>
 
-                  {/* Save Button */}
                   <button
                     onClick={handleSave}
                     disabled={saving}
