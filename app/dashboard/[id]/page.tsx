@@ -107,6 +107,7 @@ export default function GuildDashboardPage() {
     <div className="relative min-h-screen text-white bg-[#121212] p-6 overflow-hidden">
       <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
       <h1 className="relative z-10 text-5xl font-bold">Dashboard</h1>
+      <hr className="relative z-10 mt-4 border-t border-gray-600 w-full max-w-4xl" />
     </div>
   );
 }
