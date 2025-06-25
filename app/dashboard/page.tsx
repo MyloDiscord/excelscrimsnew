@@ -14,6 +14,8 @@ type DiscordGuild = {
   owner?: boolean;
   permissions: string;
   features?: string[];
+  approximate_presence_count?: number; // added to match your data
+  approximate_offline_count?: number; // added to match your data
 };
 
 type AdminGuildsResponse = {
@@ -43,11 +45,6 @@ export default function DashboardPage() {
   });
   const [isLoadingGuilds, setIsLoadingGuilds] = useState<boolean>(true);
   const [loadingGuildId, setLoadingGuildId] = useState<string | null>(null);
-
-  // Online/offline counts state
-  const [onlineOfflineCounts, setOnlineOfflineCounts] = useState<{
-    [guildId: string]: OnlineOfflineCounts;
-  }>({});
 
   // New: hovered guild id for hover state management
   const [hoveredGuildId, setHoveredGuildId] = useState<string | null>(null);
@@ -135,41 +132,6 @@ export default function DashboardPage() {
     fetchAdminGuilds();
   }, [accessToken]);
 
-  useEffect(() => {
-    if (adminGuilds.known.length === 0) return;
-
-    const fetchCounts = async () => {
-      const newCounts: { [guildId: string]: OnlineOfflineCounts } = {};
-
-      await Promise.all(
-        adminGuilds.known.map(async (guild) => {
-          try {
-            const res = await fetch(
-              `/api/discord/guild/${guild.id}/fetch-members`
-            );
-            if (!res.ok) {
-              console.error(`Failed to fetch members for guild ${guild.id}`);
-              return;
-            }
-            const data = await res.json();
-            console.log(`Guild ${guild.id} member counts:`, data);
-
-            newCounts[guild.id] = {
-              online: data.approximate_presence_count ?? data.onlineCount ?? 0,
-              offline: data.approximate_offline_count ?? data.offlineCount ?? 0,
-            };
-          } catch (err) {
-            console.error(`Error fetching members for guild ${guild.id}:`, err);
-          }
-        })
-      );
-
-      setOnlineOfflineCounts(newCounts);
-    };
-
-    fetchCounts();
-  }, [adminGuilds.known]);
-
   const handleDashboardClick = (guildId: string) => {
     setLoadingGuildId(guildId);
     router.push(`/dashboard/${guildId}`);
@@ -221,9 +183,9 @@ export default function DashboardPage() {
       ) : (
         <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8 z-10">
           {adminGuilds.known.map((guild) => {
-            const counts = onlineOfflineCounts[guild.id] || {
-              online: 0,
-              offline: 0,
+            const counts = {
+              online: guild.approximate_presence_count ?? 0,
+              offline: guild.approximate_offline_count ?? 0,
             };
 
             return (
