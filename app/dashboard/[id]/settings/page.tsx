@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogClose,
 } from "@/components/ui/dialog";
 
 import {
@@ -87,18 +88,14 @@ export default function SettingsGuildPage() {
       if (!guildId || typeof guildId !== "string") return;
       try {
         setError(null);
-        console.log("Fetching roles for guildId:", guildId);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         if (!res.ok) {
-          console.error("Failed to fetch roles: HTTP status", res.status);
           setError("Failed to fetch roles");
           return;
         }
         const data: DiscordRole[] = await res.json();
-        console.log("Roles API response:", data);
         setRoles(data);
       } catch (err) {
-        console.error("Failed to fetch roles:", err);
         setError("Failed to fetch roles");
       }
     }
@@ -121,6 +118,16 @@ export default function SettingsGuildPage() {
   };
 
   const intToHex = (int: number) => "#" + int.toString(16).padStart(6, "0");
+
+  // New: Cancel handler resets selection (optional: you can change this behavior)
+  const handleCancel = () => {
+    setSelectedRoles([]);
+  };
+
+  // New: Save handler — here just closes dialog, you can extend to save API call
+  const handleSave = () => {
+    // Add saving logic here if needed
+  };
 
   if (loading) {
     return (
@@ -274,6 +281,29 @@ export default function SettingsGuildPage() {
                     })}
                   </div>
                 )}
+
+                {/* Buttons: Cancel and Save */}
+                <div className="mt-6 flex justify-end gap-4">
+                  {/* Cancel Button */}
+                  <DialogClose
+                    onClick={handleCancel}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
+                      bg-red-700 bg-opacity-20 hover:bg-opacity-40 text-red-400 transition"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </DialogClose>
+
+                  {/* Save Button */}
+                  <DialogClose
+                    onClick={handleSave}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
+                      bg-green-700 bg-opacity-20 hover:bg-opacity-40 text-green-400 transition"
+                  >
+                    <Check className="w-4 h-4" />
+                    Save
+                  </DialogClose>
+                </div>
               </DialogContent>
             </Dialog>
           </CardContent>
