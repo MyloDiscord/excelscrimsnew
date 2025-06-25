@@ -1,7 +1,6 @@
 "use client";
 
-import { GridBackgroundDemo } from "@/components/ui/grid-background";
-
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -120,7 +119,7 @@ export default function DashboardPage() {
     return (
       <div className="relative min-h-screen bg-[#121212] flex justify-center items-center overflow-hidden">
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <GridBackgroundDemo />
+          <BackgroundBeams />
         </div>
         <ClipLoader color="#FF4B3E" size={50} />
       </div>
@@ -131,7 +130,7 @@ export default function DashboardPage() {
     return (
       <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center text-center overflow-hidden px-4">
         <div className="absolute inset-0 z-0 pointer-events-none">
-          <GridBackgroundDemo />
+          <BackgroundBeams />
         </div>
         <p className="text-white text-lg z-10">{message}</p>
         <button
@@ -147,7 +146,7 @@ export default function DashboardPage() {
   return (
     <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white overflow-hidden">
       <div className="absolute inset-0 z-0 pointer-events-none">
-        <GridBackgroundDemo />
+        <BackgroundBeams />
       </div>
 
       {isLoadingGuilds ? (
