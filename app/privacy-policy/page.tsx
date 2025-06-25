@@ -5,12 +5,10 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-[#121212] overflow-hidden">
-      {/* Background Beams */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <BackgroundBeams />
       </div>
 
-      {/* Foreground Content */}
       <div className="relative z-10 max-w-3xl mx-auto px-6 py-12 text-gray-300">
         <h1 className="text-5xl font-bold text-white mb-6">
           Welcome to Excel Scrims
