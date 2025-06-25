@@ -113,6 +113,31 @@ export default function SettingsGuildPage() {
     fetchRoles();
   }, [guildId]);
 
+  // Fetch saved staff roles when dialog opens and set selectedRoles
+  useEffect(() => {
+    if (!open) return;
+
+    async function fetchSavedStaffRoles() {
+      if (!guildId) return;
+      try {
+        const res = await fetch(
+          `/api/discord/guild/${guildId}/fetch-staff-roles`
+        );
+        if (!res.ok) throw new Error("Failed to fetch saved staff roles");
+        const data = await res.json();
+        if (Array.isArray(data.staffRoles)) {
+          setSelectedRoles(data.staffRoles);
+        } else {
+          setSelectedRoles([]);
+        }
+      } catch {
+        setNotification("Failed to load saved roles");
+      }
+    }
+
+    fetchSavedStaffRoles();
+  }, [open, guildId]);
+
   // Measure trigger button width for dropdown width
   useEffect(() => {
     if (triggerRef.current) {
@@ -148,7 +173,6 @@ export default function SettingsGuildPage() {
     setOpen(false);
   };
 
-  // Updated handleSave to POST data and show notification
   const handleSave = async () => {
     if (!guildId) return;
     setSaving(true);
@@ -160,7 +184,6 @@ export default function SettingsGuildPage() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             staffRoles: selectedRoles,
-            // optionally add lastUpdatedBy here if you want
           }),
         }
       );
@@ -381,9 +404,7 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className="fixed top-8 right-8 flex items-center gap-2
-          bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg
-          animate-fade-in-out"
+          className="fixed top-8 right-8 flex items-center gap-2 bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg animate-fade-in-out"
           style={{ zIndex: 9999 }}
           role="alert"
           aria-live="assertive"
