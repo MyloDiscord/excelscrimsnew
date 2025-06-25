@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Analytics } from "@vercel/analytics/next";
+import { HeaderProvider, useHeader } from "../app/components/HeaderContext";
 
 import {
   ClerkProvider,
@@ -30,6 +31,24 @@ export const metadata: Metadata = {
   },
 };
 
+function Header() {
+  const { headerText } = useHeader();
+
+  return (
+    <header className="flex justify-between items-center p-4 gap-4 bg-[#0d0d0d] text-white">
+      <h1 className="text-xl font-semibold">{headerText}</h1>
+      <div className="flex items-center gap-4">
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </div>
+    </header>
+  );
+}
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -37,25 +56,19 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        >
-          <header className="flex justify-end items-center p-4 gap-4 bg-[#0d0d0d] text-white">
-            <SignedOut>
-              <SignInButton />
-            </SignedOut>
-            <SignedIn>
-              <UserButton />
-            </SignedIn>
-          </header>
+      <HeaderProvider>
+        <html lang="en">
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+          >
+            <Header />
+            <div className="flex-grow">{children}</div>
 
-          <div className="flex-grow">{children}</div>
-
-          <SpeedInsights />
-          <Analytics />
-        </body> 
-      </html>
+            <SpeedInsights />
+            <Analytics />
+          </body>
+        </html>
+      </HeaderProvider>
     </ClerkProvider>
   );
 }
