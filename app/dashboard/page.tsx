@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import GuildCard from "../components/dashboard/GuildCard";
+import { fetchUserDiscordToken } from "@/lib/fetchUserDiscordToken";
+import { fetchUserAdminGuilds } from "@/lib/fetchUserAdminGuilds";
 
 type DiscordGuild = {
   id: string;
@@ -21,14 +23,6 @@ type DiscordGuild = {
 type AdminGuildsResponse = {
   known: DiscordGuild[];
   unknown?: DiscordGuild[];
-};
-
-type ErrorResponse = {
-  message?: string;
-};
-
-type GetTokenResponse = {
-  me: { accessToken: string }[];
 };
 
 export default function DashboardPage() {
@@ -61,66 +55,32 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    const fetchToken = async () => {
-      try {
-        const response = await fetch("/api/discord/getToken", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const data: GetTokenResponse | ErrorResponse = await response.json();
-
-        if (
-          response.ok &&
-          "me" in data &&
-          Array.isArray(data.me) &&
-          data.me[0]?.accessToken
-        ) {
-          setAccessToken(data.me[0].accessToken);
-        } else {
-          const err = data as ErrorResponse;
-          console.error(
-            "Error fetching token:",
-            err.message ?? "Unknown error"
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch token:", error);
+    const getToken = async () => {
+      const token = await fetchUserDiscordToken();
+      if (token) {
+        setAccessToken(token);
+      } else {
+        console.error("Failed to get access token");
       }
     };
 
-    if (isSignedIn) fetchToken();
+    if (isSignedIn) getToken();
   }, [isSignedIn]);
 
   useEffect(() => {
-    const fetchAdminGuilds = async () => {
+    const getGuilds = async () => {
       if (!accessToken) return;
+      const result = await fetchUserAdminGuilds();
 
-      try {
-        const response = await fetch("/api/discord/user/adminGuilds", {
-          method: "GET",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        const data: AdminGuildsResponse | ErrorResponse = await response.json();
-
-        if (response.ok && "known" in data) {
-          setAdminGuilds(data);
-          setIsLoadingGuilds(false);
-          console.log(data.known.map((guild) => guild.id));
-        } else {
-          const err = data as ErrorResponse;
-          console.error(
-            "Error fetching admin guilds:",
-            err.message ?? "Unknown error"
-          );
-        }
-      } catch (error) {
-        console.error("Failed to fetch admin guilds:", error);
+      if ("known" in result) {
+        setAdminGuilds(result);
+        setIsLoadingGuilds(false);
+      } else {
+        console.error("Error fetching admin guilds:", result.message);
       }
     };
 
-    fetchAdminGuilds();
+    getGuilds();
   }, [accessToken]);
 
   const handleDashboardClick = (guildId: string) => {
