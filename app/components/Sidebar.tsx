@@ -33,7 +33,7 @@ const Sidebar = ({
       {!isOpen && (
         <button
           onClick={toggleSidebar}
-          className="p-2 bg-gray-800 text-gray-300 rounded md:hidden fixed top-4 left-4 z-50"
+          className="p-2 bg-gray-800 text-gray-300 rounded md:hidden fixed top-4 left-4 z-50 cursor-pointer"
           aria-label="Open Sidebar"
         >
           <ChevronRight className="w-6 h-6" />
@@ -88,7 +88,7 @@ const Sidebar = ({
                 </button>
               </DropdownMenuTrigger>
 
-              <DropdownMenuContent className="bg-[#1f1f1f] border border-gray-700 text-white mt-2">
+              <DropdownMenuContent className="bg-[#222222] border border-gray-700 text-white mt-2">
                 <DropdownMenuItem
                   disabled
                   className="flex items-center justify-between opacity-50 cursor-default select-none"
@@ -113,7 +113,11 @@ const Sidebar = ({
                 {adminGuilds
                   .filter((guild) => guild.id !== guildId)
                   .map((guild) => (
-                    <DropdownMenuItem key={guild.id} asChild>
+                    <DropdownMenuItem
+                      key={guild.id}
+                      asChild
+                      className="hover:bg-[#2a2a2a] hover:text-[#00f8ff]"
+                    >
                       <Link
                         href={`/dashboard/${guild.id}`}
                         className="flex items-center gap-2"
