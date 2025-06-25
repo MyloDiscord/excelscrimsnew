@@ -100,8 +100,8 @@ export default function SettingsGuildPage() {
         const data: DiscordRole[] = await res.json();
         console.log("Roles API response:", data);
         setRoles(data);
-      } catch (err) {
-        console.error("Failed to fetch roles:", err);
+      } catch {
+        console.error("Failed to fetch roles");
         setError("Failed to fetch roles");
       }
     }
