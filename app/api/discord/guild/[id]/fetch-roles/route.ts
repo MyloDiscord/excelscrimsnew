@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
@@ -17,6 +18,21 @@ type FormattedRole = {
 };
 
 export async function GET(req: NextRequest) {
+
+    const { userId } = await auth();
+
+    if (!userId) {
+        return NextResponse.json({ message: "User not found." }, { status: 401 });
+    }
+
+    const client = await clerkClient();
+    const clerkResponse = await client.users.getUserOauthAccessToken(userId, "discord");
+    const accessToken = clerkResponse.data[0]?.token || "";
+
+    if (!accessToken) {
+        return NextResponse.json({ message: "Access token not found" }, { status: 401 });
+    }
+
     try {
         const segments = req.nextUrl.pathname.split("/").filter(Boolean);
         const guildId = segments[segments.length - 2];

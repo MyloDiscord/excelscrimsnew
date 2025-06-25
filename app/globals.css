@@ -15,6 +15,26 @@
   border-radius: 6px;
 }
 
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+  10%, 90% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 10px);
+  }
+}
+
+.animate-fade-in-out {
+  animation: fade-in-out 3s ease forwards;
+}
+
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);

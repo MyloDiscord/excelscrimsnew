@@ -64,6 +64,9 @@ export default function SettingsGuildPage() {
     undefined
   );
 
+  // Notification state
+  const [notification, setNotification] = useState<string | null>(null);
+
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
@@ -117,6 +120,14 @@ export default function SettingsGuildPage() {
     }
   }, [dropdownOpen]);
 
+  // Auto clear notification after 3 seconds
+  useEffect(() => {
+    if (notification) {
+      const timer = setTimeout(() => setNotification(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [notification]);
+
   const toggleRole = (role: DiscordRole) => {
     const alreadySelected = selectedRoles.find((r) => r.id === role.id);
     if (alreadySelected) {
@@ -137,13 +148,31 @@ export default function SettingsGuildPage() {
     setOpen(false);
   };
 
-  const handleSave = () => {
+  // Updated handleSave to POST data and show notification
+  const handleSave = async () => {
+    if (!guildId) return;
     setSaving(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(`/api/discord/guild/${guildId}/save-roles`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          staffRoles: selectedRoles,
+          // optionally add lastUpdatedBy here if you want
+        }),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setNotification(data.message || "Staff roles saved successfully");
+        setOpen(false);
+      } else {
+        setNotification(data.message || "Failed to save staff roles");
+      }
+    } catch {
+      setNotification("Failed to save staff roles");
+    } finally {
       setSaving(false);
-      setOpen(false);
-      // TODO: implement actual save logic here
-    }, 2500);
+    }
   };
 
   if (loading) {
@@ -345,6 +374,19 @@ export default function SettingsGuildPage() {
           </CardContent>
         </Card>
       </main>
+
+      {/* Notification */}
+      {notification && (
+        <div
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-md shadow-lg
+          animate-fade-in-out"
+          style={{ zIndex: 9999 }}
+          role="alert"
+          aria-live="assertive"
+        >
+          {notification}
+        </div>
+      )}
     </div>
   );
 }
