@@ -28,7 +28,6 @@ export async function GET() {
     }
 
     try {
-        // Fetch user guilds with user token
         const userGuildsResponse = await fetch("https://discord.com/api/users/@me/guilds", {
             method: "GET",
             headers: {
@@ -46,12 +45,10 @@ export async function GET() {
 
         const userGuilds: DiscordGuild[] = await userGuildsResponse.json();
 
-        // Filter guilds where user has admin (permission bit 0x8)
         const adminGuilds = userGuilds.filter(
             (guild) => (BigInt(guild.permissions) & BigInt(0x8)) !== BigInt(0)
         );
 
-        // Fetch bot guilds with bot token
         const botGuildsResponse = await fetch("https://discord.com/api/v10/users/@me/guilds", {
             method: "GET",
             headers: {
@@ -73,7 +70,6 @@ export async function GET() {
         const known = adminGuilds.filter((guild) => botGuildIds.has(guild.id));
         const unknown = adminGuilds.filter((guild) => !botGuildIds.has(guild.id));
 
-        // Fetch member counts for known guilds
         const knownWithCounts = await Promise.all(
             known.map(async (guild) => {
                 try {

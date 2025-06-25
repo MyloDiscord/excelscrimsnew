@@ -14,9 +14,6 @@ type DiscordGuild = {
   owner?: boolean;
   permissions: string;
   features?: string[];
-  approximate_member_count?: number | null;
-  approximate_presence_count?: number | null;
-  approximate_offline_count?: number | null;
 };
 
 type AdminGuildsResponse = {
@@ -32,6 +29,11 @@ type GetTokenResponse = {
   me: { accessToken: string }[];
 };
 
+type OnlineOfflineCounts = {
+  online: number;
+  offline: number;
+};
+
 export default function DashboardPage() {
   const { isSignedIn, isLoaded } = useUser();
   const [message, setMessage] = useState<string | null>(null);
@@ -41,6 +43,11 @@ export default function DashboardPage() {
   });
   const [isLoadingGuilds, setIsLoadingGuilds] = useState<boolean>(true);
   const [loadingGuildId, setLoadingGuildId] = useState<string | null>(null);
+
+  // New state for online/offline counts by guild ID
+  const [onlineOfflineCounts, setOnlineOfflineCounts] = useState<{
+    [guildId: string]: OnlineOfflineCounts;
+  }>({});
 
   const router = useRouter();
 
@@ -113,6 +120,43 @@ export default function DashboardPage() {
     fetchAdminGuilds();
   }, [accessToken]);
 
+  // New effect: fetch online/offline counts for all known guilds
+  useEffect(() => {
+    if (adminGuilds.known.length === 0) return;
+
+    const fetchCounts = async () => {
+      const newCounts: { [guildId: string]: OnlineOfflineCounts } = {};
+
+      // For each guild, fetch counts from your API endpoint
+      await Promise.all(
+        adminGuilds.known.map(async (guild) => {
+          try {
+            const res = await fetch(
+              `/api/discord/guild/${guild.id}/fetch-members`
+            );
+            if (!res.ok) {
+              console.error(`Failed to fetch members for guild ${guild.id}`);
+              return;
+            }
+            const data = await res.json();
+
+            // Assuming API returns { onlineCount, offlineCount }
+            newCounts[guild.id] = {
+              online: data.onlineCount ?? 0,
+              offline: data.offlineCount ?? 0,
+            };
+          } catch (err) {
+            console.error(`Error fetching members for guild ${guild.id}:`, err);
+          }
+        })
+      );
+
+      setOnlineOfflineCounts(newCounts);
+    };
+
+    fetchCounts();
+  }, [adminGuilds.known]);
+
   const handleDashboardClick = (guildId: string) => {
     setLoadingGuildId(guildId);
     router.push(`/dashboard/${guildId}`);
@@ -163,14 +207,23 @@ export default function DashboardPage() {
         </p>
       ) : (
         <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8 z-10">
-          {adminGuilds.known.map((guild) => (
-            <GuildCard
-              key={guild.id}
-              guild={guild}
-              loadingGuildId={loadingGuildId}
-              onClick={() => handleDashboardClick(guild.id)}
-            />
-          ))}
+          {adminGuilds.known.map((guild) => {
+            const counts = onlineOfflineCounts[guild.id] || {
+              online: 0,
+              offline: 0,
+            };
+
+            return (
+              <GuildCard
+                key={guild.id}
+                guild={guild}
+                loadingGuildId={loadingGuildId}
+                onlineCount={counts.online}
+                offlineCount={counts.offline}
+                onClick={() => handleDashboardClick(guild.id)}
+              />
+            );
+          })}
         </section>
       )}
     </div>
@@ -181,9 +234,17 @@ type GuildCardProps = {
   guild: DiscordGuild;
   loadingGuildId: string | null;
   onClick: () => void;
+  onlineCount: number;
+  offlineCount: number;
 };
 
-function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
+function GuildCard({
+  guild,
+  loadingGuildId,
+  onClick,
+  onlineCount,
+  offlineCount,
+}: GuildCardProps) {
   const isLoading = loadingGuildId === guild.id;
   const [hovered, setHovered] = useState(false);
 
@@ -193,9 +254,9 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
-      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none relative"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
     >
       <div className="p-6 flex flex-col items-center">
         <Image
@@ -225,18 +286,15 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
           {isLoading ? <ClipLoader color="#FFF" size={20} /> : "Dashboard"}
         </button>
 
-        {/* Hover info panel */}
+        {/* Animated online/offline text */}
         <div
-          className={`absolute left-0 right-0 bg-[#2a2a2a] rounded-b-2xl mt-2 py-2 text-sm text-gray-300 overflow-hidden transition-all duration-300 ease-in-out ${
-            hovered
-              ? "max-h-24 opacity-100"
-              : "max-h-0 opacity-0 pointer-events-none"
+          className={`overflow-hidden transition-all duration-300 ease-in-out text-sm mt-2 text-gray-300 select-none ${
+            hovered ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           }`}
           style={{ willChange: "max-height, opacity" }}
         >
-          <p>Members: {guild.approximate_member_count ?? "N/A"}</p>
-          <p>Online: {guild.approximate_presence_count ?? "N/A"}</p>
-          <p>Offline: {guild.approximate_offline_count ?? "N/A"}</p>
+          <p>Online: {onlineCount}</p>
+          <p>Offline: {offlineCount}</p>
         </div>
       </div>
     </div>
