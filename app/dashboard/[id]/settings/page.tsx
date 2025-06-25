@@ -84,7 +84,7 @@ export default function SettingsGuildPage() {
     async function fetchRoles() {
       if (!guildId || typeof guildId !== "string") return;
       try {
-        const res = await fetch(`/api/discord/guild/roles?id=${guildId}`);
+        const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         const data: DiscordRole[] = await res.json();
         const sortedRoles = data.sort((a, b) => b.position - a.position);
         setRoles(sortedRoles);
@@ -171,11 +171,31 @@ export default function SettingsGuildPage() {
                   </DialogDescription>
                 </DialogHeader>
 
+                {/* Dropdown Menu Trigger is a blank button with arrow */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="mt-4 bg-gray-800 hover:bg-gray-700 w-full">
-                      Select Staff Roles
-                    </Button>
+                    <button
+                      type="button"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+                    >
+                      {/* Empty content (blank button) */}
+                      <span>&nbsp;</span>
+                      {/* Arrow down */}
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-gray-300"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          d="M19 9l-7 7-7-7"
+                        />
+                      </svg>
+                    </button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto">
                     <DropdownMenuLabel>Available Roles</DropdownMenuLabel>
@@ -196,6 +216,7 @@ export default function SettingsGuildPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
+                {/* Selected roles outside dropdown, as pills */}
                 {selectedRoles.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRoles.map((role) => {
