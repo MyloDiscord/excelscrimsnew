@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Sidebar = ({
-  current,
   guildName,
   guildAvatar,
   guildId,
@@ -64,7 +63,6 @@ const Sidebar = ({
               {guildName}
             </h2>
 
-            {/* Dropdown Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger className="text-sm text-[#00f8ff] hover:underline text-left">
                 Switch Server
