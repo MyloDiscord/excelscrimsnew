@@ -52,7 +52,7 @@ export default function SettingsGuildPage() {
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
-  const [selectedRole, setSelectedRole] = useState<DiscordRole | null>(null);
+  const [selectedRoles, setSelectedRoles] = useState<DiscordRole[]>([]);
 
   useEffect(() => {
     async function checkAccess() {
@@ -95,6 +95,15 @@ export default function SettingsGuildPage() {
     checkAccess();
     fetchRoles();
   }, [guildId]);
+
+  const toggleRole = (role: DiscordRole) => {
+    const alreadySelected = selectedRoles.find((r) => r.id === role.id);
+    if (alreadySelected) {
+      setSelectedRoles((prev) => prev.filter((r) => r.id !== role.id));
+    } else {
+      setSelectedRoles((prev) => [...prev, role]);
+    }
+  };
 
   if (loading) {
     return (
@@ -154,14 +163,15 @@ export default function SettingsGuildPage() {
                 <DialogHeader>
                   <DialogTitle>Set Discord Staff Roles</DialogTitle>
                   <DialogDescription>
-                    Choose which Discord roles should be recognized as staff.
+                    Choose one or more Discord roles that should be recognized
+                    as staff.
                   </DialogDescription>
                 </DialogHeader>
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button className="mt-4 bg-gray-800 hover:bg-gray-700 w-full">
-                      {selectedRole ? selectedRole.name : "Select a Role"}
+                      Select Staff Roles
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto">
@@ -170,17 +180,27 @@ export default function SettingsGuildPage() {
                     {roles.map((role) => (
                       <DropdownMenuItem
                         key={role.id}
-                        onClick={() => {
-                          setSelectedRole(role);
-                          console.log("Selected role:", role);
-                        }}
-                        className="hover:bg-gray-700 cursor-pointer"
+                        onClick={() => toggleRole(role)}
+                        className={`hover:bg-gray-700 cursor-pointer ${
+                          selectedRoles.find((r) => r.id === role.id)
+                            ? "bg-gray-700"
+                            : ""
+                        }`}
                       >
                         {role.name}
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
                 </DropdownMenu>
+
+                {selectedRoles.length > 0 && (
+                  <div className="mt-4 p-3 bg-[#1a1a1a] border border-neutral-700 rounded text-sm text-gray-300">
+                    Selected Roles:{" "}
+                    <span className="text-white font-semibold">
+                      {selectedRoles.map((r) => r.name).join(", ")}
+                    </span>
+                  </div>
+                )}
               </DialogContent>
             </Dialog>
           </CardContent>
