@@ -17,11 +17,8 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Excel Scrims",
   description: "Official Excel Scrims Website.",
-  creator: "Mylo",
-  keywords: ["excel", "scrims", "gaming", "esports", "fortnite", "tournaments"],
   icons: {
     icon: "/Scrims.png",
-    apple: "/apple-touch-icon.png",
   },
   openGraph: {
     title: "Excel Scrims",
@@ -30,17 +27,17 @@ export const metadata: Metadata = {
     siteName: "Excel Scrims",
     images: [
       {
-        url: "https://excelscrims.com/Scrims.png",
-        width: 800,
-        height: 600,
-        alt: "Excel Scrims Logo",
+        url: "https://excelscrims.com/Scrims_thumb.png",
+        width: 128,
+        height: 128,
+        alt: "Excel Scrims Thumbnail",
       },
     ],
     locale: "en_US",
     type: "website",
   },
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "Excel Scrims",
     description: "Official Excel Scrims Website.",
     images: ["https://excelscrims.com/Scrims.png"],
