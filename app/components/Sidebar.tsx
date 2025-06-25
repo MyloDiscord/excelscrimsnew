@@ -179,7 +179,7 @@ const Sidebar = ({
           </li>
           <li>
             <Link
-              href={`/dashboard/${guildId}/application-overview`}
+              href={`/dashboard/${guildId}/applications/overview`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Applications Overview"
                   ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
