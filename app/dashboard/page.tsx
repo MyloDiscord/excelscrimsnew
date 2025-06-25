@@ -1,5 +1,6 @@
 "use client";
 
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -116,7 +117,10 @@ export default function DashboardPage() {
 
   if (!isLoaded) {
     return (
-      <div className="flex justify-center items-center h-screen bg-[#121212]">
+      <div className="relative min-h-screen bg-[#121212] flex justify-center items-center overflow-hidden">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <BackgroundBeams />
+        </div>
         <ClipLoader color="#FF4B3E" size={50} />
       </div>
     );
@@ -124,10 +128,13 @@ export default function DashboardPage() {
 
   if (!isSignedIn) {
     return (
-      <div className="flex flex-col justify-center items-center h-screen text-center bg-[#121212] text-white px-4">
-        <p className="text-lg">{message}</p>
+      <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center text-center overflow-hidden px-4">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <BackgroundBeams />
+        </div>
+        <p className="text-white text-lg z-10">{message}</p>
         <button
-          className="mt-6 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg font-semibold transition duration-300"
+          className="z-10 mt-6 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg font-semibold transition duration-300"
           onClick={() => router.push("/")}
         >
           Login
@@ -137,16 +144,22 @@ export default function DashboardPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white">
+    <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white overflow-hidden">
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <BackgroundBeams />
+      </div>
+
       {isLoadingGuilds ? (
-        <div className="flex flex-col items-center gap-3 text-red-500">
+        <div className="flex flex-col items-center gap-3 text-red-500 z-10">
           <ClipLoader color="#FF4B3E" size={40} />
           <p className="text-lg">Loading your servers...</p>
         </div>
       ) : adminGuilds.known.length === 0 ? (
-        <p className="text-gray-400 text-xl mt-12">No admin guilds found.</p>
+        <p className="text-gray-400 text-xl mt-12 z-10">
+          No admin guilds found.
+        </p>
       ) : (
-        <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8">
+        <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8 z-10">
           {adminGuilds.known.map((guild) => (
             <GuildCard
               key={guild.id}
@@ -176,7 +189,7 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
-      className="w-64 bg-gradient-to-tr from-[#1F2937] to-[#374151] rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
+      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none border border-gray-700"
     >
       <div className="p-6 flex flex-col items-center">
         <Image
