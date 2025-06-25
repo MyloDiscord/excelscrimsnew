@@ -1,34 +1,40 @@
 type DiscordGuild = {
     id: string;
+    name: string;
+    icon: string | null;
+    owner?: boolean;
     permissions: string;
+    features?: string[];
+    approximate_presence_count?: number;
+    approximate_offline_count?: number;
 };
 
 type AdminGuildsResponse = {
     known: DiscordGuild[];
+    unknown?: DiscordGuild[];
 };
 
 export async function checkUserIsGuildAdmin(guildId: string): Promise<boolean> {
     try {
         const res = await fetch("/api/discord/user/adminGuilds", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
+            headers: { "Content-Type": "application/json" },
         });
 
         if (!res.ok) return false;
 
         const data: AdminGuildsResponse = await res.json();
 
-        const guild = data.known.find((g) => g.id === guildId);
-        if (!guild) return false;
+        if (data.known.some((guild) => guild.id === guildId)) {
+            return true;
+        }
 
-        const ADMIN_PERMISSION = 0x00000008n;
-        const permissionBits = BigInt(guild.permissions);
+        if (data.unknown && data.unknown.some((guild) => guild.id === guildId)) {
+            return false;
+        }
 
-        return (permissionBits & ADMIN_PERMISSION) === ADMIN_PERMISSION;
-    } catch (err) {
-        console.error("checkUserIsGuildAdmin error:", err);
+        return false;
+    } catch (e) {
+        console.error("Error checking admin guilds:", e);
         return false;
     }
 }
