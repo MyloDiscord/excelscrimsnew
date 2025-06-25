@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Image from "next/image";
-import { BackgroundBeams } from "@/components/ui/background-beams";
 
 type DiscordGuild = {
   id: string;
@@ -94,6 +93,7 @@ export default function DashboardPage() {
         if (response.ok && "known" in data) {
           setAdminGuilds(data);
           setIsLoadingGuilds(false);
+          console.log(data.known.map((guild) => guild.id));
         } else {
           const err = data as ErrorResponse;
           console.error(
@@ -114,45 +114,49 @@ export default function DashboardPage() {
     router.push(`/dashboard/${guildId}`);
   };
 
-  return (
-    <div className="relative min-h-screen bg-[#0e0e0e] overflow-hidden">
-      <div className="absolute inset-0 z-0 pointer-events-none">
-        <BackgroundBeams />
+  if (!isLoaded) {
+    return (
+      <div className="flex justify-center items-center h-screen bg-[#121212]">
+        <ClipLoader color="#FF4B3E" size={50} />
       </div>
+    );
+  }
 
-      <div className="relative z-10 flex flex-col justify-center items-center text-white px-4 py-10 min-h-screen">
-        {!isLoaded ? (
-          <ClipLoader color="#FF0000" size={50} />
-        ) : !isSignedIn ? (
-          <div className="text-center space-y-4">
-            <p className="text-gray-300">{message}</p>
-            <button
-              className="bg-[#2c262a] hover:bg-[#3a3137] text-white px-6 py-2 rounded-lg shadow-md shadow-black/50 transition-all duration-300 hover:scale-105 active:scale-95"
-              onClick={() => router.push("/")}
-            >
-              Login
-            </button>
-          </div>
-        ) : isLoadingGuilds ? (
-          <ClipLoader color="#FF0000" size={40} />
-        ) : (
-          <div className="w-full max-w-6xl text-center">
-            <h2 className="text-2xl font-bold mb-6 text-gray-100">
-              Select a server
-            </h2>
-            <div className="flex flex-wrap justify-center gap-6">
-              {adminGuilds.known.map((guild) => (
-                <GuildCard
-                  key={guild.id}
-                  guild={guild}
-                  loadingGuildId={loadingGuildId}
-                  onClick={() => handleDashboardClick(guild.id)}
-                />
-              ))}
-            </div>
-          </div>
-        )}
+  if (!isSignedIn) {
+    return (
+      <div className="flex flex-col justify-center items-center h-screen text-center bg-[#121212] text-white px-4">
+        <p className="text-lg">{message}</p>
+        <button
+          className="mt-6 px-6 py-3 bg-red-600 hover:bg-red-700 rounded-lg shadow-lg font-semibold transition duration-300"
+          onClick={() => router.push("/")}
+        >
+          Login
+        </button>
       </div>
+    );
+  }
+
+  return (
+    <div className="min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white">
+      {isLoadingGuilds ? (
+        <div className="flex flex-col items-center gap-3 text-red-500">
+          <ClipLoader color="#FF4B3E" size={40} />
+          <p className="text-lg">Loading your servers...</p>
+        </div>
+      ) : adminGuilds.known.length === 0 ? (
+        <p className="text-gray-400 text-xl mt-12">No admin guilds found.</p>
+      ) : (
+        <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8">
+          {adminGuilds.known.map((guild) => (
+            <GuildCard
+              key={guild.id}
+              guild={guild}
+              loadingGuildId={loadingGuildId}
+              onClick={() => handleDashboardClick(guild.id)}
+            />
+          ))}
+        </section>
+      )}
     </div>
   );
 }
@@ -169,31 +173,38 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
   return (
     <div
       onClick={onClick}
-      className="flex flex-col justify-center items-center border p-4 rounded-xl shadow-lg w-80 transform transition-all duration-300 hover:scale-105 cursor-pointer bg-[#1f1f1f] hover:bg-[#2a2a2a]"
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
+      className="w-64 bg-gradient-to-tr from-[#1F2937] to-[#374151] rounded-2xl shadow-xl hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
     >
-      <Image
-        src={
-          guild.icon
-            ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
-            : "/default-guild-icon.png"
-        }
-        alt={guild.name}
-        width={80}
-        height={80}
-        className="rounded-full mb-4"
-      />
-      <h4 className="text-lg sm:text-xl font-semibold mb-2 text-white">
-        {guild.name}
-      </h4>
-      <div
-        className={`flex items-center justify-center gap-2 p-3 mt-2 text-white rounded-lg transition-all duration-300 transform active:scale-95 shadow-md ${
-          isLoading
-            ? "bg-gray-500"
-            : "bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg"
-        }`}
-      >
-        {isLoading && <ClipLoader color="#FFFFFF" size={20} />}
-        <span>Dashboard</span>
+      <div className="p-6 flex flex-col items-center">
+        <Image
+          src={
+            guild.icon
+              ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+              : "/default-guild-icon.png"
+          }
+          alt={guild.name}
+          width={96}
+          height={96}
+          className="rounded-full mb-4 border-2 border-red-500"
+          priority
+        />
+        <h4 className="text-lg font-bold mb-3 truncate text-white">
+          {guild.name}
+        </h4>
+
+        <button
+          disabled={isLoading}
+          className={`mt-2 w-full py-2 rounded-xl font-semibold text-white transition-colors duration-300 ${
+            isLoading
+              ? "bg-gray-600 cursor-not-allowed"
+              : "bg-red-600 hover:bg-red-700 active:scale-95 shadow-md"
+          }`}
+        >
+          {isLoading ? <ClipLoader color="#FFF" size={20} /> : "Dashboard"}
+        </button>
       </div>
     </div>
   );
