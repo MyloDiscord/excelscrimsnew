@@ -58,6 +58,7 @@ export default function SettingsGuildPage() {
   const [selectedRoles, setSelectedRoles] = useState<DiscordRole[]>([]);
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
@@ -204,7 +205,7 @@ export default function SettingsGuildPage() {
                 </DialogHeader>
 
                 {/* Dropdown Menu Trigger */}
-                <DropdownMenu>
+                <DropdownMenu onOpenChange={(open) => setDropdownOpen(open)}>
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
@@ -212,7 +213,11 @@ export default function SettingsGuildPage() {
                       aria-label="Select Staff Roles"
                     >
                       <span className="truncate">Select roles...</span>
-                      <ChevronDown className="h-5 w-5 text-gray-300 ml-2 flex-shrink-0" />
+                      <ChevronDown
+                        className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
+                          dropdownOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
                     </button>
                   </DropdownMenuTrigger>
 
