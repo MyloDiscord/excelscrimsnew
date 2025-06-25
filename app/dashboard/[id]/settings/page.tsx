@@ -26,7 +26,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { ChevronDown, Check } from "lucide-react";
+import { ChevronDown, Check, X } from "lucide-react";
 
 type DiscordGuild = {
   id: string;
@@ -116,6 +116,10 @@ export default function SettingsGuildPage() {
     }
   };
 
+  const removeRole = (roleId: string) => {
+    setSelectedRoles((prev) => prev.filter((r) => r.id !== roleId));
+  };
+
   const intToHex = (int: number) => "#" + int.toString(16).padStart(6, "0");
 
   if (loading) {
@@ -189,8 +193,12 @@ export default function SettingsGuildPage() {
                       className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                       aria-label="Select Staff Roles"
                     >
-                      <span>&nbsp;</span>
-                      <ChevronDown className="h-5 w-5 text-gray-300" />
+                      <span className="truncate">
+                        {selectedRoles.length > 0
+                          ? selectedRoles.map((r) => r.name).join(", ")
+                          : "Select roles..."}
+                      </span>
+                      <ChevronDown className="h-5 w-5 text-gray-300 ml-2 flex-shrink-0" />
                     </button>
                   </DropdownMenuTrigger>
 
@@ -238,44 +246,37 @@ export default function SettingsGuildPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Selected roles pills with removable dot */}
-                {selectedRoles.length > 0 ? (
+                {/* Selected roles pills with removable X */}
+                {selectedRoles.length > 0 && (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRoles.map((role) => {
                       const hex = intToHex(role.color);
                       return (
                         <div
                           key={role.id}
-                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-default select-none"
+                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group"
                           style={{
                             backgroundColor: hex + "22", // faded background
                             color: "#fff",
                           }}
+                          onClick={() => removeRole(role.id)}
+                          title={`Remove ${role.name}`}
                         >
                           <span
-                            onClick={() =>
-                              setSelectedRoles((prev) =>
-                                prev.filter((r) => r.id !== role.id)
-                              )
-                            }
-                            className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer relative transition-colors duration-150"
+                            className="w-2 h-2 rounded-full relative flex-shrink-0 group-hover:bg-transparent bg-[inherit]"
                             style={{ backgroundColor: hex }}
-                            title={`Remove ${role.name}`}
                           >
-                            <span className="absolute opacity-0 hover:opacity-100 transition-opacity duration-200 select-none">
-                              ×
-                            </span>
-                            <span className="w-2 h-2 rounded-full select-none" />
+                            {/* Show 'X' on hover */}
+                            <X
+                              className="absolute top-0 left-0 w-2 h-2 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                              strokeWidth={3}
+                            />
                           </span>
                           {role.name}
                         </div>
                       );
                     })}
                   </div>
-                ) : (
-                  <p className="mt-4 text-gray-500 select-none">
-                    Select roles...
-                  </p>
                 )}
               </DialogContent>
             </Dialog>
