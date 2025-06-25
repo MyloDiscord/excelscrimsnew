@@ -44,10 +44,16 @@ export default function DashboardPage() {
   const [isLoadingGuilds, setIsLoadingGuilds] = useState<boolean>(true);
   const [loadingGuildId, setLoadingGuildId] = useState<string | null>(null);
 
-  // New state for online/offline counts by guild ID
+  // Online/offline counts state
   const [onlineOfflineCounts, setOnlineOfflineCounts] = useState<{
     [guildId: string]: OnlineOfflineCounts;
   }>({});
+
+  // New: hovered guild id for hover state management
+  const [hoveredGuildId, setHoveredGuildId] = useState<string | null>(null);
+
+  // New: detect mobile to always show counts there
+  const [isMobile, setIsMobile] = useState(false);
 
   const router = useRouter();
 
@@ -56,6 +62,15 @@ export default function DashboardPage() {
       setMessage("You are not logged in!");
     }
   }, [isLoaded, isSignedIn]);
+
+  useEffect(() => {
+    function handleResize() {
+      setIsMobile(window.innerWidth < 640);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchToken = async () => {
@@ -120,14 +135,13 @@ export default function DashboardPage() {
     fetchAdminGuilds();
   }, [accessToken]);
 
-  // New effect: fetch online/offline counts for all known guilds
+  // Fetch online/offline counts for all known guilds
   useEffect(() => {
     if (adminGuilds.known.length === 0) return;
 
     const fetchCounts = async () => {
       const newCounts: { [guildId: string]: OnlineOfflineCounts } = {};
 
-      // For each guild, fetch counts from your API endpoint
       await Promise.all(
         adminGuilds.known.map(async (guild) => {
           try {
@@ -221,6 +235,9 @@ export default function DashboardPage() {
                 onlineCount={counts.online}
                 offlineCount={counts.offline}
                 onClick={() => handleDashboardClick(guild.id)}
+                hoveredGuildId={hoveredGuildId}
+                setHoveredGuildId={setHoveredGuildId}
+                isMobile={isMobile}
               />
             );
           })}
@@ -236,6 +253,9 @@ type GuildCardProps = {
   onClick: () => void;
   onlineCount: number;
   offlineCount: number;
+  hoveredGuildId: string | null;
+  setHoveredGuildId: React.Dispatch<React.SetStateAction<string | null>>;
+  isMobile: boolean;
 };
 
 function GuildCard({
@@ -244,9 +264,14 @@ function GuildCard({
   onClick,
   onlineCount,
   offlineCount,
+  hoveredGuildId,
+  setHoveredGuildId,
+  isMobile,
 }: GuildCardProps) {
   const isLoading = loadingGuildId === guild.id;
-  const [hovered, setHovered] = useState(false);
+
+  // Show counts if hovered or on mobile
+  const showCounts = isMobile || hoveredGuildId === guild.id;
 
   return (
     <div
@@ -254,8 +279,8 @@ function GuildCard({
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
-      onMouseEnter={() => setHovered(true)}
-      onMouseLeave={() => setHovered(false)}
+      onMouseEnter={() => setHoveredGuildId(guild.id)}
+      onMouseLeave={() => setHoveredGuildId(null)}
       className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
     >
       <div className="p-6 flex flex-col items-center">
@@ -286,10 +311,9 @@ function GuildCard({
           {isLoading ? <ClipLoader color="#FFF" size={20} /> : "Dashboard"}
         </button>
 
-        {/* Animated online/offline text */}
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out text-sm mt-2 text-gray-300 select-none ${
-            hovered ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
+            showCounts ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           }`}
           style={{ willChange: "max-height, opacity" }}
         >
