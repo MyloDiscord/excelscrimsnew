@@ -174,110 +174,112 @@ export default function SettingsGuildPage() {
           <CardContent>
             <AlertDialog>
               <AlertDialogTrigger>
-                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md">
+                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
                   Set Staff Roles
                 </Button>
               </AlertDialogTrigger>
 
-              <AlertDialogContent className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg mx-auto p-6 relative">
-                {/* Close (X) button */}
-                <button
-                  aria-label="Close dialog"
-                  className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors"
-                  onClick={() => {
-                    const cancelBtn = document.querySelector(
-                      "button[aria-label='Cancel']"
-                    );
-                    if (cancelBtn && cancelBtn instanceof HTMLButtonElement) {
-                      cancelBtn.click();
-                    }
-                  }}
-                >
-                  <X className="w-5 h-5 text-gray-400 hover:text-gray-200" />
-                </button>
+              <AlertDialogContent className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-6">
+                <div className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg w-full relative p-6">
+                  {/* Close (X) button */}
+                  <button
+                    aria-label="Close dialog"
+                    className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors"
+                    onClick={() => {
+                      const cancelBtn = document.querySelector(
+                        "button[aria-label='Cancel']"
+                      );
+                      if (cancelBtn && cancelBtn instanceof HTMLButtonElement) {
+                        cancelBtn.click();
+                      }
+                    }}
+                  >
+                    <X className="w-5 h-5 text-gray-400 hover:text-gray-200" />
+                  </button>
 
-                <AlertDialogHeader>
-                  <AlertDialogTitle>
-                    <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
-                      Select Staff Roles
-                    </div>
-                  </AlertDialogTitle>
-                </AlertDialogHeader>
+                  <AlertDialogHeader>
+                    <AlertDialogTitle>
+                      <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
+                        Select Staff Roles
+                      </div>
+                    </AlertDialogTitle>
+                  </AlertDialogHeader>
 
-                <div className="space-y-3 max-h-80 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-[#121212]">
-                  {sortedRoles.map((role) => (
-                    <label
-                      key={role.id}
-                      htmlFor={`role-${role.id}`}
-                      className="flex items-center gap-5 p-3 hover:bg-[#2b2b2b] rounded-md cursor-pointer transition-colors select-none"
-                    >
-                      <input
-                        type="checkbox"
-                        id={`role-${role.id}`}
-                        checked={selectedRoles.includes(role.id)}
-                        onChange={() => toggleRole(role.id)}
-                        className="peer hidden"
-                        disabled={isSaving}
-                      />
-                      <span
-                        className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
-                          ${
-                            selectedRoles.includes(role.id)
-                              ? "border-gray-300 bg-gray-300"
-                              : "border-gray-600 bg-transparent"
-                          }
-                        `}
-                        aria-hidden="true"
+                  <div className="space-y-3 max-h-80 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-[#121212]">
+                    {sortedRoles.map((role) => (
+                      <label
+                        key={role.id}
+                        htmlFor={`role-${role.id}`}
+                        className="flex items-center gap-5 p-3 hover:bg-[#2b2b2b] rounded-md cursor-pointer transition-colors select-none"
                       >
-                        {selectedRoles.includes(role.id) && (
-                          <Check className="w-5 h-5 text-gray-900" />
+                        <input
+                          type="checkbox"
+                          id={`role-${role.id}`}
+                          checked={selectedRoles.includes(role.id)}
+                          onChange={() => toggleRole(role.id)}
+                          className="peer hidden"
+                          disabled={isSaving}
+                        />
+                        <span
+                          className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
+              ${
+                selectedRoles.includes(role.id)
+                  ? "border-gray-300 bg-gray-300"
+                  : "border-gray-600 bg-transparent"
+              }
+            `}
+                          aria-hidden="true"
+                        >
+                          {selectedRoles.includes(role.id) && (
+                            <Check className="w-5 h-5 text-gray-900" />
+                          )}
+                        </span>
+
+                        <span
+                          className="inline-block w-5 h-5 rounded-full flex-shrink-0"
+                          style={{
+                            backgroundColor: `#${role.color
+                              .toString(16)
+                              .padStart(6, "0")}`,
+                          }}
+                        />
+                        <span className="text-base font-medium select-text text-gray-300">
+                          {role.name}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+
+                  <AlertDialogFooter className="mt-10 flex justify-end gap-4">
+                    <AlertDialogCancel>
+                      <Button
+                        aria-label="Cancel"
+                        variant="outline"
+                        className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md"
+                        disabled={isSaving}
+                      >
+                        Cancel
+                      </Button>
+                    </AlertDialogCancel>
+                    <AlertDialogAction>
+                      <Button
+                        aria-label="Save"
+                        onClick={handleSave}
+                        className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md flex items-center gap-2"
+                        disabled={isSaving}
+                      >
+                        {isSaving ? (
+                          <>
+                            <ClipLoader size={18} color="#d1d5db" />
+                            Saving...
+                          </>
+                        ) : (
+                          "Save"
                         )}
-                      </span>
-
-                      <span
-                        className="inline-block w-5 h-5 rounded-full flex-shrink-0"
-                        style={{
-                          backgroundColor: `#${role.color
-                            .toString(16)
-                            .padStart(6, "0")}`,
-                        }}
-                      />
-                      <span className="text-base font-medium select-text text-gray-300">
-                        {role.name}
-                      </span>
-                    </label>
-                  ))}
+                      </Button>
+                    </AlertDialogAction>
+                  </AlertDialogFooter>
                 </div>
-
-                <AlertDialogFooter className="mt-10 flex justify-end gap-4">
-                  <AlertDialogCancel>
-                    <Button
-                      aria-label="Cancel"
-                      variant="outline"
-                      className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md"
-                      disabled={isSaving}
-                    >
-                      Cancel
-                    </Button>
-                  </AlertDialogCancel>
-                  <AlertDialogAction>
-                    <Button
-                      aria-label="Save"
-                      onClick={handleSave}
-                      className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md flex items-center gap-2"
-                      disabled={isSaving}
-                    >
-                      {isSaving ? (
-                        <>
-                          <ClipLoader size={18} color="#d1d5db" />
-                          Saving...
-                        </>
-                      ) : (
-                        "Save"
-                      )}
-                    </Button>
-                  </AlertDialogAction>
-                </AlertDialogFooter>
               </AlertDialogContent>
             </AlertDialog>
           </CardContent>
