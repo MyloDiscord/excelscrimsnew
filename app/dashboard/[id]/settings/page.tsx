@@ -64,7 +64,9 @@ export default function SettingsGuildPage() {
     undefined
   );
 
-  // Notification state
+  type NotificationType = "success" | "error";
+  const [notificationType, setNotificationType] =
+    useState<NotificationType>("success");
   const [notification, setNotification] = useState<string | null>(null);
 
   useEffect(() => {
@@ -87,6 +89,7 @@ export default function SettingsGuildPage() {
           setUnauthorized(true);
         }
       } catch {
+        setNotificationType("error");
         setError("Error checking access");
       } finally {
         setLoading(false);
@@ -99,12 +102,14 @@ export default function SettingsGuildPage() {
         setError(null);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         if (!res.ok) {
+          setNotificationType("error");
           setError("Failed to fetch roles");
           return;
         }
         const data: DiscordRole[] = await res.json();
         setRoles(data);
       } catch {
+        setNotificationType("error");
         setError("Failed to fetch roles");
       }
     }
@@ -131,7 +136,8 @@ export default function SettingsGuildPage() {
           setSelectedRoles([]);
         }
       } catch {
-        setNotification("Failed to load saved roles");
+        setNotificationType("error");
+        setNotification("Failed to load saved roles"); // Fix here: setNotification for the message, not setNotificationType
       }
     }
 
@@ -189,12 +195,15 @@ export default function SettingsGuildPage() {
       );
       const data = await res.json();
       if (res.ok) {
+        setNotificationType("success");
         setNotification(data.message || "Staff roles saved successfully");
         setOpen(false);
       } else {
+        setNotificationType("error");
         setNotification(data.message || "Failed to save staff roles");
       }
     } catch {
+      setNotificationType("error");
       setNotification("Failed to save staff roles");
     } finally {
       setSaving(false);
@@ -404,12 +413,20 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className="fixed top-8 right-8 flex items-center gap-2 bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg animate-fade-in-out"
+          className={`fixed top-8 right-8 flex items-center gap-2 px-6 py-3 rounded-md shadow-lg animate-fade-in-out ${
+            notificationType === "success"
+              ? "bg-green-700/20 text-green-400"
+              : "bg-red-700/20 text-red-400"
+          }`}
           style={{ zIndex: 9999 }}
           role="alert"
           aria-live="assertive"
         >
-          <Check className="w-5 h-5" />
+          {notificationType === "success" ? (
+            <Check className="w-5 h-5" />
+          ) : (
+            <X className="w-5 h-5" />
+          )}
           <span className="font-semibold">{notification}</span>
         </div>
       )}
