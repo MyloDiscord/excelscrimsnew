@@ -2,9 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
-export async function GET(req: NextRequest, context: { params: { id: string } }) {
+export async function GET(req: NextRequest) {
     try {
-        const guildId = context.params.id;
+
+        const segments = req.nextUrl.pathname.split("/").filter(Boolean);
+        const guildId = segments[segments.length - 2];
+
         if (!guildId) {
             return NextResponse.json({ message: "Missing guild ID" }, { status: 400 });
         }
@@ -26,7 +29,6 @@ export async function GET(req: NextRequest, context: { params: { id: string } })
         const roles = await res.json();
 
         return NextResponse.json({ roles });
-
     } catch (error: unknown) {
         const err = error as Error;
         return NextResponse.json(
