@@ -9,15 +9,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
 import {
-  AlertDialog,
-  AlertDialogTrigger,
-  AlertDialogContent,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@/components/ui/alert-dialog";
+  Dialog,
+  DialogTrigger,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 import { Check, X } from "lucide-react";
 
@@ -172,116 +170,114 @@ export default function SettingsGuildPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <AlertDialog>
-              <AlertDialogTrigger>
+            <Dialog>
+              <DialogTrigger asChild>
                 <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
                   Set Staff Roles
                 </Button>
-              </AlertDialogTrigger>
+              </DialogTrigger>
 
-              <AlertDialogContent className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-6">
-                <div className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-auto relative p-6">
-                  {/* Close (X) button */}
-                  <button
-                    aria-label="Close dialog"
-                    className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
-                    onClick={() => {
-                      const cancelBtn = document.querySelector(
-                        "button[aria-label='Cancel']"
-                      );
-                      if (cancelBtn && cancelBtn instanceof HTMLButtonElement) {
-                        cancelBtn.click();
-                      }
-                    }}
-                  >
-                    <X className="w-5 h-5 text-gray-400 hover:text-gray-200" />
-                  </button>
+              <DialogContent className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-auto relative p-6">
+                {/* Close (X) button */}
+                <button
+                  aria-label="Close dialog"
+                  className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+                  onClick={() => {
+                    // Close the dialog by sending Escape key event
+                    document.activeElement?.dispatchEvent(
+                      new KeyboardEvent("keydown", { key: "Escape" })
+                    );
+                  }}
+                >
+                  <X className="w-5 h-5 text-gray-400 hover:text-gray-200" />
+                </button>
 
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
-                        Select Staff Roles
-                      </div>
-                    </AlertDialogTitle>
-                  </AlertDialogHeader>
+                <DialogHeader>
+                  <DialogTitle>
+                    <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
+                      Select Staff Roles
+                    </div>
+                  </DialogTitle>
+                </DialogHeader>
 
-                  <div className="space-y-3 max-h-80 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-[#121212]">
-                    {sortedRoles.map((role) => (
-                      <label
-                        key={role.id}
-                        htmlFor={`role-${role.id}`}
-                        className="flex items-center gap-5 p-3 hover:bg-[#2b2b2b] rounded-md cursor-pointer transition-colors select-none"
-                      >
-                        <input
-                          type="checkbox"
-                          id={`role-${role.id}`}
-                          checked={selectedRoles.includes(role.id)}
-                          onChange={() => toggleRole(role.id)}
-                          className="peer hidden"
-                          disabled={isSaving}
-                        />
-                        <span
-                          className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-[#121212]">
+                  {sortedRoles.map((role) => (
+                    <label
+                      key={role.id}
+                      htmlFor={`role-${role.id}`}
+                      className="flex items-center gap-5 p-3 hover:bg-[#2b2b2b] rounded-md cursor-pointer transition-colors select-none"
+                    >
+                      <input
+                        type="checkbox"
+                        id={`role-${role.id}`}
+                        checked={selectedRoles.includes(role.id)}
+                        onChange={() => toggleRole(role.id)}
+                        className="peer hidden"
+                        disabled={isSaving}
+                      />
+                      <span
+                        className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
               ${
                 selectedRoles.includes(role.id)
                   ? "border-gray-300 bg-gray-300"
                   : "border-gray-600 bg-transparent"
               }
             `}
-                          aria-hidden="true"
-                        >
-                          {selectedRoles.includes(role.id) && (
-                            <Check className="w-5 h-5 text-gray-900" />
-                          )}
-                        </span>
-
-                        <span
-                          className="inline-block w-5 h-5 rounded-full flex-shrink-0"
-                          style={{
-                            backgroundColor: `#${role.color
-                              .toString(16)
-                              .padStart(6, "0")}`,
-                          }}
-                        />
-                        <span className="text-base font-medium select-text text-gray-300">
-                          {role.name}
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-
-                  <AlertDialogFooter className="mt-10 flex justify-end gap-4">
-                    <AlertDialogCancel>
-                      <Button
-                        aria-label="Cancel"
-                        variant="outline"
-                        className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
-                        disabled={isSaving}
+                        aria-hidden="true"
                       >
-                        Cancel
-                      </Button>
-                    </AlertDialogCancel>
-                    <AlertDialogAction>
-                      <Button
-                        aria-label="Save"
-                        onClick={handleSave}
-                        className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
-                        disabled={isSaving}
-                      >
-                        {isSaving ? (
-                          <>
-                            <ClipLoader size={18} color="#d1d5db" />
-                            Saving...
-                          </>
-                        ) : (
-                          "Save"
+                        {selectedRoles.includes(role.id) && (
+                          <Check className="w-5 h-5 text-gray-900" />
                         )}
-                      </Button>
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
+                      </span>
+
+                      <span
+                        className="inline-block w-5 h-5 rounded-full flex-shrink-0"
+                        style={{
+                          backgroundColor: `#${role.color
+                            .toString(16)
+                            .padStart(6, "0")}`,
+                        }}
+                      />
+                      <span className="text-base font-medium select-text text-gray-300">
+                        {role.name}
+                      </span>
+                    </label>
+                  ))}
                 </div>
-              </AlertDialogContent>
-            </AlertDialog>
+
+                <DialogFooter className="mt-10 flex justify-end gap-4">
+                  <Button
+                    aria-label="Cancel"
+                    variant="outline"
+                    className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
+                    disabled={isSaving}
+                    onClick={() =>
+                      document.activeElement?.dispatchEvent(
+                        new KeyboardEvent("keydown", { key: "Escape" })
+                      )
+                    }
+                  >
+                    Cancel
+                  </Button>
+
+                  <Button
+                    aria-label="Save"
+                    onClick={handleSave}
+                    className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                    disabled={isSaving}
+                  >
+                    {isSaving ? (
+                      <>
+                        <ClipLoader size={18} color="#d1d5db" />
+                        Saving...
+                      </>
+                    ) : (
+                      "Save"
+                    )}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
       </main>
