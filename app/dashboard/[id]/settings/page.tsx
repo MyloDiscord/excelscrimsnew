@@ -306,21 +306,23 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
 
                 {/* Buttons */}
                 <div className="mt-6 flex justify-end gap-4">
+                  {/* Cancel Button */}
                   <button
                     onClick={handleCancel}
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-    bg-red-700/60 hover:bg-red-700/80 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+    bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     Cancel
                   </button>
 
+                  {/* Save Button */}
                   <button
                     onClick={handleSave}
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-    bg-green-600/60 hover:bg-green-600/80 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+    bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? (
                       "Saving..."
