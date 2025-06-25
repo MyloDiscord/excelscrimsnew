@@ -4,7 +4,7 @@ import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import Image from "next/image"; // use Next.js Image for optimization
+import Image from "next/image";
 
 type DiscordGuild = {
   id: string;
@@ -21,10 +21,9 @@ type AdminGuildsResponse = {
 };
 
 export default function DashboardPage() {
-  const { isSignedIn, isLoaded } = useUser(); // removed unused 'user'
+  const { isSignedIn, isLoaded } = useUser();
   const [message, setMessage] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
-
   const [adminGuilds, setAdminGuilds] = useState<AdminGuildsResponse>({
     known: [],
   });
@@ -44,13 +43,11 @@ export default function DashboardPage() {
       try {
         const response = await fetch("/api/discord/getToken", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
 
         const data = await response.json();
-        if (response.ok && data.me && data.me[0]?.accessToken) {
+        if (response.ok && data.me?.[0]?.accessToken) {
           setAccessToken(data.me[0].accessToken);
         } else {
           console.error("Error fetching token:", data.message);
@@ -60,9 +57,7 @@ export default function DashboardPage() {
       }
     };
 
-    if (isSignedIn) {
-      fetchToken();
-    }
+    if (isSignedIn) fetchToken();
   }, [isSignedIn]);
 
   useEffect(() => {
@@ -72,29 +67,23 @@ export default function DashboardPage() {
       try {
         const response = await fetch("/api/discord/user/adminGuilds", {
           method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
         });
 
         const data: AdminGuildsResponse = await response.json();
         if (response.ok) {
           setAdminGuilds(data);
           setIsLoadingGuilds(false);
-
-          const guildIds = data.known.map((guild) => guild.id);
-          console.log(guildIds);
+          console.log(data.known.map((guild) => guild.id));
         } else {
-          console.error("Error fetching admin guilds:", (data as any).message);
+          console.error("Error fetching admin guilds:", (data as any)?.message);
         }
       } catch (error) {
         console.error("Failed to fetch admin guilds:", error);
       }
     };
 
-    if (accessToken) {
-      fetchAdminGuilds();
-    }
+    fetchAdminGuilds();
   }, [accessToken]);
 
   const handleDashboardClick = (guildId: string) => {
@@ -140,91 +129,25 @@ export default function DashboardPage() {
 
               {/* MOBILE */}
               <div className="flex flex-col items-center gap-6 sm:hidden overflow-y-auto max-h-[80vh] w-full">
-                {adminGuilds.known.map((guild: DiscordGuild) => (
-                  <div
+                {adminGuilds.known.map((guild) => (
+                  <GuildCard
                     key={guild.id}
-                    className="flex flex-col justify-center items-center border p-4 rounded-lg shadow-lg w-80 transform transition-all duration-300 hover:scale-105"
-                  >
-                    {guild.icon ? (
-                      <Image
-                        src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                        alt={guild.name}
-                        width={80}
-                        height={80}
-                        className="rounded-full mb-4"
-                      />
-                    ) : (
-                      <Image
-                        src="/default-guild-icon.png"
-                        alt="Default guild icon"
-                        width={80}
-                        height={80}
-                        className="rounded-full mb-4"
-                      />
-                    )}
-                    <h4 className="text-lg sm:text-xl font-semibold mb-2">
-                      {guild.name}
-                    </h4>
-                    <button
-                      onClick={() => handleDashboardClick(guild.id)}
-                      disabled={loadingGuildId === guild.id}
-                      className={`flex items-center justify-center gap-2 p-3 mt-4 text-white rounded-lg transition-all duration-300 transform active:scale-95 shadow-md cursor-pointer ${
-                        loadingGuildId === guild.id
-                          ? "bg-gray-500 cursor-not-allowed"
-                          : "bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg"
-                      }`}
-                    >
-                      {loadingGuildId === guild.id && (
-                        <ClipLoader color="#FFFFFF" size={20} />
-                      )}
-                      <span>Dashboard</span>
-                    </button>
-                  </div>
+                    guild={guild}
+                    loadingGuildId={loadingGuildId}
+                    onClick={() => handleDashboardClick(guild.id)}
+                  />
                 ))}
               </div>
 
               {/* DESKTOP */}
               <div className="hidden sm:flex sm:flex-wrap justify-center gap-6 w-full">
-                {adminGuilds.known.map((guild: DiscordGuild) => (
-                  <div
+                {adminGuilds.known.map((guild) => (
+                  <GuildCard
                     key={guild.id}
-                    className="flex flex-col justify-center items-center border p-4 rounded-lg shadow-lg w-80 transform transition-all duration-300 hover:scale-105"
-                  >
-                    {guild.icon ? (
-                      <Image
-                        src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
-                        alt={guild.name}
-                        width={80}
-                        height={80}
-                        className="rounded-full mb-4"
-                      />
-                    ) : (
-                      <Image
-                        src="/default-guild-icon.png"
-                        alt="Default guild icon"
-                        width={80}
-                        height={80}
-                        className="rounded-full mb-4"
-                      />
-                    )}
-                    <h4 className="text-lg sm:text-xl font-semibold mb-2">
-                      {guild.name}
-                    </h4>
-                    <button
-                      onClick={() => handleDashboardClick(guild.id)}
-                      disabled={loadingGuildId === guild.id}
-                      className={`flex items-center justify-center gap-2 p-3 mt-4 text-white rounded-lg transition-all duration-300 transform active:scale-95 shadow-md cursor-pointer ${
-                        loadingGuildId === guild.id
-                          ? "bg-gray-500 cursor-not-allowed"
-                          : "bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg"
-                      }`}
-                    >
-                      {loadingGuildId === guild.id && (
-                        <ClipLoader color="#FFFFFF" size={20} />
-                      )}
-                      <span>Dashboard</span>
-                    </button>
-                  </div>
+                    guild={guild}
+                    loadingGuildId={loadingGuildId}
+                    onClick={() => handleDashboardClick(guild.id)}
+                  />
                 ))}
               </div>
             </>
@@ -233,6 +156,45 @@ export default function DashboardPage() {
           )}
         </section>
       )}
+    </div>
+  );
+}
+
+type GuildCardProps = {
+  guild: DiscordGuild;
+  loadingGuildId: string | null;
+  onClick: () => void;
+};
+
+function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
+  return (
+    <div className="flex flex-col justify-center items-center border p-4 rounded-lg shadow-lg w-80 transform transition-all duration-300 hover:scale-105">
+      <Image
+        src={
+          guild.icon
+            ? `https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`
+            : "/default-guild-icon.png"
+        }
+        alt={guild.name}
+        width={80}
+        height={80}
+        className="rounded-full mb-4"
+      />
+      <h4 className="text-lg sm:text-xl font-semibold mb-2">{guild.name}</h4>
+      <button
+        onClick={onClick}
+        disabled={loadingGuildId === guild.id}
+        className={`flex items-center justify-center gap-2 p-3 mt-4 text-white rounded-lg transition-all duration-300 transform active:scale-95 shadow-md cursor-pointer ${
+          loadingGuildId === guild.id
+            ? "bg-gray-500 cursor-not-allowed"
+            : "bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg"
+        }`}
+      >
+        {loadingGuildId === guild.id && (
+          <ClipLoader color="#FFFFFF" size={20} />
+        )}
+        <span>Dashboard</span>
+      </button>
     </div>
   );
 }
