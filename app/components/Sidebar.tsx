@@ -62,7 +62,7 @@ const Sidebar = ({
         {isOpen && (
           <button
             onClick={toggleSidebar}
-            className="mb-4 p-2 bg-red-600 text-white rounded"
+            className="mb-4 p-2 bg-[#00f8ff] text-white rounded"
             aria-label="Close Sidebar"
           >
             Close
@@ -75,7 +75,7 @@ const Sidebar = ({
               href={`/dashboard/${guildId}`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Dashboard"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
                   : ""
               }`}
             >
@@ -84,22 +84,22 @@ const Sidebar = ({
           </li>
           <li>
             <Link
-              href="/scrims"
+              href={`/dashboard/${guildId}/staff-overview`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Scrims Overview"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
                   : ""
               }`}
             >
-              Scrims Overview
+              Staff Overview
             </Link>
           </li>
           <li>
             <Link
-              href="/applications"
+              href={`/dashboard/${guildId}/application-overview`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Applications Overview"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
                   : ""
               }`}
             >
@@ -108,10 +108,10 @@ const Sidebar = ({
           </li>
           <li>
             <Link
-              href="/activity-checks"
+              href={`/dashboard/${guildId}/activity-checks/overview`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Activity Checks"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
                   : ""
               }`}
             >
@@ -120,22 +120,10 @@ const Sidebar = ({
           </li>
           <li>
             <Link
-              href="/presets"
-              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
-                current === "Presets"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
-                  : ""
-              }`}
-            >
-              Presets
-            </Link>
-          </li>
-          <li>
-            <Link
-              href="/settings"
+              href={`/dashboard/${guildId}/settings`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
                 current === "Settings"
-                  ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
                   : ""
               }`}
             >
