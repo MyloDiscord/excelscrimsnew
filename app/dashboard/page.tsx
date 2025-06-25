@@ -189,7 +189,7 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
-      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none border border-gray-700"
+      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
     >
       <div className="p-6 flex flex-col items-center">
         <Image
