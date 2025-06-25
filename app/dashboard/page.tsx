@@ -164,8 +164,13 @@ type GuildCardProps = {
 };
 
 function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
+  const isLoading = loadingGuildId === guild.id;
+
   return (
-    <div className="bg-[#1a1a1a] hover:bg-[#2a2a2a] border border-[#2f2f2f] text-white rounded-xl p-6 w-72 flex flex-col items-center shadow-md shadow-black/40 transition-all duration-300 hover:scale-105">
+    <div
+      onClick={onClick}
+      className="flex flex-col justify-center items-center border p-4 rounded-xl shadow-lg w-80 transform transition-all duration-300 hover:scale-105 cursor-pointer bg-[#1f1f1f] hover:bg-[#2a2a2a]"
+    >
       <Image
         src={
           guild.icon
@@ -173,26 +178,23 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
             : "/default-guild-icon.png"
         }
         alt={guild.name}
-        width={72}
-        height={72}
+        width={80}
+        height={80}
         className="rounded-full mb-4"
       />
-      <h4 className="text-lg font-semibold mb-3">{guild.name}</h4>
-      <button
-        onClick={onClick}
-        disabled={loadingGuildId === guild.id}
-        className={`px-5 py-2 rounded-md text-white font-medium transition-all duration-300 transform active:scale-95 ${
-          loadingGuildId === guild.id
-            ? "bg-gray-600 cursor-not-allowed"
-            : "bg-red-500 hover:bg-red-600 hover:shadow-lg hover:scale-105"
+      <h4 className="text-lg sm:text-xl font-semibold mb-2 text-white">
+        {guild.name}
+      </h4>
+      <div
+        className={`flex items-center justify-center gap-2 p-3 mt-2 text-white rounded-lg transition-all duration-300 transform active:scale-95 shadow-md ${
+          isLoading
+            ? "bg-gray-500"
+            : "bg-red-500 hover:bg-red-600 hover:scale-105 hover:shadow-lg"
         }`}
       >
-        {loadingGuildId === guild.id ? (
-          <ClipLoader color="#FFFFFF" size={16} />
-        ) : (
-          "Dashboard"
-        )}
-      </button>
+        {isLoading && <ClipLoader color="#FFFFFF" size={20} />}
+        <span>Dashboard</span>
+      </div>
     </div>
   );
 }
