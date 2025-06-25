@@ -25,7 +25,6 @@ export default function HomePage() {
       </div>
 
       <div className="relative z-10 flex flex-col justify-center items-center text-white px-4 min-h-screen">
-        {/* Login Button */}
         <a
           href={""}
           onMouseEnter={() => setHovered(true)}
@@ -58,7 +57,6 @@ export default function HomePage() {
           Login With Epic
         </a>
 
-        {/* Subtext */}
         <p
           className={`mt-6 max-w-md text-center text-sm text-gray-400 transition-all duration-300 ease-in-out
           ${
@@ -73,7 +71,6 @@ export default function HomePage() {
           By signing in, you&apos;ll unlock access to our scrims and events.
         </p>
 
-        {/* Socials Button */}
         <button
           onClick={() => setShowSocials(!showSocials)}
           className="mt-10 bg-[#1e1e1e] hover:bg-[#292929] text-gray-300 font-medium px-10 py-3 rounded-xl transition-all duration-300 ease-in-out shadow-md shadow-black/40"
@@ -81,7 +78,6 @@ export default function HomePage() {
           Socials
         </button>
 
-        {/* Social Links */}
         <div
           className={`flex flex-col items-center gap-3 mt-4 transition-all duration-300 ease-in-out
           ${
@@ -92,14 +88,14 @@ export default function HomePage() {
           style={{ willChange: "opacity, transform" }}
         >
           <a
-            href="https://twitter.com"
+            href="https://x.com/@NexoScrims"
             target="_blank"
             className="bg-[#1d1f23] hover:bg-[#2a2d34] text-white px-8 py-2 rounded-lg shadow shadow-black/40 transition-all duration-200"
           >
             Twitter
           </a>
           <a
-            href="https://discord.gg"
+            href="https://discord.gg/scrims"
             target="_blank"
             className="bg-[#1d1f23] hover:bg-[#2a2d34] text-white px-8 py-2 rounded-lg shadow shadow-black/40 transition-all duration-200"
           >
