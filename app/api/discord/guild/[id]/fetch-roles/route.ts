@@ -2,6 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 
 const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
+type DiscordRoleFromApi = {
+    id: string;
+    name: string;
+    position: number;
+    color: number | null;
+};
+
+type FormattedRole = {
+    id: string;
+    name: string;
+    position: number;
+    color: number;
+};
+
 export async function GET(req: NextRequest) {
     try {
         const segments = req.nextUrl.pathname.split("/").filter(Boolean);
@@ -25,11 +39,11 @@ export async function GET(req: NextRequest) {
             );
         }
 
-        const roles = await res.json();
+        const roles: DiscordRoleFromApi[] = await res.json();
 
-        const formattedRoles = roles
-            .sort((a: any, b: any) => b.position - a.position)
-            .map((role: any) => ({
+        const formattedRoles: FormattedRole[] = roles
+            .sort((a, b) => b.position - a.position)
+            .map((role) => ({
                 id: role.id,
                 name: role.name,
                 position: role.position,
