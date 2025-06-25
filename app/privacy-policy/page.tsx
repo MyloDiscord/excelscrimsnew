@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link"; // <-- import Link
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export default function HomePage() {
@@ -38,12 +39,11 @@ export default function HomePage() {
           community features.
         </p>
 
-        <a
-          href="/"
-          className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-md transition"
-        >
-          Log In with Epic Account
-        </a>
+        <Link href="/">
+          <a className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-md transition">
+            Log In with Epic Account
+          </a>
+        </Link>
       </div>
     </div>
   );
