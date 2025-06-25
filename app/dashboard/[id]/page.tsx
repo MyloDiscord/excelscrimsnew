@@ -1,5 +1,6 @@
 "use client";
 
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
@@ -73,12 +74,12 @@ export default function GuildDashboardPage() {
     }
 
     checkAccess();
-
   }, [guildId]);
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white">
+      <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white overflow-hidden">
+        <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
         <ClipLoader color="#FF4B3E" size={50} />
       </div>
     );
@@ -86,7 +87,8 @@ export default function GuildDashboardPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white text-xl">
+      <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white text-xl overflow-hidden">
+        <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
         {error}
       </div>
     );
@@ -94,15 +96,17 @@ export default function GuildDashboardPage() {
 
   if (unauthorized) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-black text-white text-xl">
+      <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white text-xl overflow-hidden">
+        <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
         You are not authorized to view this page.
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen text-white bg-black p-6">
-      Dashboard for guild: {guildId}
+    <div className="relative min-h-screen text-white bg-[#121212] p-6 overflow-hidden">
+      <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
+      <div className="relative z-10">Dashboard for guild: {guildId}</div>
     </div>
   );
 }
