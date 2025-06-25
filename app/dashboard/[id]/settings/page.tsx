@@ -216,7 +216,10 @@ export default function SettingsGuildPage() {
                     </button>
                   </DropdownMenuTrigger>
 
-                  <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md">
+                  <DropdownMenuContent
+                    className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
+             scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
+                  >
                     <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
                       Available Roles
                     </DropdownMenuLabel>
