@@ -12,7 +12,7 @@ type DiscordGuild = {
   permissions: string;
   approximate_presence_count?: number;
   approximate_offline_count?: number;
-  icon?: string | null; // for avatar URL if you have it
+  icon?: string | null;
 };
 
 type AdminGuildsResponse = {
