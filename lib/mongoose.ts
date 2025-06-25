@@ -2,6 +2,7 @@ import { ServerApiVersion } from 'mongodb';
 import mongoose from 'mongoose';
 
 const uri = process.env.MONGODB_URI || "mongodb+srv://mylobusiness1:Fsv4o3xPPeMqjo7I@excel-website.mhgzda3.mongodb.net/?retryWrites=true&w=majority&appName=Excel-Website";
+
 if (!uri) {
     throw new Error('Invalid/Missing environment variable: "MONGODB_URI"');
 }
@@ -20,4 +21,5 @@ async function connect() {
     });
 }
 
-export default { connect, mongoose };
+const db = { connect, mongoose };
+export default db;
