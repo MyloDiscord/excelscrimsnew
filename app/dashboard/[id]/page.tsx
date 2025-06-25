@@ -62,7 +62,7 @@ export default function GuildDashboardPage() {
         } else {
           setUnauthorized(true);
         }
-      } catch (e) {
+      } catch {
         setError("Error checking access");
       } finally {
         setLoading(false);

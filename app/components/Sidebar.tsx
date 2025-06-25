@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ChevronRight } from "lucide-react";
+import Image from "next/image";
 
 const Sidebar = ({
   current,
@@ -38,10 +39,12 @@ const Sidebar = ({
       >
         <div className="flex items-center mb-6">
           {guildAvatar ? (
-            <img
+            <Image
               src={guildAvatar}
               alt={`${guildName}'s avatar`}
-              className="w-12 h-12 rounded-full shadow-lg mr-3"
+              width={48}
+              height={48}
+              className="rounded-full shadow-lg mr-3"
             />
           ) : (
             <div className="w-12 h-12 rounded-full bg-gray-700 flex items-center justify-center mr-3">
