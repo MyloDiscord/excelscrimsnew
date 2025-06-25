@@ -19,7 +19,7 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 
-import { Check } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 type DiscordGuild = {
   id: string;
@@ -49,6 +49,7 @@ export default function SettingsGuildPage() {
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
@@ -104,6 +105,7 @@ export default function SettingsGuildPage() {
   };
 
   const handleSave = async () => {
+    setIsSaving(true);
     try {
       const res = await fetch(`/api/discord/guild/${guildId}/set-staff-roles`, {
         method: "POST",
@@ -115,6 +117,8 @@ export default function SettingsGuildPage() {
       console.log("Saved staff roles:", data);
     } catch (err) {
       console.error("Error saving staff roles:", err);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -175,7 +179,23 @@ export default function SettingsGuildPage() {
                 </Button>
               </AlertDialogTrigger>
 
-              <AlertDialogContent className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg mx-auto p-6">
+              <AlertDialogContent className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg mx-auto p-6 relative">
+                {/* Close (X) button */}
+                <button
+                  aria-label="Close dialog"
+                  className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors"
+                  onClick={() => {
+                    const cancelBtn = document.querySelector(
+                      "button[aria-label='Cancel']"
+                    );
+                    if (cancelBtn && cancelBtn instanceof HTMLButtonElement) {
+                      cancelBtn.click();
+                    }
+                  }}
+                >
+                  <X className="w-5 h-5 text-gray-400 hover:text-gray-200" />
+                </button>
+
                 <AlertDialogHeader>
                   <AlertDialogTitle>
                     <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
@@ -197,6 +217,7 @@ export default function SettingsGuildPage() {
                         checked={selectedRoles.includes(role.id)}
                         onChange={() => toggleRole(role.id)}
                         className="peer hidden"
+                        disabled={isSaving}
                       />
                       <span
                         className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
@@ -231,18 +252,29 @@ export default function SettingsGuildPage() {
                 <AlertDialogFooter className="mt-10 flex justify-end gap-4">
                   <AlertDialogCancel>
                     <Button
+                      aria-label="Cancel"
                       variant="outline"
                       className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md"
+                      disabled={isSaving}
                     >
                       Cancel
                     </Button>
                   </AlertDialogCancel>
                   <AlertDialogAction>
                     <Button
+                      aria-label="Save"
                       onClick={handleSave}
-                      className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md"
+                      className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md flex items-center gap-2"
+                      disabled={isSaving}
                     >
-                      Save
+                      {isSaving ? (
+                        <>
+                          <ClipLoader size={18} color="#d1d5db" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save"
+                      )}
                     </Button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
