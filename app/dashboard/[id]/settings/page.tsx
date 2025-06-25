@@ -124,5 +124,5 @@ export default function SettingsGuildPage() {
         <hr className="border-gray-600 mb-6 block md:hidden" />
       </main>
     </div>
-  );
+  ); 
 }
