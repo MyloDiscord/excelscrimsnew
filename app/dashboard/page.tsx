@@ -154,8 +154,8 @@ export default function DashboardPage() {
             const data = await res.json();
 
             newCounts[guild.id] = {
-              online: data.onlineCount ?? 0,
-              offline: data.offlineCount ?? 0,
+              online: data.approximate_presence_count ?? 0,
+              offline: data.approximate_offline_count ?? 0,
             };
           } catch (err) {
             console.error(`Error fetching members for guild ${guild.id}:`, err);
