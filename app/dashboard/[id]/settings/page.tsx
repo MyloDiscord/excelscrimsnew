@@ -151,56 +151,89 @@ export default function SettingsGuildPage() {
         />
       )}
 
-      <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6">
+      <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6 max-w-3xl mx-auto w-full">
         <h1 className="text-5xl font-bold mb-6 text-center md:text-left">
           Settings
         </h1>
 
-        <Card className="w-full max-w-xl bg-[#1c1c1c] border border-neutral-800">
+        <Card className="w-full bg-[#1c1c1c] border border-neutral-800 shadow-xl rounded-xl">
           <CardHeader>
-            <CardTitle>Set Discord Staff Roles</CardTitle>
+            <CardTitle className="text-xl font-semibold text-pink-400">
+              Set Discord Staff Roles
+            </CardTitle>
           </CardHeader>
           <CardContent>
             <AlertDialog>
               <AlertDialogTrigger>
-                <Button className="w-full">Set Staff Roles</Button>
+                <Button className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:brightness-110 transition-all font-semibold shadow-md">
+                  Set Staff Roles
+                </Button>
               </AlertDialogTrigger>
 
-              <AlertDialogContent className="bg-[#1c1c1c] text-white border border-neutral-700">
+              <AlertDialogContent className="bg-[#181818] border border-pink-600 text-white rounded-xl shadow-2xl max-w-lg mx-auto">
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Select Staff Roles</AlertDialogTitle>
+                  <AlertDialogTitle>
+                    <div className="text-2xl font-bold mb-6 text-pink-400">
+                      Select Staff Roles
+                    </div>
+                  </AlertDialogTitle>
                 </AlertDialogHeader>
 
-                <div className="space-y-2 max-h-64 overflow-y-auto">
+                <div className="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scroll">
                   {roles.map((role) => (
                     <label
                       key={role.id}
-                      className="flex items-center gap-2 cursor-pointer"
+                      htmlFor={`role-${role.id}`}
+                      className="flex items-center gap-4 p-2 hover:bg-[#2a2a2a] rounded-md cursor-pointer transition-colors select-none"
                     >
                       <input
                         type="checkbox"
+                        id={`role-${role.id}`}
                         checked={selectedRoles.includes(role.id)}
                         onChange={() => toggleRole(role.id)}
+                        className="peer hidden"
                       />
                       <span
-                        className="inline-block w-3 h-3 rounded-full"
+                        className="w-6 h-6 border-2 border-white rounded-sm flex items-center justify-center transition-colors peer-checked:bg-pink-500 peer-checked:border-pink-500"
+                        aria-hidden="true"
+                      >
+                        <svg
+                          className="w-4 h-4 text-black"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                        >
+                          <path d="M5 13l4 4L19 7" />
+                        </svg>
+                      </span>
+
+                      <span
+                        className="inline-block w-4 h-4 rounded-full flex-shrink-0"
                         style={{
                           backgroundColor: `#${role.color
                             .toString(16)
                             .padStart(6, "0")}`,
                         }}
                       />
-                      <span>{role.name}</span>
+                      <span className="text-sm font-medium">{role.name}</span>
                     </label>
                   ))}
                 </div>
 
-                <AlertDialogFooter className="mt-6 flex justify-end gap-3">
+                <AlertDialogFooter className="mt-8 flex justify-end gap-4">
                   <AlertDialogCancel>
-                    <Button variant="outline">Cancel</Button>
+                    <Button variant="outline" className="border-neutral-600">
+                      Cancel
+                    </Button>
                   </AlertDialogCancel>
                   <AlertDialogAction>
-                    <Button onClick={handleSave}>Save</Button>
+                    <Button
+                      onClick={handleSave}
+                      className="bg-pink-600 hover:bg-pink-700 transition-colors"
+                    >
+                      Save
+                    </Button>
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>
