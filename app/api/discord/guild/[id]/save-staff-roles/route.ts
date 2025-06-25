@@ -3,6 +3,13 @@ import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/mongoose";
 import GuildSettings from "@/schemas/guildSettings";
 
+interface StaffRole {
+    id: string;
+    name: string;
+    position: number;
+    color: number;
+}
+
 export async function POST(req: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
@@ -10,7 +17,7 @@ export async function POST(req: NextRequest) {
     }
 
     await db.connect();
-    console.log('db connected - processing...');
+    console.log("db connected - processing...");
 
     try {
         const segments = req.nextUrl.pathname.split("/").filter(Boolean);
@@ -26,7 +33,7 @@ export async function POST(req: NextRequest) {
         if (
             !Array.isArray(staffRoles) ||
             staffRoles.some(
-                (r: any) =>
+                (r: StaffRole) =>
                     !r.id || !r.name || typeof r.position !== "number" || typeof r.color !== "number"
             )
         ) {
@@ -44,7 +51,11 @@ export async function POST(req: NextRequest) {
         );
 
         return NextResponse.json({ message: "Staff roles saved successfully", updated });
-    } catch (error: any) {
-        return NextResponse.json({ message: "Failed to save staff roles", error: error.message }, { status: 500 });
+    } catch (error) {
+        let errorMessage = "Failed to save staff roles";
+        if (error && typeof error === "object" && "message" in error) {
+            errorMessage = (error as { message?: string }).message || errorMessage;
+        }
+        return NextResponse.json({ message: errorMessage }, { status: 500 });
     }
 }
