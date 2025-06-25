@@ -43,8 +43,8 @@ export default function HomePage() {
         <h2 className="text-2xl font-semibold mt-8 mb-4">Get Started</h2>
         <p className="mb-6 text-lg leading-relaxed">
           To participate in our scrims, simply log in with your Epic account
-          below. Once verified, you'll gain access to our Discord-based events
-          and leaderboard tracking.
+          below. Once verified, you&apos;ll gain access to our Discord-based
+          events and leaderboard tracking.
         </p>
 
         <Link
