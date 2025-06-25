@@ -404,22 +404,20 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className={`fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 px-4 py-3 rounded-md shadow-lg animate-fade-in-out max-w-[90vw] sm:max-w-md
-      ${
-        notificationType === "success"
-          ? "bg-green-700/20 text-green-400"
-          : "bg-red-700/20 text-red-400"
-      }`}
-          style={{ zIndex: 9999 }}
+          className={`fixed top-4 right-4 sm:right-8 w-[90vw] sm:w-auto max-w-sm flex items-center gap-2 px-4 py-3 rounded-md shadow-lg animate-fade-in-out z-[9999] ${
+            notificationType === "success"
+              ? "bg-green-700/20 text-green-400"
+              : "bg-red-700/20 text-red-400"
+          }`}
           role="alert"
           aria-live="assertive"
         >
           {notificationType === "success" ? (
-            <Check className="w-5 h-5" />
+            <Check className="w-5 h-5 flex-shrink-0" />
           ) : (
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 flex-shrink-0" />
           )}
-          <span className="font-semibold truncate">{notification}</span>
+          <span className="font-semibold break-words">{notification}</span>
         </div>
       )}
     </div>
