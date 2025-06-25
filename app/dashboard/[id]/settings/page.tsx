@@ -8,16 +8,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-} from "@/components/ui/dialog";
-
-import { Check, X } from "lucide-react";
+import { Dialog, DialogTrigger } from "@/components/ui/dialog";
 
 type DiscordGuild = {
   id: string;
@@ -45,9 +36,6 @@ export default function SettingsGuildPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
-  const [roles, setRoles] = useState<DiscordRole[]>([]);
-  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
-  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
@@ -78,48 +66,6 @@ export default function SettingsGuildPage() {
     checkAccess();
   }, [guildId]);
 
-  useEffect(() => {
-    async function fetchRoles() {
-      if (!guildId || typeof guildId !== "string") return;
-
-      try {
-        const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
-        const data = await res.json();
-        setRoles(data.roles || []);
-      } catch {
-        console.warn("Failed to fetch roles");
-      }
-    }
-
-    fetchRoles();
-  }, [guildId]);
-
-  const toggleRole = (roleId: string) => {
-    setSelectedRoles((prev) =>
-      prev.includes(roleId)
-        ? prev.filter((id) => id !== roleId)
-        : [...prev, roleId]
-    );
-  };
-
-  const handleSave = async () => {
-    setIsSaving(true);
-    try {
-      const res = await fetch(`/api/discord/guild/${guildId}/set-staff-roles`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ staffRoles: selectedRoles }),
-      });
-
-      const data = await res.json();
-      console.log("Saved staff roles:", data);
-    } catch (err) {
-      console.error("Error saving staff roles:", err);
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white overflow-hidden">
@@ -137,8 +83,6 @@ export default function SettingsGuildPage() {
       </div>
     );
   }
-
-  const sortedRoles = [...roles].sort((a, b) => b.position - a.position);
 
   return (
     <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
