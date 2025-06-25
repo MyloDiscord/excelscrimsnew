@@ -17,11 +17,26 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 type DiscordGuild = {
   id: string;
   name: string;
   permissions: string;
   icon?: string | null;
+};
+
+type DiscordRole = {
+  id: string;
+  name: string;
+  position: number;
 };
 
 type AdminGuildsResponse = {
@@ -36,6 +51,8 @@ export default function SettingsGuildPage() {
   const [error, setError] = useState<string | null>(null);
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
+  const [roles, setRoles] = useState<DiscordRole[]>([]);
+  const [selectedRole, setSelectedRole] = useState<DiscordRole | null>(null);
 
   useEffect(() => {
     async function checkAccess() {
@@ -63,7 +80,20 @@ export default function SettingsGuildPage() {
       }
     }
 
+    async function fetchRoles() {
+      if (!guildId || typeof guildId !== "string") return;
+      try {
+        const res = await fetch(`/api/discord/guild/roles?id=${guildId}`);
+        const data: DiscordRole[] = await res.json();
+        const sortedRoles = data.sort((a, b) => b.position - a.position);
+        setRoles(sortedRoles);
+      } catch (err) {
+        console.error("Failed to fetch roles:", err);
+      }
+    }
+
     checkAccess();
+    fetchRoles();
   }, [guildId]);
 
   if (loading) {
@@ -125,10 +155,32 @@ export default function SettingsGuildPage() {
                   <DialogTitle>Set Discord Staff Roles</DialogTitle>
                   <DialogDescription>
                     Choose which Discord roles should be recognized as staff.
-                    These roles will be used for moderation and admin access in
-                    your server.
                   </DialogDescription>
                 </DialogHeader>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button className="mt-4 bg-gray-800 hover:bg-gray-700 w-full">
+                      {selectedRole ? selectedRole.name : "Select a Role"}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto">
+                    <DropdownMenuLabel>Available Roles</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {roles.map((role) => (
+                      <DropdownMenuItem
+                        key={role.id}
+                        onClick={() => {
+                          setSelectedRole(role);
+                          console.log("Selected role:", role);
+                        }}
+                        className="hover:bg-gray-700 cursor-pointer"
+                      >
+                        {role.name}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </DialogContent>
             </Dialog>
           </CardContent>
