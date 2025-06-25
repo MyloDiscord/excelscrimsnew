@@ -1,13 +1,12 @@
 "use client";
 
-import { useRouter, useParams } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { checkUserIsGuildAdmin } from "@/lib/checkUserIsGuildAdmin";
 import ClipLoader from "react-spinners/ClipLoader";
 
 export default function GuildDashboardPage() {
   const { guildId } = useParams();
-  const router = useRouter();
 
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
@@ -46,7 +45,6 @@ export default function GuildDashboardPage() {
 
   return (
     <div className="min-h-screen text-white bg-black p-6">
-      {/* Your guild dashboard content here */}
       Dashboard for guild: {guildId}
     </div>
   );
