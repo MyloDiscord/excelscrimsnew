@@ -28,3 +28,5 @@ if (process.env.NODE_ENV === "development") {
 } else {
     client = new MongoClient(uri, options);
 }
+
+export const mongoClient = client;
