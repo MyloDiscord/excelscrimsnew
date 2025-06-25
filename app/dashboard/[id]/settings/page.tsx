@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import Sidebar from "../../../components/Sidebar";
@@ -59,6 +59,10 @@ export default function SettingsGuildPage() {
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const [dropdownWidth, setDropdownWidth] = useState<number | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     async function checkAccess() {
@@ -90,18 +94,14 @@ export default function SettingsGuildPage() {
       if (!guildId || typeof guildId !== "string") return;
       try {
         setError(null);
-        console.log("Fetching roles for guildId:", guildId);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         if (!res.ok) {
-          console.error("Failed to fetch roles: HTTP status", res.status);
           setError("Failed to fetch roles");
           return;
         }
         const data: DiscordRole[] = await res.json();
-        console.log("Roles API response:", data);
         setRoles(data);
       } catch {
-        console.error("Failed to fetch roles");
         setError("Failed to fetch roles");
       }
     }
@@ -109,6 +109,13 @@ export default function SettingsGuildPage() {
     checkAccess();
     fetchRoles();
   }, [guildId]);
+
+  // Measure trigger button width for dropdown width
+  useEffect(() => {
+    if (triggerRef.current) {
+      setDropdownWidth(triggerRef.current.offsetWidth);
+    }
+  }, [dropdownOpen]);
 
   const toggleRole = (role: DiscordRole) => {
     const alreadySelected = selectedRoles.find((r) => r.id === role.id);
@@ -205,6 +212,7 @@ export default function SettingsGuildPage() {
                 <DropdownMenu onOpenChange={(open) => setDropdownOpen(open)}>
                   <DropdownMenuTrigger asChild>
                     <button
+                      ref={triggerRef}
                       type="button"
                       className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                       aria-label="Select Staff Roles"
@@ -219,8 +227,15 @@ export default function SettingsGuildPage() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent
-                    className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
-scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
+                    style={{ width: dropdownWidth }}
+                    className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
+                    scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
+                    transition-opacity duration-300 ease-in-out
+                    ${
+                      dropdownOpen
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-2 pointer-events-none"
+                    }`}
                   >
                     <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
                       Available Roles
@@ -239,15 +254,11 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                             e.preventDefault();
                             toggleRole(role);
                           }}
-                          className={`
-          flex items-center justify-between px-4 py-2 cursor-pointer rounded-md
-          transition-colors duration-150
-          ${
-            isSelected
-              ? "bg-[#1a1a1a] text-white shadow-md"
-              : "hover:bg-gray-700 text-gray-300"
-          }
-        `}
+                          className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
+                            isSelected
+                              ? "bg-[#1a1a1a] text-white shadow-md"
+                              : "hover:bg-gray-700 text-gray-300"
+                          }`}
                         >
                           <div className="flex items-center gap-3">
                             <span
@@ -295,12 +306,12 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                       );
                     })}
 
-                    <Button
+                    <button
                       onClick={() => setSelectedRoles([])}
-                      className="ml-4 bg-red-700/60 hover:bg-red-700/80 text-white transition px-4 py-2 rounded-md text-sm font-semibold cursor-pointer"
+                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
                     >
                       Clear All
-                    </Button>
+                    </button>
                   </div>
                 )}
 
@@ -308,8 +319,7 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                   <button
                     onClick={handleCancel}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-    bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     Cancel
@@ -318,8 +328,7 @@ scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                   <button
                     onClick={handleSave}
                     disabled={saving}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-    bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? (
                       "Saving..."
