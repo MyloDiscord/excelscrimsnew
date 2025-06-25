@@ -19,12 +19,10 @@ export default function HomePage() {
 
   return (
     <div className="relative min-h-screen bg-[#121212] overflow-hidden">
-      {/* Background Beams */}
       <div className="absolute inset-0 z-0 pointer-events-none">
         <BackgroundBeams />
       </div>
 
-      {/* Foreground Content */}
       <div className="relative z-10 flex flex-col justify-center items-center text-white px-4 min-h-screen">
         <div className="mb-10">
           <Image
@@ -72,7 +70,7 @@ export default function HomePage() {
           `}
           style={{ willChange: "opacity, transform" }}
         >
-          By logging in, you will be able to participate in our scrims.
+          By signing in, you'll unlock access to our scrims and events.
         </p>
       </div>
     </div>
