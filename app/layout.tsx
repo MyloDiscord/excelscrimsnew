@@ -11,7 +11,6 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,23 +35,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const pathname = usePathname();
-
-  const getHeaderText = (path: string) => {
-    switch (true) {
-      case path.startsWith("/dashboard"):
-        return "Dashboard";
-      case path === "/":
-        return "Welcome to Excel Scrims!";
-      case path.startsWith("/profile"):
-        return "Your Profile";
-      default:
-        return "Excel Scrims";
-    }
-  };
-
-  const headerText = getHeaderText(pathname ?? "/");
-
   return (
     <ClerkProvider>
       <html lang="en">
@@ -72,7 +54,7 @@ export default function RootLayout({
 
           <SpeedInsights />
           <Analytics />
-        </body>
+        </body> 
       </html>
     </ClerkProvider>
   );
