@@ -180,11 +180,11 @@ export default function SettingsGuildPage() {
               </AlertDialogTrigger>
 
               <AlertDialogContent className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50 p-6">
-                <div className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg w-full relative p-6">
+                <div className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-auto relative p-6">
                   {/* Close (X) button */}
                   <button
                     aria-label="Close dialog"
-                    className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors"
+                    className="absolute top-4 right-4 p-1 rounded hover:bg-gray-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
                     onClick={() => {
                       const cancelBtn = document.querySelector(
                         "button[aria-label='Cancel']"
@@ -255,7 +255,7 @@ export default function SettingsGuildPage() {
                       <Button
                         aria-label="Cancel"
                         variant="outline"
-                        className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md"
+                        className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400"
                         disabled={isSaving}
                       >
                         Cancel
@@ -265,7 +265,7 @@ export default function SettingsGuildPage() {
                       <Button
                         aria-label="Save"
                         onClick={handleSave}
-                        className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md flex items-center gap-2"
+                        className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md px-5 py-2 min-w-[90px] flex items-center justify-center gap-2 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
                         disabled={isSaving}
                       >
                         {isSaving ? (
