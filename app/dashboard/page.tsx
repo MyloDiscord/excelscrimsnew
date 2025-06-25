@@ -1,6 +1,5 @@
 "use client";
 
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { GridBackgroundDemo } from "@/components/ui/grid-background";
 
 import { useUser } from "@clerk/nextjs";
