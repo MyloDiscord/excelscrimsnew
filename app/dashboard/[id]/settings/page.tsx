@@ -55,6 +55,7 @@ export default function SettingsGuildPage() {
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
+  const [savedRoles, setSavedRoles] = useState<DiscordRole[]>([]); // NEW state for saved roles
   const [selectedRoles, setSelectedRoles] = useState<DiscordRole[]>([]);
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
@@ -70,7 +71,7 @@ export default function SettingsGuildPage() {
   const [notification, setNotification] = useState<string | null>(null);
 
   useEffect(() => {
-    async function checkAccess() {
+    async function loadAllData() {
       if (!guildId || typeof guildId !== "string") {
         setError("Invalid guild ID.");
         setLoading(false);
@@ -78,71 +79,60 @@ export default function SettingsGuildPage() {
       }
 
       try {
-        const res = await fetch("/api/discord/user/adminGuilds");
-        const data: AdminGuildsResponse = await res.json();
+        // Fetch admin guilds & check access
+        const resGuilds = await fetch("/api/discord/user/adminGuilds");
+        const dataGuilds: AdminGuildsResponse = await resGuilds.json();
 
-        setAdminGuilds(data.known);
-        const foundGuild = data.known.find((g) => g.id === guildId);
-        if (foundGuild) {
-          setCurrentGuild(foundGuild);
-        } else {
+        setAdminGuilds(dataGuilds.known);
+        const foundGuild = dataGuilds.known.find((g) => g.id === guildId);
+        if (!foundGuild) {
           setUnauthorized(true);
+          setLoading(false);
+          return;
+        }
+        setCurrentGuild(foundGuild);
+
+        // Fetch roles
+        const resRoles = await fetch(
+          `/api/discord/guild/${guildId}/fetch-roles`
+        );
+        if (!resRoles.ok) {
+          setNotificationType("error");
+          setError("Failed to fetch roles");
+          setLoading(false);
+          return;
+        }
+        const rolesData: DiscordRole[] = await resRoles.json();
+        setRoles(rolesData);
+
+        // Fetch saved staff roles
+        const resSaved = await fetch(
+          `/api/discord/guild/${guildId}/get-staff-roles`
+        );
+        if (!resSaved.ok) throw new Error("Failed to fetch saved staff roles");
+        const savedData = await resSaved.json();
+        if (Array.isArray(savedData.staffRoles)) {
+          setSavedRoles(savedData.staffRoles);
+        } else {
+          setSavedRoles([]);
         }
       } catch {
         setNotificationType("error");
-        setError("Error checking access");
+        setError("Error loading data");
       } finally {
         setLoading(false);
       }
     }
 
-    async function fetchRoles() {
-      if (!guildId || typeof guildId !== "string") return;
-      try {
-        setError(null);
-        const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
-        if (!res.ok) {
-          setNotificationType("error");
-          setError("Failed to fetch roles");
-          return;
-        }
-        const data: DiscordRole[] = await res.json();
-        setRoles(data);
-      } catch {
-        setNotificationType("error");
-        setError("Failed to fetch roles");
-      }
-    }
-
-    checkAccess();
-    fetchRoles();
+    loadAllData();
   }, [guildId]);
 
-  // Fetch saved staff roles when dialog opens and set selectedRoles
+  // When dialog opens, set selectedRoles from savedRoles immediately
   useEffect(() => {
-    if (!open) return;
-
-    async function fetchSavedStaffRoles() {
-      if (!guildId) return;
-      try {
-        const res = await fetch(
-          `/api/discord/guild/${guildId}/get-staff-roles`
-        );
-        if (!res.ok) throw new Error("Failed to fetch saved staff roles");
-        const data = await res.json();
-        if (Array.isArray(data.staffRoles)) {
-          setSelectedRoles(data.staffRoles);
-        } else {
-          setSelectedRoles([]);
-        }
-      } catch {
-        setNotificationType("error");
-        setNotification("Failed to load saved roles"); // Fix here: setNotification for the message, not setNotificationType
-      }
+    if (open) {
+      setSelectedRoles(savedRoles);
     }
-
-    fetchSavedStaffRoles();
-  }, [open, guildId]);
+  }, [open, savedRoles]);
 
   // Measure trigger button width for dropdown width
   useEffect(() => {
