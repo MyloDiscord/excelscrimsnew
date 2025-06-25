@@ -18,7 +18,7 @@ type DiscordGuild = {
 type DiscordRole = {
   id: string;
   name: string;
-  color: number; // Discord color as int
+  color: number;
 };
 
 type AdminGuildsResponse = {
@@ -50,7 +50,11 @@ export default function SettingsGuildPage() {
 
         setAdminGuilds(data.known);
         const foundGuild = data.known.find((g) => g.id === guildId);
-        foundGuild ? setCurrentGuild(foundGuild) : setUnauthorized(true);
+        if (foundGuild) {
+          setCurrentGuild(foundGuild);
+        } else {
+          setUnauthorized(true);
+        }
       } catch {
         setError("Error checking access");
       } finally {
