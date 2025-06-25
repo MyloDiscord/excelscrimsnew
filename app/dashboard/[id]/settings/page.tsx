@@ -299,7 +299,7 @@ export default function SettingsGuildPage() {
                     onClick={handleCancel}
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-                      bg-red-700 bg-opacity-20 hover:bg-opacity-40 text-red-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+    bg-red-700/60 hover:bg-red-700/80 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     Cancel
@@ -309,7 +309,7 @@ export default function SettingsGuildPage() {
                     onClick={handleSave}
                     disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-                      bg-green-700 bg-opacity-20 hover:bg-opacity-40 text-green-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
+    bg-green-600/60 hover:bg-green-600/80 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     {saving ? (
                       "Saving..."
