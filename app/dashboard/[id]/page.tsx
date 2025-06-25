@@ -4,6 +4,7 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
+import Sidebar from "../../components/Sidebar";
 
 type DiscordGuild = {
   id: string;
@@ -11,6 +12,7 @@ type DiscordGuild = {
   permissions: string;
   approximate_presence_count?: number;
   approximate_offline_count?: number;
+  icon?: string | null; // for avatar URL if you have it
 };
 
 type AdminGuildsResponse = {
@@ -25,6 +27,9 @@ export default function GuildDashboardPage() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  // Store current guild info to pass to Sidebar
+  const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
+
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
@@ -34,39 +39,30 @@ export default function GuildDashboardPage() {
         return;
       }
 
-      console.log("Checking access for guildId:", guildId);
-
       try {
         const res = await fetch("/api/discord/user/adminGuilds", {
           headers: { "Content-Type": "application/json" },
         });
 
-        console.log("API response status:", res.status);
-
         if (!res.ok) {
           const text = await res.text();
-          console.error("Failed to fetch guilds, response text:", text);
-          setError("Failed to fetch guilds");
+          setError("Failed to fetch guilds: " + text);
           setLoading(false);
           return;
         }
 
         const data: AdminGuildsResponse = await res.json();
 
-        console.log("Received guild data:", data);
-
-        if (data.known.some((guild) => guild.id === guildId)) {
-          console.log("User is admin of this guild");
+        const foundGuild = data.known.find((guild) => guild.id === guildId);
+        if (foundGuild) {
           setUnauthorized(false);
+          setCurrentGuild(foundGuild);
         } else if (data.unknown?.some((guild) => guild.id === guildId)) {
-          console.log("User is not admin (guild in unknown)");
           setUnauthorized(true);
         } else {
-          console.log("Guild not found in known or unknown");
           setUnauthorized(true);
         }
       } catch (e) {
-        console.error("Error checking access:", e);
         setError("Error checking access");
       } finally {
         setLoading(false);
@@ -104,10 +100,25 @@ export default function GuildDashboardPage() {
   }
 
   return (
-    <div className="relative min-h-screen text-white bg-[#121212] p-6 overflow-hidden">
+    <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
       <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
-      <h1 className="relative z-10 text-5xl font-bold">Dashboard</h1>
-      <hr className="relative z-10 mt-4 border-t border-gray-600 w-full max-w-4xl" />
+
+      {currentGuild && (
+        <Sidebar
+          current="Dashboard"
+          guildName={currentGuild.name}
+          guildAvatar={
+            currentGuild.icon
+              ? `https://cdn.discordapp.com/icons/${currentGuild.id}/${currentGuild.icon}.png`
+              : null
+          }
+        />
+      )}
+
+      <main className="relative z-10 flex-grow p-6">
+        <h1 className="text-5xl font-bold mb-4">Dashboard</h1>
+        <p>Guild ID: {guildId}</p>
+      </main>
     </div>
   );
 }
