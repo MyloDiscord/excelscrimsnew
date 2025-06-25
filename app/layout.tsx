@@ -54,7 +54,7 @@ export default function RootLayout({
 
           <SpeedInsights />
           <Analytics />
-        </body>
+        </body> 
       </html>
     </ClerkProvider>
   );

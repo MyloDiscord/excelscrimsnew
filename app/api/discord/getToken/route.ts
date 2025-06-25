@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 
 export async function GET() {
     const { userId } = await auth();
-    const session = await auth();
 
     if (!userId) {
         return NextResponse.json({ message: "User not found." });
@@ -43,7 +42,7 @@ export async function GET() {
 
         return NextResponse.json({ me });
     } catch (error) {
-        // @ts-ignore
+        // @ts-expect-error
         return NextResponse.json({ message: "Error fetching Discord user data", error: error.message }, { status: 500 });
     }
 }
