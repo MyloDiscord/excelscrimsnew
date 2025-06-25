@@ -201,7 +201,7 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
           alt={guild.name}
           width={96}
           height={96}
-          className="rounded-full mb-4 border-2 border-red-500"
+          className="rounded-full mb-4 border-2"
           priority
         />
         <h4 className="text-lg font-bold mb-3 truncate text-white">
