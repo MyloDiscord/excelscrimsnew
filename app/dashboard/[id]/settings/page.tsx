@@ -57,6 +57,8 @@ export default function SettingsGuildPage() {
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<DiscordRole[]>([]);
+  const [saving, setSaving] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     async function checkAccess() {
@@ -88,14 +90,18 @@ export default function SettingsGuildPage() {
       if (!guildId || typeof guildId !== "string") return;
       try {
         setError(null);
+        console.log("Fetching roles for guildId:", guildId);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         if (!res.ok) {
+          console.error("Failed to fetch roles: HTTP status", res.status);
           setError("Failed to fetch roles");
           return;
         }
         const data: DiscordRole[] = await res.json();
+        console.log("Roles API response:", data);
         setRoles(data);
       } catch (err) {
+        console.error("Failed to fetch roles:", err);
         setError("Failed to fetch roles");
       }
     }
@@ -119,14 +125,20 @@ export default function SettingsGuildPage() {
 
   const intToHex = (int: number) => "#" + int.toString(16).padStart(6, "0");
 
-  // New: Cancel handler resets selection (optional: you can change this behavior)
+  // Cancel clears selection and closes dialog
   const handleCancel = () => {
     setSelectedRoles([]);
+    setOpen(false);
   };
 
-  // New: Save handler — here just closes dialog, you can extend to save API call
+  // Save simulates saving with a delay and then closes dialog
   const handleSave = () => {
-    // Add saving logic here if needed
+    setSaving(true);
+    setTimeout(() => {
+      setSaving(false);
+      setOpen(false);
+      // TODO: implement actual save logic here
+    }, 2500);
   };
 
   if (loading) {
@@ -177,7 +189,7 @@ export default function SettingsGuildPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Dialog>
+            <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
                   Set Staff Roles
@@ -282,27 +294,33 @@ export default function SettingsGuildPage() {
                   </div>
                 )}
 
-                {/* Buttons: Cancel and Save */}
+                {/* Buttons */}
                 <div className="mt-6 flex justify-end gap-4">
-                  {/* Cancel Button */}
-                  <DialogClose
+                  <button
                     onClick={handleCancel}
+                    disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-                      bg-red-700 bg-opacity-20 hover:bg-opacity-40 text-red-400 transition"
+                      bg-red-700 bg-opacity-20 hover:bg-opacity-40 text-red-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     Cancel
-                  </DialogClose>
+                  </button>
 
-                  {/* Save Button */}
-                  <DialogClose
+                  <button
                     onClick={handleSave}
+                    disabled={saving}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer
-                      bg-green-700 bg-opacity-20 hover:bg-opacity-40 text-green-400 transition"
+                      bg-green-700 bg-opacity-20 hover:bg-opacity-40 text-green-400 transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Check className="w-4 h-4" />
-                    Save
-                  </DialogClose>
+                    {saving ? (
+                      "Saving..."
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Save
+                      </>
+                    )}
+                  </button>
                 </div>
               </DialogContent>
             </Dialog>
