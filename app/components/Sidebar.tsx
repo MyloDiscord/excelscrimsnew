@@ -221,7 +221,7 @@ const Sidebar = ({
           <p>
             Developed by{" "}
             <a
-              href="https://x.com/kotaau1"
+              href="https://discord.com/users/253680525619757057"
               target="_blank"
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-400 transition-colors"
