@@ -55,7 +55,7 @@ export default function SettingsGuildPage() {
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
-  const [savedRoles, setSavedRoles] = useState<DiscordRole[]>([]); // NEW state for saved roles
+  const [savedRoles, setSavedRoles] = useState<DiscordRole[]>([]);
   const [selectedRoles, setSelectedRoles] = useState<DiscordRole[]>([]);
   const [saving, setSaving] = useState(false);
   const [open, setOpen] = useState(false);
@@ -79,7 +79,6 @@ export default function SettingsGuildPage() {
       }
 
       try {
-        // Fetch admin guilds & check access
         const resGuilds = await fetch("/api/discord/user/adminGuilds");
         const dataGuilds: AdminGuildsResponse = await resGuilds.json();
 
@@ -92,7 +91,6 @@ export default function SettingsGuildPage() {
         }
         setCurrentGuild(foundGuild);
 
-        // Fetch roles
         const resRoles = await fetch(
           `/api/discord/guild/${guildId}/fetch-roles`
         );
@@ -105,7 +103,6 @@ export default function SettingsGuildPage() {
         const rolesData: DiscordRole[] = await resRoles.json();
         setRoles(rolesData);
 
-        // Fetch saved staff roles
         const resSaved = await fetch(
           `/api/discord/guild/${guildId}/get-staff-roles`
         );
@@ -127,21 +124,18 @@ export default function SettingsGuildPage() {
     loadAllData();
   }, [guildId]);
 
-  // When dialog opens, set selectedRoles from savedRoles immediately
   useEffect(() => {
     if (open) {
       setSelectedRoles(savedRoles);
     }
   }, [open, savedRoles]);
 
-  // Measure trigger button width for dropdown width
   useEffect(() => {
     if (triggerRef.current) {
       setDropdownWidth(triggerRef.current.offsetWidth);
     }
   }, [dropdownOpen]);
 
-  // Auto clear notification after 3 seconds
   useEffect(() => {
     if (notification) {
       const timer = setTimeout(() => setNotification(null), 3000);
@@ -401,7 +395,6 @@ export default function SettingsGuildPage() {
         </Card>
       </main>
 
-      {/* Notification */}
       {notification && (
         <div
           className={`fixed top-4 right-4 sm:right-8 w-[90vw] sm:w-auto max-w-sm flex items-center gap-2 px-4 py-3 rounded-md shadow-lg animate-fade-in-out z-[9999] ${
