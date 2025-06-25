@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
         const roles: DiscordRoleFromApi[] = await res.json();
 
         const formattedRoles: FormattedRole[] = roles
+            .filter(role => role.name !== "@everyone")
             .sort((a, b) => b.position - a.position)
             .map((role) => ({
                 id: role.id,
