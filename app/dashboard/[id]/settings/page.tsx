@@ -1,10 +1,18 @@
 "use client";
 
-import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import { BackgroundBeams } from "@/components/ui/background-beams";
 import Sidebar from "../../../components/Sidebar";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useParams } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 type DiscordGuild = {
   id: string;
@@ -15,6 +23,12 @@ type DiscordGuild = {
   icon?: string | null;
 };
 
+type DiscordRole = {
+  id: string;
+  name: string;
+  color: number; // Discord color as int
+};
+
 type AdminGuildsResponse = {
   known: DiscordGuild[];
   unknown?: DiscordGuild[];
@@ -22,43 +36,33 @@ type AdminGuildsResponse = {
 
 export default function SettingsGuildPage() {
   const { id: guildId } = useParams();
-
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
+  const [roles, setRoles] = useState<DiscordRole[]>([]);
+  const [selectedRole, setSelectedRole] = useState<string | null>(null);
 
+  // Load Guilds
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
-        console.warn("guildId is invalid:", guildId);
         setError("Invalid guild ID.");
         setLoading(false);
         return;
       }
 
       try {
-        const res = await fetch("/api/discord/user/adminGuilds", {
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!res.ok) {
-          const text = await res.text();
-          setError("Failed to fetch guilds: " + text);
-          setLoading(false);
-          return;
-        }
-
+        const res = await fetch("/api/discord/user/adminGuilds");
         const data: AdminGuildsResponse = await res.json();
+
         setAdminGuilds(data.known);
 
-        const foundGuild = data.known.find((guild) => guild.id === guildId);
+        const foundGuild = data.known.find((g) => g.id === guildId);
         if (foundGuild) {
-          setUnauthorized(false);
           setCurrentGuild(foundGuild);
-        } else if (data.unknown?.some((guild) => guild.id === guildId)) {
-          setUnauthorized(true);
+          setUnauthorized(false);
         } else {
           setUnauthorized(true);
         }
@@ -72,6 +76,23 @@ export default function SettingsGuildPage() {
     checkAccess();
   }, [guildId]);
 
+  // Load Roles
+  useEffect(() => {
+    async function fetchRoles() {
+      if (!guildId || typeof guildId !== "string") return;
+
+      try {
+        const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
+        const data = await res.json();
+        setRoles(data.roles || []);
+      } catch {
+        console.warn("Failed to fetch roles");
+      }
+    }
+
+    fetchRoles();
+  }, [guildId]);
+
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white overflow-hidden">
@@ -81,20 +102,11 @@ export default function SettingsGuildPage() {
     );
   }
 
-  if (error) {
+  if (error || unauthorized) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white text-xl overflow-hidden">
         <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
-        {error}
-      </div>
-    );
-  }
-
-  if (unauthorized) {
-    return (
-      <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white text-xl overflow-hidden">
-        <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
-        You are not authorized to view this page.
+        {error || "You are not authorized to view this page."}
       </div>
     );
   }
@@ -118,11 +130,39 @@ export default function SettingsGuildPage() {
       )}
 
       <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6">
-        <h1 className="text-5xl font-bold mb-4 text-center md:text-left">
+        <h1 className="text-5xl font-bold mb-6 text-center md:text-left">
           Settings
         </h1>
-        <hr className="border-gray-600 mb-6 block md:hidden" />
+
+        {/* Staff Role Selector Card */}
+        <Card className="w-full max-w-xl bg-[#1c1c1c] border border-neutral-800">
+          <CardHeader>
+            <CardTitle>Set Discord Staff Roles</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Select onValueChange={(value) => setSelectedRole(value)}>
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Select a role..." />
+              </SelectTrigger>
+              <SelectContent>
+                {roles.map((role) => (
+                  <SelectItem key={role.id} value={role.id}>
+                    <span
+                      className="inline-block w-3 h-3 rounded-full mr-2 align-middle"
+                      style={{
+                        backgroundColor: `#${role.color
+                          .toString(16)
+                          .padStart(6, "0")}`,
+                      }}
+                    />
+                    {role.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </CardContent>
+        </Card>
       </main>
     </div>
-  ); 
+  );
 }
