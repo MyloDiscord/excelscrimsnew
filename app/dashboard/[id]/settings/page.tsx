@@ -8,7 +8,14 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
-import { Dialog, DialogTrigger } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 type DiscordGuild = {
   id: string;
@@ -113,6 +120,16 @@ export default function SettingsGuildPage() {
                   Set Staff Roles
                 </Button>
               </DialogTrigger>
+              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white">
+                <DialogHeader>
+                  <DialogTitle>Set Discord Staff Roles</DialogTitle>
+                  <DialogDescription>
+                    Choose which Discord roles should be recognized as staff.
+                    These roles will be used for moderation and admin access in
+                    your server.
+                  </DialogDescription>
+                </DialogHeader>
+              </DialogContent>
             </Dialog>
           </CardContent>
         </Card>
