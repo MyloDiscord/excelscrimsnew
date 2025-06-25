@@ -26,9 +26,8 @@ export default function GuildDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // Store current guild info to pass to Sidebar
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
+  const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
 
   useEffect(() => {
     async function checkAccess() {
@@ -52,6 +51,7 @@ export default function GuildDashboardPage() {
         }
 
         const data: AdminGuildsResponse = await res.json();
+        setAdminGuilds(data.known);
 
         const foundGuild = data.known.find((guild) => guild.id === guildId);
         if (foundGuild) {
@@ -113,12 +113,12 @@ export default function GuildDashboardPage() {
               : null
           }
           guildId={currentGuild.id}
+          adminGuilds={adminGuilds}
         />
       )}
 
       <main className="relative z-10 flex-grow p-6">
         <h1 className="text-5xl font-bold mb-4">Dashboard</h1>
-        <p>Guild ID: {guildId}</p>
       </main>
     </div>
   );

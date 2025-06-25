@@ -10,17 +10,19 @@ const Sidebar = ({
   guildName,
   guildAvatar,
   guildId,
+  adminGuilds,
 }: {
   current: string;
   guildName: string;
   guildAvatar: string | null;
   guildId: string;
+  adminGuilds: { id: string; name: string; icon?: string | null }[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  const toggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
+  const toggleSidebar = () => setIsOpen(!isOpen);
+  const toggleDropdown = () => setShowDropdown((prev) => !prev);
 
   return (
     <div>
@@ -39,7 +41,7 @@ const Sidebar = ({
           isOpen ? "translate-x-0" : "-translate-x-full"
         } md:translate-x-0 md:relative md:block w-64 bg-[#121212] text-gray-200 h-screen p-4 shadow-lg flex flex-col`}
       >
-        <div className="flex items-center mb-6">
+        <div className="flex items-center mb-4">
           {guildAvatar ? (
             <Image
               src={guildAvatar}
@@ -57,6 +59,45 @@ const Sidebar = ({
             {guildName}
           </h2>
         </div>
+
+        <button
+          onClick={toggleDropdown}
+          className="w-full mb-4 p-2 rounded bg-[#1e1e1e] hover:bg-[#2a2a2a] text-sm text-white text-left"
+        >
+          Switch Guild
+        </button>
+
+        {showDropdown && (
+          <div className="bg-[#1a1a1a] rounded p-2 mb-4 space-y-2 overflow-auto max-h-60">
+            {adminGuilds
+              .filter((g) => g.id !== guildId)
+              .map((g) => (
+                <Link
+                  key={g.id}
+                  href={`/dashboard/${g.id}`}
+                  className="block p-2 rounded hover:bg-[#2a2a2a] transition-colors text-sm"
+                >
+                  <div className="flex items-center space-x-2">
+                    {g.icon ? (
+                      <Image
+                        src={`https://cdn.discordapp.com/icons/${g.id}/${g.icon}.png`}
+                        alt={g.name}
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                      />
+                    ) : (
+                      <div className="w-5 h-5 bg-gray-700 rounded-full flex items-center justify-center text-xs text-gray-300">
+                        ?
+                      </div>
+                    )}
+                    <span className="truncate">{g.name}</span>
+                  </div>
+                </Link>
+              ))}
+          </div>
+        )}
+
         <hr className="my-4 border-gray-600" />
 
         {isOpen && (
