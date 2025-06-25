@@ -153,14 +153,17 @@ export default function SettingsGuildPage() {
     if (!guildId) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/discord/guild/${guildId}/save-staff-roles`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          staffRoles: selectedRoles,
-          // optionally add lastUpdatedBy here if you want
-        }),
-      });
+      const res = await fetch(
+        `/api/discord/guild/${guildId}/save-staff-roles`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            staffRoles: selectedRoles,
+            // optionally add lastUpdatedBy here if you want
+          }),
+        }
+      );
       const data = await res.json();
       if (res.ok) {
         setNotification(data.message || "Staff roles saved successfully");
@@ -378,13 +381,15 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-md shadow-lg
-          animate-fade-in-out"
+          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2
+      bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg
+      animate-fade-in-out"
           style={{ zIndex: 9999 }}
           role="alert"
           aria-live="assertive"
         >
-          {notification}
+          <Check className="w-5 h-5" />
+          <span className="font-semibold">{notification}</span>
         </div>
       )}
     </div>
