@@ -60,10 +60,10 @@ export default function PrivacyPolicy() {
           You have the right to access, correct, or delete your personal data.
           Contact us at{" "}
           <a
-            href="mailto:support@excelscrims.com"
+            href="mailto:excelscrimsdiscord@gmail.com"
             className="text-red-500 underline"
           >
-            support@excelscrims.com
+            excelscrimsdiscord@gmail.com
           </a>{" "}
           for any requests.
         </p>
@@ -81,10 +81,10 @@ export default function PrivacyPolicy() {
           If you have any questions or concerns about this Privacy Policy, please
           contact us at{" "}
           <a
-            href="mailto:support@excelscrims.com"
+            href="mailto:excelscrimsdiscord@gmail.com"
             className="text-red-500 underline"
           >
-            support@excelscrims.com
+            excelscrimsdiscord@gmail.com
           </a>
           .
         </p>
