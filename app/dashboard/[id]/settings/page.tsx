@@ -188,6 +188,7 @@ export default function SettingsGuildPage() {
         setNotificationType("success");
         setNotification(data.message || "Staff roles saved successfully");
         setOpen(false);
+        window.location.reload();
       } else {
         setNotificationType("error");
         setNotification(data.message || "Failed to save staff roles");
@@ -403,11 +404,12 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className={`fixed top-8 right-8 flex items-center gap-2 px-6 py-3 rounded-md shadow-lg animate-fade-in-out ${
-            notificationType === "success"
-              ? "bg-green-700/20 text-green-400"
-              : "bg-red-700/20 text-red-400"
-          }`}
+          className={`fixed top-4 left-1/2 transform -translate-x-1/2 flex items-center gap-2 px-4 py-3 rounded-md shadow-lg animate-fade-in-out max-w-[90vw] sm:max-w-md
+      ${
+        notificationType === "success"
+          ? "bg-green-700/20 text-green-400"
+          : "bg-red-700/20 text-red-400"
+      }`}
           style={{ zIndex: 9999 }}
           role="alert"
           aria-live="assertive"
@@ -417,7 +419,7 @@ export default function SettingsGuildPage() {
           ) : (
             <X className="w-5 h-5" />
           )}
-          <span className="font-semibold">{notification}</span>
+          <span className="font-semibold truncate">{notification}</span>
         </div>
       )}
     </div>
