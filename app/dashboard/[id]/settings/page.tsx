@@ -8,6 +8,17 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog";
+
 type DiscordGuild = {
   id: string;
   name: string;
@@ -150,36 +161,50 @@ export default function SettingsGuildPage() {
             <CardTitle>Set Discord Staff Roles</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-2 max-h-64 overflow-y-auto">
-              {roles.map((role) => (
-                <label
-                  key={role.id}
-                  className="flex items-center gap-2 cursor-pointer"
-                >
-                  <input
-                    type="checkbox"
-                    checked={selectedRoles.includes(role.id)}
-                    onChange={() => toggleRole(role.id)}
-                  />
-                  <span
-                    className="inline-block w-3 h-3 rounded-full"
-                    style={{
-                      backgroundColor: `#${role.color
-                        .toString(16)
-                        .padStart(6, "0")}`,
-                    }}
-                  />
-                  <span>{role.name}</span>
-                </label>
-              ))}
-            </div>
+            <AlertDialog>
+              <AlertDialogTrigger>
+                <Button className="w-full">Set Staff Roles</Button>
+              </AlertDialogTrigger>
 
-            <div className="flex justify-end gap-3 mt-6">
-              <Button variant="outline" onClick={() => setSelectedRoles([])}>
-                Cancel
-              </Button>
-              <Button onClick={handleSave}>Save</Button>
-            </div>
+              <AlertDialogContent className="bg-[#1c1c1c] text-white border border-neutral-700">
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Select Staff Roles</AlertDialogTitle>
+                </AlertDialogHeader>
+
+                <div className="space-y-2 max-h-64 overflow-y-auto">
+                  {roles.map((role) => (
+                    <label
+                      key={role.id}
+                      className="flex items-center gap-2 cursor-pointer"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={selectedRoles.includes(role.id)}
+                        onChange={() => toggleRole(role.id)}
+                      />
+                      <span
+                        className="inline-block w-3 h-3 rounded-full"
+                        style={{
+                          backgroundColor: `#${role.color
+                            .toString(16)
+                            .padStart(6, "0")}`,
+                        }}
+                      />
+                      <span>{role.name}</span>
+                    </label>
+                  ))}
+                </div>
+
+                <AlertDialogFooter className="mt-6 flex justify-end gap-3">
+                  <AlertDialogCancel>
+                    <Button variant="outline">Cancel</Button>
+                  </AlertDialogCancel>
+                  <AlertDialogAction>
+                    <Button onClick={handleSave}>Save</Button>
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </CardContent>
         </Card>
       </main>
