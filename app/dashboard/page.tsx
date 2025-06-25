@@ -14,6 +14,9 @@ type DiscordGuild = {
   owner?: boolean;
   permissions: string;
   features?: string[];
+  approximate_member_count?: number | null;
+  approximate_presence_count?: number | null;
+  approximate_offline_count?: number | null;
 };
 
 type AdminGuildsResponse = {
@@ -182,6 +185,7 @@ type GuildCardProps = {
 
 function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
   const isLoading = loadingGuildId === guild.id;
+  const [hovered, setHovered] = useState(false);
 
   return (
     <div
@@ -189,7 +193,9 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" ? onClick() : null)}
-      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
+      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none relative"
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <div className="p-6 flex flex-col items-center">
         <Image
@@ -218,6 +224,20 @@ function GuildCard({ guild, loadingGuildId, onClick }: GuildCardProps) {
         >
           {isLoading ? <ClipLoader color="#FFF" size={20} /> : "Dashboard"}
         </button>
+
+        {/* Hover info panel */}
+        <div
+          className={`absolute left-0 right-0 bg-[#2a2a2a] rounded-b-2xl mt-2 py-2 text-sm text-gray-300 overflow-hidden transition-all duration-300 ease-in-out ${
+            hovered
+              ? "max-h-24 opacity-100"
+              : "max-h-0 opacity-0 pointer-events-none"
+          }`}
+          style={{ willChange: "max-height, opacity" }}
+        >
+          <p>Members: {guild.approximate_member_count ?? "N/A"}</p>
+          <p>Online: {guild.approximate_presence_count ?? "N/A"}</p>
+          <p>Offline: {guild.approximate_offline_count ?? "N/A"}</p>
+        </div>
       </div>
     </div>
   );
