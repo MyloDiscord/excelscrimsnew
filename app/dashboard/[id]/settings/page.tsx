@@ -126,7 +126,7 @@ export default function SettingsGuildPage() {
       if (!guildId) return;
       try {
         const res = await fetch(
-          `/api/discord/guild/${guildId}/fetch-staff-roles`
+          `/api/discord/guild/${guildId}/get-staff-roles`
         );
         if (!res.ok) throw new Error("Failed to fetch saved staff roles");
         const data = await res.json();
