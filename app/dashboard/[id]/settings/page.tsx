@@ -263,7 +263,7 @@ export default function SettingsGuildPage() {
                           title={`Remove ${role.name}`}
                         >
                           <span
-                            className="w-2 h-2 rounded-full relative flex-shrink-0 group-hover:bg-transparent bg-[inherit]"
+                            className="w-2 h-2 rounded-full relative flex-shrink-0 bg-[inherit]"
                             style={{ backgroundColor: hex }}
                           >
                             {/* Show 'X' on hover */}
