@@ -66,7 +66,24 @@ const Sidebar = ({
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <button className="text-sm bg-[#1f1f1f] text-[#00f8ff] px-3 py-1 rounded-md hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer border border-[#00f8ff] mt-1">
+                <button
+                  className="
+      text-sm 
+      bg-[#1f1f1f] 
+      text-[#00f8ff] 
+      px-3 py-1 
+      rounded-md 
+      border border-[#00f8ff] 
+      mt-1 
+      cursor-pointer 
+      hover:bg-[#2a2a2a] 
+      hover:text-[#00f8ff] 
+      transition-colors duration-200
+      focus:outline-none
+      focus:ring-2 focus:ring-[#00f8ff] 
+      focus:ring-offset-1
+    "
+                >
                   Switch Server
                 </button>
               </DropdownMenuTrigger>
