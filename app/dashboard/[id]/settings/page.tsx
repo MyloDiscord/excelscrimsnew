@@ -218,7 +218,7 @@ export default function SettingsGuildPage() {
 
                   <DropdownMenuContent
                     className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
-             scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
+scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent"
                   >
                     <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
                       Available Roles
@@ -233,16 +233,19 @@ export default function SettingsGuildPage() {
                       return (
                         <DropdownMenuItem
                           key={role.id}
-                          onClick={() => toggleRole(role)}
+                          onSelect={(e) => {
+                            e.preventDefault(); // Prevent closing the menu
+                            toggleRole(role);
+                          }}
                           className={`
-                flex items-center justify-between px-4 py-2 cursor-pointer rounded-md
-                transition-colors duration-150
-                ${
-                  isSelected
-                    ? "bg-[#1a1a1a] text-white shadow-md"
-                    : "hover:bg-gray-700 text-gray-300"
-                }
-              `}
+          flex items-center justify-between px-4 py-2 cursor-pointer rounded-md
+          transition-colors duration-150
+          ${
+            isSelected
+              ? "bg-[#1a1a1a] text-white shadow-md"
+              : "hover:bg-gray-700 text-gray-300"
+          }
+        `}
                         >
                           <div className="flex items-center gap-3">
                             <span
@@ -252,8 +255,6 @@ export default function SettingsGuildPage() {
                             />
                             <span className="select-none">{role.name}</span>
                           </div>
-
-                          {/* Checkmark for selected */}
                           {isSelected && (
                             <Check className="h-5 w-5 text-white" />
                           )}
@@ -265,7 +266,7 @@ export default function SettingsGuildPage() {
 
                 {/* Selected roles pills with removable X */}
                 {selectedRoles.length > 0 && (
-                  <div className="mt-4 flex flex-wrap gap-2">
+                  <div className="mt-4 flex flex-wrap gap-2 items-center">
                     {selectedRoles.map((role) => {
                       const hex = intToHex(role.color);
                       return (
@@ -273,7 +274,7 @@ export default function SettingsGuildPage() {
                           key={role.id}
                           className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group"
                           style={{
-                            backgroundColor: hex + "22", // faded background
+                            backgroundColor: hex + "22",
                             color: "#fff",
                           }}
                           onClick={() => removeRole(role.id)}
@@ -283,7 +284,6 @@ export default function SettingsGuildPage() {
                             className="w-2 h-2 rounded-full relative flex-shrink-0 bg-[inherit]"
                             style={{ backgroundColor: hex }}
                           >
-                            {/* Show 'X' on hover */}
                             <X
                               className="absolute top-0 left-0 w-2 h-2 text-white opacity-0 group-hover:opacity-100 transition-opacity"
                               strokeWidth={3}
@@ -293,6 +293,14 @@ export default function SettingsGuildPage() {
                         </div>
                       );
                     })}
+
+                    {/* Clear All Button */}
+                    <button
+                      onClick={() => setSelectedRoles([])}
+                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
+                    >
+                      Clear All
+                    </button>
                   </div>
                 )}
 
