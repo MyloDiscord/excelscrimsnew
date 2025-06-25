@@ -193,11 +193,7 @@ export default function SettingsGuildPage() {
                       className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                       aria-label="Select Staff Roles"
                     >
-                      <span className="truncate">
-                        {selectedRoles.length > 0
-                          ? selectedRoles.map((r) => r.name).join(", ")
-                          : "Select roles..."}
-                      </span>
+                      <span className="truncate">Select roles...</span>
                       <ChevronDown className="h-5 w-5 text-gray-300 ml-2 flex-shrink-0" />
                     </button>
                   </DropdownMenuTrigger>
