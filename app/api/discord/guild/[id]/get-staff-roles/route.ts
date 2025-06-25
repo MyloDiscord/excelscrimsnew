@@ -22,6 +22,14 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
 
+    const client = await clerkClient();
+    const discordTokenResponse = await client.users.getUserOauthAccessToken(userId, "discord");
+    const discordAccessToken = discordTokenResponse.data[0]?.token;
+
+    if (!discordAccessToken) {
+        return NextResponse.json({ message: "Discord not linked or access token missing" }, { status: 401 });
+    }
+
     await db.connect();
 
     const segments = req.nextUrl.pathname.split("/").filter(Boolean);
