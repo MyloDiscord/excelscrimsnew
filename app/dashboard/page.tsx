@@ -14,8 +14,8 @@ type DiscordGuild = {
   owner?: boolean;
   permissions: string;
   features?: string[];
-  approximate_presence_count?: number; // added to match your data
-  approximate_offline_count?: number; // added to match your data
+  approximate_presence_count?: number;
+  approximate_offline_count?: number;
 };
 
 type AdminGuildsResponse = {
@@ -31,11 +31,6 @@ type GetTokenResponse = {
   me: { accessToken: string }[];
 };
 
-type OnlineOfflineCounts = {
-  online: number;
-  offline: number;
-};
-
 export default function DashboardPage() {
   const { isSignedIn, isLoaded } = useUser();
   const [message, setMessage] = useState<string | null>(null);
@@ -45,11 +40,7 @@ export default function DashboardPage() {
   });
   const [isLoadingGuilds, setIsLoadingGuilds] = useState<boolean>(true);
   const [loadingGuildId, setLoadingGuildId] = useState<string | null>(null);
-
-  // New: hovered guild id for hover state management
   const [hoveredGuildId, setHoveredGuildId] = useState<string | null>(null);
-
-  // New: detect mobile to always show counts there
   const [isMobile, setIsMobile] = useState(false);
 
   const router = useRouter();
