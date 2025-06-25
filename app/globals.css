@@ -4,6 +4,17 @@
 
 @custom-variant dark (&:is(.dark *));
 
+.scrollbar-thin::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: transparent;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #4b5563; /* Neutral-600 */
+  border-radius: 6px;
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
