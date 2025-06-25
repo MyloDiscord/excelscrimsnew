@@ -1,6 +1,6 @@
 "use client";
 
-import Link from "next/link"; // <-- import Link
+import Link from "next/link";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
 export default function HomePage() {
