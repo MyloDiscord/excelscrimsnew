@@ -186,7 +186,7 @@ export default function SettingsGuildPage() {
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
-                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                       aria-label="Select Staff Roles"
                     >
                       <span>&nbsp;</span>
@@ -210,14 +210,14 @@ export default function SettingsGuildPage() {
                           key={role.id}
                           onClick={() => toggleRole(role)}
                           className={`
-            flex items-center justify-between px-4 py-2 cursor-pointer rounded-md
-            transition-colors duration-150
-            ${
-              isSelected
-                ? "bg-red-600 text-white shadow-md"
-                : "hover:bg-gray-700 text-gray-300"
-            }
-          `}
+                flex items-center justify-between px-4 py-2 cursor-pointer rounded-md
+                transition-colors duration-150
+                ${
+                  isSelected
+                    ? "bg-[#1a1a1a] text-white shadow-md"
+                    : "hover:bg-gray-700 text-gray-300"
+                }
+              `}
                         >
                           <div className="flex items-center gap-3">
                             <span
@@ -238,29 +238,44 @@ export default function SettingsGuildPage() {
                   </DropdownMenuContent>
                 </DropdownMenu>
 
-                {/* Selected roles pills */}
-                {selectedRoles.length > 0 && (
+                {/* Selected roles pills with removable dot */}
+                {selectedRoles.length > 0 ? (
                   <div className="mt-4 flex flex-wrap gap-2">
                     {selectedRoles.map((role) => {
                       const hex = intToHex(role.color);
                       return (
                         <div
                           key={role.id}
-                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium"
+                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-default select-none"
                           style={{
                             backgroundColor: hex + "22", // faded background
                             color: "#fff",
                           }}
                         >
                           <span
-                            className="w-2 h-2 rounded-full"
+                            onClick={() =>
+                              setSelectedRoles((prev) =>
+                                prev.filter((r) => r.id !== role.id)
+                              )
+                            }
+                            className="w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold cursor-pointer relative transition-colors duration-150"
                             style={{ backgroundColor: hex }}
-                          />
+                            title={`Remove ${role.name}`}
+                          >
+                            <span className="absolute opacity-0 hover:opacity-100 transition-opacity duration-200 select-none">
+                              ×
+                            </span>
+                            <span className="w-2 h-2 rounded-full select-none" />
+                          </span>
                           {role.name}
                         </div>
                       );
                     })}
                   </div>
+                ) : (
+                  <p className="mt-4 text-gray-500 select-none">
+                    Select roles...
+                  </p>
                 )}
               </DialogContent>
             </Dialog>
