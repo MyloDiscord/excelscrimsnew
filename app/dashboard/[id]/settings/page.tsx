@@ -47,6 +47,11 @@ type AdminGuildsResponse = {
   unknown?: DiscordGuild[];
 };
 
+type DiscordChannel = {
+  id: string;
+  name: string;
+};
+
 export default function SettingsGuildPage() {
   const { id: guildId } = useParams();
   const [loading, setLoading] = useState(true);
@@ -65,6 +70,11 @@ export default function SettingsGuildPage() {
     undefined
   );
 
+  // Channels state and selected channel for log channel picker
+  const [channels, setChannels] = useState<DiscordChannel[]>([]);
+  const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
+  const [logChannelDialogOpen, setLogChannelDialogOpen] = useState(false);
+
   type NotificationType = "success" | "error";
   const [notificationType, setNotificationType] =
     useState<NotificationType>("success");
@@ -79,6 +89,7 @@ export default function SettingsGuildPage() {
       }
 
       try {
+        // Fetch admin guilds
         const resGuilds = await fetch("/api/discord/user/adminGuilds");
         const dataGuilds: AdminGuildsResponse = await resGuilds.json();
 
@@ -91,6 +102,7 @@ export default function SettingsGuildPage() {
         }
         setCurrentGuild(foundGuild);
 
+        // Fetch roles
         const resRoles = await fetch(
           `/api/discord/guild/${guildId}/fetch-roles`
         );
@@ -103,6 +115,7 @@ export default function SettingsGuildPage() {
         const rolesData: DiscordRole[] = await resRoles.json();
         setRoles(rolesData);
 
+        // Fetch saved staff roles
         const resSaved = await fetch(
           `/api/discord/guild/${guildId}/get-staff-roles`
         );
@@ -112,6 +125,29 @@ export default function SettingsGuildPage() {
           setSavedRoles(savedData.staffRoles);
         } else {
           setSavedRoles([]);
+        }
+
+        // Fetch channels for log channel select
+        const resChannels = await fetch(
+          `/api/discord/guild/${guildId}/fetch-channels`
+        );
+        if (!resChannels.ok) {
+          setNotificationType("error");
+          setError("Failed to fetch channels");
+          setLoading(false);
+          return;
+        }
+        const channelsData: DiscordChannel[] = await resChannels.json();
+        setChannels(channelsData);
+
+        // Fetch saved log channel
+        const resSavedChannel = await fetch(
+          `/api/discord/guild/${guildId}/get-log-channel`
+        );
+        if (resSavedChannel.ok) {
+          const savedChannelData = await resSavedChannel.json();
+          if (savedChannelData?.channelId)
+            setSelectedChannel(savedChannelData.channelId);
         }
       } catch {
         setNotificationType("error");
@@ -195,6 +231,35 @@ export default function SettingsGuildPage() {
     }
   };
 
+  // Save Log Channel handler
+  const saveLogChannel = async () => {
+    if (!guildId || !selectedChannel) return;
+
+    try {
+      const res = await fetch(
+        `/api/discord/guild/${guildId}/save-log-channel`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ channelId: selectedChannel }),
+        }
+      );
+
+      const data = await res.json();
+      if (res.ok) {
+        setNotificationType("success");
+        setNotification(data.message || "Log channel saved");
+        setLogChannelDialogOpen(false);
+      } else {
+        setNotificationType("error");
+        setNotification(data.message || "Failed to save log channel");
+      }
+    } catch {
+      setNotificationType("error");
+      setNotification("Error saving log channel");
+    }
+  };
+
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white overflow-hidden">
@@ -266,7 +331,11 @@ export default function SettingsGuildPage() {
                       className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                       aria-label="Select Staff Roles"
                     >
-                      <span className="truncate">Select roles...</span>
+                      <span className="truncate">
+                        {selectedRoles.length > 0
+                          ? selectedRoles.map((r) => r.name).join(", ")
+                          : "Select roles..."}
+                      </span>
                       <ChevronDown
                         className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
                           dropdownOpen ? "rotate-180" : "rotate-0"
@@ -387,6 +456,98 @@ export default function SettingsGuildPage() {
                         Save
                       </>
                     )}
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
+          </CardContent>
+        </Card>
+
+        <Card className="w-full bg-[#1c1c1c] border border-neutral-700 shadow-lg rounded-lg mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-gray-300">
+              Set Log Channel
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Dialog
+              open={logChannelDialogOpen}
+              onOpenChange={setLogChannelDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
+                  Set Log Channel
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
+                <DialogHeader>
+                  <DialogTitle>Set Log Channel</DialogTitle>
+                  <DialogDescription>
+                    Choose the channel where logs should be sent.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
+                      aria-label="Select Log Channel"
+                    >
+                      <span className="truncate">
+                        {selectedChannel
+                          ? `#${
+                              channels.find((c) => c.id === selectedChannel)
+                                ?.name || "Unknown"
+                            }`
+                          : "Select a channel..."}
+                      </span>
+                      <ChevronDown className="h-5 w-5 text-gray-300 ml-2" />
+                    </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md">
+                    <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
+                      Available Channels
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {channels.map((channel) => (
+                      <DropdownMenuItem
+                        key={channel.id}
+                        onSelect={(e) => {
+                          e.preventDefault();
+                          setSelectedChannel(channel.id);
+                        }}
+                        className={`flex justify-between items-center px-4 py-2 ${
+                          selectedChannel === channel.id
+                            ? "bg-[#1a1a1a] text-white"
+                            : "hover:bg-gray-700 text-gray-300"
+                        }`}
+                      >
+                        #{channel.name}
+                        {selectedChannel === channel.id && (
+                          <Check className="h-4 w-4" />
+                        )}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                <div className="mt-6 flex justify-end gap-4">
+                  <button
+                    onClick={() => setLogChannelDialogOpen(false)}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={saveLogChannel}
+                    disabled={!selectedChannel}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Check className="w-4 h-4" />
+                    Save
                   </button>
                 </div>
               </DialogContent>

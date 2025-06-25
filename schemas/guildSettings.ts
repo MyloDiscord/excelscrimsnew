@@ -11,6 +11,7 @@ const guildSettingsSchema = new Schema(
     {
         guildId: { type: String, required: true, unique: true },
         staffRoles: [staffRoleSchema],
+        logChannel: { type: String, default: null },
         lastUpdatedBy: { type: String },
     },
     {
