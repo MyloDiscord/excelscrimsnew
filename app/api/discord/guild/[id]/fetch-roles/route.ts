@@ -1,10 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN; 
+const BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 
 export async function GET(req: NextRequest) {
     try {
-
         const segments = req.nextUrl.pathname.split("/").filter(Boolean);
         const guildId = segments[segments.length - 2];
 
@@ -28,7 +27,16 @@ export async function GET(req: NextRequest) {
 
         const roles = await res.json();
 
-        return NextResponse.json({ roles });
+        const formattedRoles = roles
+            .sort((a: any, b: any) => b.position - a.position)
+            .map((role: any) => ({
+                id: role.id,
+                name: role.name,
+                position: role.position,
+                color: role.color ?? 0,
+            }));
+
+        return NextResponse.json(formattedRoles);
     } catch (error: unknown) {
         const err = error as Error;
         return NextResponse.json(

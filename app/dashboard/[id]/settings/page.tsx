@@ -84,6 +84,7 @@ export default function SettingsGuildPage() {
     async function fetchRoles() {
       if (!guildId || typeof guildId !== "string") return;
       try {
+        setError(null);
         console.log("Fetching roles for guildId:", guildId);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
         if (!res.ok) {
@@ -92,8 +93,8 @@ export default function SettingsGuildPage() {
           return;
         }
         const data: DiscordRole[] = await res.json();
-        const sortedRoles = data.sort((a, b) => b.position - a.position);
-        setRoles(sortedRoles);
+        console.log("Roles API response:", data);
+        setRoles(data);
       } catch (err) {
         console.error("Failed to fetch roles:", err);
         setError("Failed to fetch roles");
