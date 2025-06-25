@@ -140,7 +140,7 @@ export default function DashboardPage() {
 
               {/* MOBILE */}
               <div className="flex flex-col items-center gap-6 sm:hidden overflow-y-auto max-h-[80vh] w-full">
-                {adminGuilds.known.map((guild, index) => (
+                {adminGuilds.known.map((guild: DiscordGuild) => (
                   <div
                     key={guild.id}
                     className="flex flex-col justify-center items-center border p-4 rounded-lg shadow-lg w-80 transform transition-all duration-300 hover:scale-105"
@@ -185,7 +185,7 @@ export default function DashboardPage() {
 
               {/* DESKTOP */}
               <div className="hidden sm:flex sm:flex-wrap justify-center gap-6 w-full">
-                {adminGuilds.known.map((guild) => (
+                {adminGuilds.known.map((guild: DiscordGuild) => (
                   <div
                     key={guild.id}
                     className="flex flex-col justify-center items-center border p-4 rounded-lg shadow-lg w-80 transform transition-all duration-300 hover:scale-105"
