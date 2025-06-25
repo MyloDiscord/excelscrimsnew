@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const Sidebar = ({
+  current,
   guildName,
   guildAvatar,
   guildId,
@@ -24,7 +25,6 @@ const Sidebar = ({
   adminGuilds: { id: string; name: string; icon?: string | null }[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const toggleSidebar = () => setIsOpen(!isOpen);
 
   return (
@@ -64,22 +64,28 @@ const Sidebar = ({
             </h2>
 
             <DropdownMenu>
-              <DropdownMenuTrigger className="text-sm text-[#00f8ff] hover:underline text-left">
-                Switch Server
+              <DropdownMenuTrigger asChild>
+                <button className="text-sm bg-[#1f1f1f] text-[#00f8ff] px-3 py-1 rounded-md hover:bg-[#2a2a2a] transition-colors duration-200 cursor-pointer border border-[#00f8ff] mt-1">
+                  Switch Server
+                </button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="bg-[#1f1f1f] border border-gray-700 text-white">
+
+              <DropdownMenuContent className="bg-[#1f1f1f] border border-gray-700 text-white mt-2">
                 {adminGuilds
                   .filter((guild) => guild.id !== guildId)
                   .map((guild) => (
                     <DropdownMenuItem key={guild.id} asChild>
-                      <Link href={`/dashboard/${guild.id}`}>
+                      <Link
+                        href={`/dashboard/${guild.id}`}
+                        className="flex items-center gap-2"
+                      >
                         {guild.icon && (
                           <Image
                             src={`https://cdn.discordapp.com/icons/${guild.id}/${guild.icon}.png`}
                             alt={guild.name}
                             width={20}
                             height={20}
-                            className="inline-block mr-2 rounded-full"
+                            className="rounded-full"
                           />
                         )}
                         {guild.name}
@@ -93,8 +99,94 @@ const Sidebar = ({
 
         <hr className="my-4 border-gray-600" />
 
-        {/* rest of your sidebar... */}
-        {/* Leave your nav links and footer untouched here */}
+        {isOpen && (
+          <button
+            onClick={toggleSidebar}
+            className="mb-4 p-2 bg-[#00f8ff] text-white rounded"
+            aria-label="Close Sidebar"
+          >
+            Close
+          </button>
+        )}
+
+        <ul className="space-y-3 flex-grow">
+          <li>
+            <Link
+              href={`/dashboard/${guildId}`}
+              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
+                current === "Dashboard"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
+                  : ""
+              }`}
+            >
+              Dashboard
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={`/dashboard/${guildId}/staff-overview`}
+              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
+                current === "Scrims Overview"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
+                  : ""
+              }`}
+            >
+              Staff Overview
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={`/dashboard/${guildId}/application-overview`}
+              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
+                current === "Applications Overview"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
+                  : ""
+              }`}
+            >
+              Applications Overview
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={`/dashboard/${guildId}/activity-checks/overview`}
+              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
+                current === "Activity Checks"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
+                  : ""
+              }`}
+            >
+              Activity Checks
+            </Link>
+          </li>
+          <li>
+            <Link
+              href={`/dashboard/${guildId}/settings`}
+              className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
+                current === "Settings"
+                  ? "bg-gray-800 text-white border-l-4 border-[#00f8ff] font-semibold"
+                  : ""
+              }`}
+            >
+              Settings
+            </Link>
+          </li>
+        </ul>
+
+        <hr className="my-4 border-gray-600" />
+
+        <footer className="text-center text-sm text-gray-400 mt-auto">
+          <p>
+            Developed by{" "}
+            <a
+              href="https://x.com/kotaau1"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 hover:text-blue-400 transition-colors"
+            >
+              Mylo
+            </a>
+          </p>
+        </footer>
       </div>
     </div>
   );
