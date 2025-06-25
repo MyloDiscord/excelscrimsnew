@@ -39,10 +39,11 @@ export default function HomePage() {
           community features.
         </p>
 
-        <Link href="/">
-          <a className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-md transition">
-            Log In with Epic Account
-          </a>
+        <Link
+          href="/"
+          className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-md transition"
+        >
+          Log In with Epic Account
         </Link>
       </div>
     </div>
