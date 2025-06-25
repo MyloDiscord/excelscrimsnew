@@ -2,7 +2,7 @@
 
 import { BackgroundBeams } from "@/components/ui/background-beams";
 
-export default function PrivacyPolicy() {
+export default function HomePage() {
   return (
     <div className="relative min-h-screen bg-[#121212] overflow-hidden">
       {/* Background Beams */}
@@ -12,82 +12,40 @@ export default function PrivacyPolicy() {
 
       {/* Foreground Content */}
       <div className="relative z-10 max-w-3xl mx-auto px-6 py-12 text-gray-300">
-        <h1 className="text-4xl font-bold text-white mb-6">Privacy Policy</h1>
+        <h1 className="text-5xl font-bold text-white mb-6">
+          Welcome to Excel Scrims
+        </h1>
 
-        <p className="mb-4">Last updated: June 2025</p>
-
-        <p className="mb-6">
-          At Excel Scrims, we value your privacy and are committed to protecting
-          your personal information. This Privacy Policy explains how we collect,
-          use, and safeguard your data when you use our services, including Epic
-          Account Services (EAS) login.
+        <p className="mb-6 text-lg leading-relaxed">
+          Excel Scrims is a community platform dedicated to organizing
+          competitive Fortnite scrims. Our verification system uses Epic Account
+          Services login to ensure that every player participating in our scrims
+          is verified and authentic.
         </p>
 
         <h2 className="text-2xl font-semibold mt-8 mb-4">
-          1. Information We Collect
+          Why Verification Matters
         </h2>
-        <p className="mb-4">
-          When you sign in using Epic Account Services, we collect limited
-          information such as your Epic username and unique user ID. We do not
-          collect sensitive information like passwords.
+        <p className="mb-6 text-lg leading-relaxed">
+          We use Epic Account login to confirm player identities, helping us
+          maintain fair competition and prevent cheating or impersonation. This
+          system lets us track who is playing in our scrims accurately and
+          securely.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          2. How We Use Your Information
-        </h2>
-        <p className="mb-4">
-          We use your information to provide and improve our scrims and community
-          services, to authenticate your identity, and to communicate important
-          updates.
+        <h2 className="text-2xl font-semibold mt-8 mb-4">Get Started</h2>
+        <p className="mb-6 text-lg leading-relaxed">
+          To participate in our scrims, simply log in with your Epic account.
+          This verifies your identity and grants you access to our events and
+          community features.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 mb-4">3. Data Security</h2>
-        <p className="mb-4">
-          We implement reasonable security measures to protect your information
-          against unauthorized access or disclosure.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          4. Sharing Your Information
-        </h2>
-        <p className="mb-4">
-          We do not sell or rent your personal information. We may share data with
-          Epic Games as required for authentication and compliance purposes.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4">5. Your Rights</h2>
-        <p className="mb-4">
-          You have the right to access, correct, or delete your personal data.
-          Contact us at{" "}
-          <a
-            href="mailto:excelscrimsdiscord@gmail.com"
-            className="text-red-500 underline"
-          >
-            excelscrimsdiscord@gmail.com
-          </a>{" "}
-          for any requests.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4">
-          6. Changes to This Policy
-        </h2>
-        <p className="mb-4">
-          We may update this Privacy Policy from time to time. Changes will be
-          posted on this page with an updated effective date.
-        </p>
-
-        <h2 className="text-2xl font-semibold mt-8 mb-4">7. Contact Us</h2>
-        <p>
-          If you have any questions or concerns about this Privacy Policy, please
-          contact us at{" "}
-          <a
-            href="mailto:excelscrimsdiscord@gmail.com"
-            className="text-red-500 underline"
-          >
-            excelscrimsdiscord@gmail.com
-          </a>
-          .
-        </p>
+        <a
+          href="/"
+          className="inline-block bg-red-600 hover:bg-red-700 text-white font-semibold px-6 py-3 rounded-md transition"
+        >
+          Log In with Epic Account
+        </a>
       </div>
     </div>
   );
