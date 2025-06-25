@@ -102,7 +102,7 @@ export async function GET() {
                                 ? guildDetails.approximate_member_count - guildDetails.approximate_presence_count
                                 : null,
                     };
-                } catch (error) {
+                } catch {
                     return {
                         ...guild,
                         approximate_member_count: null,
