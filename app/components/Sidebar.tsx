@@ -33,7 +33,7 @@ const Sidebar = ({
       {!isOpen && (
         <button
           onClick={toggleSidebar}
-          className="p-2 bg-gray-800 text-gray-300 rounded md:hidden fixed top-4 left-4 z-50 cursor-pointer"
+          className="p-2 bg-gray-800 text-gray-300 rounded md:hidden fixed top-4 left-6 z-50 cursor-pointer"
           aria-label="Open Sidebar"
         >
           <ChevronRight className="w-6 h-6" />
