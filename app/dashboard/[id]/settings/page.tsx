@@ -37,6 +37,7 @@ type DiscordRole = {
   id: string;
   name: string;
   position: number;
+  color: number; // Discord hex color int
 };
 
 type AdminGuildsResponse = {
@@ -104,6 +105,8 @@ export default function SettingsGuildPage() {
       setSelectedRoles((prev) => [...prev, role]);
     }
   };
+
+  const intToHex = (int: number) => "#" + int.toString(16).padStart(6, "0");
 
   if (loading) {
     return (
@@ -194,11 +197,26 @@ export default function SettingsGuildPage() {
                 </DropdownMenu>
 
                 {selectedRoles.length > 0 && (
-                  <div className="mt-4 p-3 bg-[#1a1a1a] border border-neutral-700 rounded text-sm text-gray-300">
-                    Selected Roles:{" "}
-                    <span className="text-white font-semibold">
-                      {selectedRoles.map((r) => r.name).join(", ")}
-                    </span>
+                  <div className="mt-4 flex flex-wrap gap-2">
+                    {selectedRoles.map((role) => {
+                      const hex = intToHex(role.color);
+                      return (
+                        <div
+                          key={role.id}
+                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium"
+                          style={{
+                            backgroundColor: hex + "22", // faded background
+                            color: "#fff",
+                          }}
+                        >
+                          <span
+                            className="w-2 h-2 rounded-full"
+                            style={{ backgroundColor: hex }}
+                          />
+                          {role.name}
+                        </div>
+                      );
+                    })}
                   </div>
                 )}
               </DialogContent>
