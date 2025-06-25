@@ -118,7 +118,10 @@ export default function GuildDashboardPage() {
       )}
 
       <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6">
-        <h1 className="text-5xl font-bold mb-4">Dashboard</h1>
+        <h1 className="text-5xl font-bold mb-4 text-center md:text-left">
+          Dashboard
+        </h1>
+        <hr className="border-gray-600 mb-6 block md:hidden" />
       </main>
     </div>
   );
