@@ -381,9 +381,9 @@ export default function SettingsGuildPage() {
       {/* Notification */}
       {notification && (
         <div
-          className="fixed bottom-8 left-1/2 transform -translate-x-1/2 flex items-center gap-2
-      bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg
-      animate-fade-in-out"
+          className="fixed top-8 right-8 flex items-center gap-2
+          bg-green-700/20 text-green-400 px-6 py-3 rounded-md shadow-lg
+          animate-fade-in-out"
           style={{ zIndex: 9999 }}
           role="alert"
           aria-live="assertive"
