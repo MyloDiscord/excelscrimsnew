@@ -70,7 +70,6 @@ export default function SettingsGuildPage() {
     undefined
   );
 
-  // Channels state and selected channel for log channel picker
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const [logChannelDialogOpen, setLogChannelDialogOpen] = useState(false);
@@ -89,7 +88,6 @@ export default function SettingsGuildPage() {
       }
 
       try {
-        // Fetch admin guilds
         const resGuilds = await fetch("/api/discord/user/adminGuilds");
         const dataGuilds: AdminGuildsResponse = await resGuilds.json();
 
@@ -102,7 +100,6 @@ export default function SettingsGuildPage() {
         }
         setCurrentGuild(foundGuild);
 
-        // Fetch roles
         const resRoles = await fetch(
           `/api/discord/guild/${guildId}/fetch-roles`
         );
@@ -115,7 +112,6 @@ export default function SettingsGuildPage() {
         const rolesData: DiscordRole[] = await resRoles.json();
         setRoles(rolesData);
 
-        // Fetch saved staff roles
         const resSaved = await fetch(
           `/api/discord/guild/${guildId}/get-staff-roles`
         );
@@ -127,7 +123,6 @@ export default function SettingsGuildPage() {
           setSavedRoles([]);
         }
 
-        // Fetch channels for log channel select
         const resChannels = await fetch(
           `/api/discord/guild/${guildId}/fetch-channels`
         );
@@ -140,7 +135,6 @@ export default function SettingsGuildPage() {
         const channelsData: DiscordChannel[] = await resChannels.json();
         setChannels(channelsData);
 
-        // Fetch saved log channel
         const resSavedChannel = await fetch(
           `/api/discord/guild/${guildId}/get-log-channel`
         );
@@ -231,7 +225,6 @@ export default function SettingsGuildPage() {
     }
   };
 
-  // Save Log Channel handler
   const saveLogChannel = async () => {
     if (!guildId || !selectedChannel) return;
 
