@@ -135,7 +135,6 @@ export default function DashboardPage() {
     fetchAdminGuilds();
   }, [accessToken]);
 
-  // Fetch online/offline counts for all known guilds
   useEffect(() => {
     if (adminGuilds.known.length === 0) return;
 
@@ -154,7 +153,6 @@ export default function DashboardPage() {
             }
             const data = await res.json();
 
-            // Assuming API returns { onlineCount, offlineCount }
             newCounts[guild.id] = {
               online: data.onlineCount ?? 0,
               offline: data.offlineCount ?? 0,
@@ -270,7 +268,6 @@ function GuildCard({
 }: GuildCardProps) {
   const isLoading = loadingGuildId === guild.id;
 
-  // Show counts if hovered or on mobile
   const showCounts = isMobile || hoveredGuildId === guild.id;
 
   return (
@@ -317,8 +314,14 @@ function GuildCard({
           }`}
           style={{ willChange: "max-height, opacity" }}
         >
-          <p>Online: {onlineCount}</p>
-          <p>Offline: {offlineCount}</p>
+          <p className="flex items-center justify-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+            Online: {onlineCount}
+          </p>
+          <p className="flex items-center justify-center gap-2">
+            <span className="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+            Offline: {offlineCount}
+          </p>
         </div>
       </div>
     </div>
