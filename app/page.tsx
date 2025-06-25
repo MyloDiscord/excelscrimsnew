@@ -60,17 +60,17 @@ export default function HomePage() {
 
         <p
           className={`mt-8 max-w-md text-center text-sm text-gray-400 transition-all duration-300 ease-in-out
-            ${
-              isMobile
-                ? "opacity-100 translate-y-0"
-                : hovered
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 -translate-y-4 pointer-events-none"
-            }
-          `}
+    ${
+      isMobile
+        ? "opacity-100 translate-y-0"
+        : hovered
+        ? "opacity-100 translate-y-0"
+        : "opacity-0 -translate-y-4 pointer-events-none"
+    }
+  `}
           style={{ willChange: "opacity, transform" }}
         >
-          By signing in, you'll unlock access to our scrims and events.
+          By signing in, you&apos;ll unlock access to our scrims and events.
         </p>
       </div>
     </div>
