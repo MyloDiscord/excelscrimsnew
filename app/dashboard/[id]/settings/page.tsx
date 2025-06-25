@@ -84,12 +84,19 @@ export default function SettingsGuildPage() {
     async function fetchRoles() {
       if (!guildId || typeof guildId !== "string") return;
       try {
+        console.log("Fetching roles for guildId:", guildId);
         const res = await fetch(`/api/discord/guild/${guildId}/fetch-roles`);
+        if (!res.ok) {
+          console.error("Failed to fetch roles: HTTP status", res.status);
+          setError("Failed to fetch roles");
+          return;
+        }
         const data: DiscordRole[] = await res.json();
         const sortedRoles = data.sort((a, b) => b.position - a.position);
         setRoles(sortedRoles);
       } catch (err) {
         console.error("Failed to fetch roles:", err);
+        setError("Failed to fetch roles");
       }
     }
 
@@ -162,7 +169,7 @@ export default function SettingsGuildPage() {
                   Set Staff Roles
                 </Button>
               </DialogTrigger>
-              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white">
+              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
                 <DialogHeader>
                   <DialogTitle>Set Discord Staff Roles</DialogTitle>
                   <DialogDescription>
@@ -176,7 +183,7 @@ export default function SettingsGuildPage() {
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
-                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-red-600"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
                     >
                       {/* Empty content (blank button) */}
                       <span>&nbsp;</span>
