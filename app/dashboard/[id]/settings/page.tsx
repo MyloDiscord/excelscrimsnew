@@ -19,6 +19,8 @@ import {
   AlertDialogAction,
 } from "@/components/ui/alert-dialog";
 
+import { Check } from "lucide-react";
+
 type DiscordGuild = {
   id: string;
   name: string;
@@ -30,6 +32,7 @@ type DiscordRole = {
   id: string;
   name: string;
   color: number;
+  position: number;
 };
 
 type AdminGuildsResponse = {
@@ -133,6 +136,8 @@ export default function SettingsGuildPage() {
     );
   }
 
+  const sortedRoles = [...roles].sort((a, b) => b.position - a.position);
+
   return (
     <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
       <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
@@ -156,35 +161,35 @@ export default function SettingsGuildPage() {
           Settings
         </h1>
 
-        <Card className="w-full bg-[#1c1c1c] border border-neutral-800 shadow-xl rounded-xl">
+        <Card className="w-full bg-[#1c1c1c] border border-neutral-700 shadow-lg rounded-lg">
           <CardHeader>
-            <CardTitle className="text-xl font-semibold text-pink-400">
+            <CardTitle className="text-xl font-semibold text-gray-300">
               Set Discord Staff Roles
             </CardTitle>
           </CardHeader>
           <CardContent>
             <AlertDialog>
               <AlertDialogTrigger>
-                <Button className="w-full bg-gradient-to-r from-pink-500 to-red-500 hover:brightness-110 transition-all font-semibold shadow-md">
+                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md">
                   Set Staff Roles
                 </Button>
               </AlertDialogTrigger>
 
-              <AlertDialogContent className="bg-[#181818] border border-pink-600 text-white rounded-xl shadow-2xl max-w-lg mx-auto">
+              <AlertDialogContent className="bg-[#222222] border border-neutral-700 text-white rounded-lg shadow-lg max-w-lg mx-auto p-6">
                 <AlertDialogHeader>
                   <AlertDialogTitle>
-                    <div className="text-2xl font-bold mb-6 text-pink-400">
+                    <div className="text-3xl font-extrabold mb-8 text-gray-200 tracking-wide">
                       Select Staff Roles
                     </div>
                   </AlertDialogTitle>
                 </AlertDialogHeader>
 
-                <div className="space-y-3 max-h-72 overflow-y-auto pr-2 custom-scroll">
-                  {roles.map((role) => (
+                <div className="space-y-3 max-h-80 overflow-y-auto pr-3 scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-[#121212]">
+                  {sortedRoles.map((role) => (
                     <label
                       key={role.id}
                       htmlFor={`role-${role.id}`}
-                      className="flex items-center gap-4 p-2 hover:bg-[#2a2a2a] rounded-md cursor-pointer transition-colors select-none"
+                      className="flex items-center gap-5 p-3 hover:bg-[#2b2b2b] rounded-md cursor-pointer transition-colors select-none"
                     >
                       <input
                         type="checkbox"
@@ -194,43 +199,48 @@ export default function SettingsGuildPage() {
                         className="peer hidden"
                       />
                       <span
-                        className="w-6 h-6 border-2 border-white rounded-sm flex items-center justify-center transition-colors peer-checked:bg-pink-500 peer-checked:border-pink-500"
+                        className={`w-7 h-7 border-2 rounded-md flex items-center justify-center transition-colors shadow-sm
+                          ${
+                            selectedRoles.includes(role.id)
+                              ? "border-gray-300 bg-gray-300"
+                              : "border-gray-600 bg-transparent"
+                          }
+                        `}
                         aria-hidden="true"
                       >
-                        <svg
-                          className="w-4 h-4 text-black"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          viewBox="0 0 24 24"
-                        >
-                          <path d="M5 13l4 4L19 7" />
-                        </svg>
+                        {selectedRoles.includes(role.id) && (
+                          <Check className="w-5 h-5 text-gray-900" />
+                        )}
                       </span>
 
                       <span
-                        className="inline-block w-4 h-4 rounded-full flex-shrink-0"
+                        className="inline-block w-5 h-5 rounded-full flex-shrink-0"
                         style={{
                           backgroundColor: `#${role.color
                             .toString(16)
                             .padStart(6, "0")}`,
                         }}
                       />
-                      <span className="text-sm font-medium">{role.name}</span>
+                      <span className="text-base font-medium select-text text-gray-300">
+                        {role.name}
+                      </span>
                     </label>
                   ))}
                 </div>
 
-                <AlertDialogFooter className="mt-8 flex justify-end gap-4">
+                <AlertDialogFooter className="mt-10 flex justify-end gap-4">
                   <AlertDialogCancel>
-                    <Button variant="outline" className="border-neutral-600">
+                    <Button
+                      variant="outline"
+                      className="border border-gray-600 hover:border-gray-400 hover:text-gray-400 transition-colors font-semibold rounded-md"
+                    >
                       Cancel
                     </Button>
                   </AlertDialogCancel>
                   <AlertDialogAction>
                     <Button
                       onClick={handleSave}
-                      className="bg-pink-600 hover:bg-pink-700 transition-colors"
+                      className="bg-gray-700 hover:bg-gray-600 transition-colors font-semibold rounded-md"
                     >
                       Save
                     </Button>
