@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
-import { useHeader } from "@/app/components/HeaderContext";
+
 type DiscordGuild = {
   id: string;
   name: string;
@@ -24,8 +24,6 @@ export default function GuildDashboardPage() {
   const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const { setHeaderText } = useHeader();
-
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
@@ -34,8 +32,6 @@ export default function GuildDashboardPage() {
         setLoading(false);
         return;
       }
-
-      setHeaderText(`Dashboard - Loading...`);
 
       console.log("Checking access for guildId:", guildId);
 
@@ -51,7 +47,6 @@ export default function GuildDashboardPage() {
           console.error("Failed to fetch guilds, response text:", text);
           setError("Failed to fetch guilds");
           setLoading(false);
-          setHeaderText("Dashboard");
           return;
         }
 
@@ -62,15 +57,12 @@ export default function GuildDashboardPage() {
         if (data.known.some((guild) => guild.id === guildId)) {
           console.log("User is admin of this guild");
           setUnauthorized(false);
-          setHeaderText("Dashboard");
         } else if (data.unknown?.some((guild) => guild.id === guildId)) {
           console.log("User is not admin (guild in unknown)");
           setUnauthorized(true);
-          setHeaderText("Dashboard");
         } else {
           console.log("Guild not found in known or unknown");
           setUnauthorized(true);
-          setHeaderText("Dashboard");
         }
       } catch (e) {
         console.error("Error checking access:", e);
@@ -82,8 +74,7 @@ export default function GuildDashboardPage() {
 
     checkAccess();
 
-    return () => setHeaderText("Dashboard");
-  }, [guildId, setHeaderText]);
+  }, [guildId]);
 
   if (loading) {
     return (
