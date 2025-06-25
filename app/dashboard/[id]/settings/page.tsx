@@ -153,7 +153,7 @@ export default function SettingsGuildPage() {
     if (!guildId) return;
     setSaving(true);
     try {
-      const res = await fetch(`/api/discord/guild/${guildId}/save-roles`, {
+      const res = await fetch(`/api/discord/guild/${guildId}/save-staff-roles`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
