@@ -6,20 +6,12 @@ import { BackgroundBeams } from "@/components/ui/background-beams";
 import Sidebar from "../../../components/Sidebar";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
 
 type DiscordGuild = {
   id: string;
   name: string;
   permissions: string;
-  approximate_presence_count?: number;
-  approximate_offline_count?: number;
   icon?: string | null;
 };
 
@@ -42,9 +34,8 @@ export default function SettingsGuildPage() {
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
   const [roles, setRoles] = useState<DiscordRole[]>([]);
-  const [selectedRole, setSelectedRole] = useState<string | null>(null);
+  const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
 
-  // Load Guilds
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
@@ -58,14 +49,8 @@ export default function SettingsGuildPage() {
         const data: AdminGuildsResponse = await res.json();
 
         setAdminGuilds(data.known);
-
         const foundGuild = data.known.find((g) => g.id === guildId);
-        if (foundGuild) {
-          setCurrentGuild(foundGuild);
-          setUnauthorized(false);
-        } else {
-          setUnauthorized(true);
-        }
+        foundGuild ? setCurrentGuild(foundGuild) : setUnauthorized(true);
       } catch {
         setError("Error checking access");
       } finally {
@@ -76,7 +61,6 @@ export default function SettingsGuildPage() {
     checkAccess();
   }, [guildId]);
 
-  // Load Roles
   useEffect(() => {
     async function fetchRoles() {
       if (!guildId || typeof guildId !== "string") return;
@@ -92,6 +76,29 @@ export default function SettingsGuildPage() {
 
     fetchRoles();
   }, [guildId]);
+
+  const toggleRole = (roleId: string) => {
+    setSelectedRoles((prev) =>
+      prev.includes(roleId)
+        ? prev.filter((id) => id !== roleId)
+        : [...prev, roleId]
+    );
+  };
+
+  const handleSave = async () => {
+    try {
+      const res = await fetch(`/api/discord/guild/${guildId}/set-staff-roles`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ staffRoles: selectedRoles }),
+      });
+
+      const data = await res.json();
+      console.log("Saved staff roles:", data);
+    } catch (err) {
+      console.error("Error saving staff roles:", err);
+    }
+  };
 
   if (loading) {
     return (
@@ -134,32 +141,41 @@ export default function SettingsGuildPage() {
           Settings
         </h1>
 
-        {/* Staff Role Selector Card */}
         <Card className="w-full max-w-xl bg-[#1c1c1c] border border-neutral-800">
           <CardHeader>
             <CardTitle>Set Discord Staff Roles</CardTitle>
           </CardHeader>
           <CardContent>
-            <Select onValueChange={(value) => setSelectedRole(value)}>
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Select a role..." />
-              </SelectTrigger>
-              <SelectContent>
-                {roles.map((role) => (
-                  <SelectItem key={role.id} value={role.id}>
-                    <span
-                      className="inline-block w-3 h-3 rounded-full mr-2 align-middle"
-                      style={{
-                        backgroundColor: `#${role.color
-                          .toString(16)
-                          .padStart(6, "0")}`,
-                      }}
-                    />
-                    {role.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            <div className="space-y-2 max-h-64 overflow-y-auto">
+              {roles.map((role) => (
+                <label
+                  key={role.id}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <input
+                    type="checkbox"
+                    checked={selectedRoles.includes(role.id)}
+                    onChange={() => toggleRole(role.id)}
+                  />
+                  <span
+                    className="inline-block w-3 h-3 rounded-full"
+                    style={{
+                      backgroundColor: `#${role.color
+                        .toString(16)
+                        .padStart(6, "0")}`,
+                    }}
+                  />
+                  <span>{role.name}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+              <Button variant="outline" onClick={() => setSelectedRoles([])}>
+                Cancel
+              </Button>
+              <Button onClick={handleSave}>Save</Button>
+            </div>
           </CardContent>
         </Card>
       </main>
