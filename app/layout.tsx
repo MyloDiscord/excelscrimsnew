@@ -20,29 +20,6 @@ export const metadata: Metadata = {
   icons: {
     icon: "/Scrims.png",
   },
-  openGraph: {
-    title: "Excel Scrims",
-    description: "Official Excel Scrims Website.",
-    url: "https://excelscrims.com",
-    siteName: "Excel Scrims",
-    images: [
-      {
-        url: "https://excelscrims.com/Scrims_thumb.png",
-        width: 128,
-        height: 128,
-        alt: "Excel Scrims Thumbnail",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary",
-    title: "Excel Scrims",
-    description: "Official Excel Scrims Website.",
-    images: ["https://excelscrims.com/Scrims.png"],
-    creator: "@NexoScrims",
-  },
 };
 
 export default function RootLayout({
