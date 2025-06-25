@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import db from "@/lib/mongoose";
 import GuildSettings from "@/schemas/guildSettings";
 
@@ -15,6 +15,27 @@ export async function POST(req: NextRequest) {
     if (!userId) {
         return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
     }
+
+    const client = await clerkClient();
+    const discordTokenResponse = await client.users.getUserOauthAccessToken(userId, "discord");
+    const discordAccessToken = discordTokenResponse.data[0]?.token;
+
+    if (!discordAccessToken) {
+        return NextResponse.json({ message: "Discord not linked or access token missing" }, { status: 401 });
+    }
+
+    const discordUserRes = await fetch("https://discord.com/api/users/@me", {
+        headers: {
+            Authorization: `Bearer ${discordAccessToken}`,
+        },
+    });
+
+    if (!discordUserRes.ok) {
+        return NextResponse.json({ message: "Failed to fetch Discord user info" }, { status: 500 });
+    }
+
+    const discordUser = await discordUserRes.json();
+    const discordUserId = discordUser.id as string;
 
     await db.connect();
     console.log("db connected - processing...");
@@ -45,7 +66,7 @@ export async function POST(req: NextRequest) {
             {
                 guildId,
                 staffRoles,
-                lastUpdatedBy: lastUpdatedBy || userId,
+                lastUpdatedBy: lastUpdatedBy || discordUserId || userId,
             },
             { upsert: true, new: true, setDefaultsOnInsert: true }
         );
