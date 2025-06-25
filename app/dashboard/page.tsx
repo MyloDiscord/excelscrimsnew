@@ -20,6 +20,14 @@ type AdminGuildsResponse = {
   unknown?: DiscordGuild[];
 };
 
+type ErrorResponse = {
+  message?: string;
+};
+
+type GetTokenResponse = {
+  me: { accessToken: string }[];
+};
+
 export default function DashboardPage() {
   const { isSignedIn, isLoaded } = useUser();
   const [message, setMessage] = useState<string | null>(null);
@@ -46,11 +54,21 @@ export default function DashboardPage() {
           headers: { "Content-Type": "application/json" },
         });
 
-        const data = await response.json();
-        if (response.ok && data.me?.[0]?.accessToken) {
+        const data: GetTokenResponse | ErrorResponse = await response.json();
+
+        if (
+          response.ok &&
+          "me" in data &&
+          Array.isArray(data.me) &&
+          data.me[0]?.accessToken
+        ) {
           setAccessToken(data.me[0].accessToken);
         } else {
-          console.error("Error fetching token:", data.message);
+          const err = data as ErrorResponse;
+          console.error(
+            "Error fetching token:",
+            err.message ?? "Unknown error"
+          );
         }
       } catch (error) {
         console.error("Failed to fetch token:", error);
@@ -70,13 +88,18 @@ export default function DashboardPage() {
           headers: { "Content-Type": "application/json" },
         });
 
-        const data: AdminGuildsResponse = await response.json();
-        if (response.ok) {
+        const data: AdminGuildsResponse | ErrorResponse = await response.json();
+
+        if (response.ok && "known" in data) {
           setAdminGuilds(data);
           setIsLoadingGuilds(false);
           console.log(data.known.map((guild) => guild.id));
         } else {
-          console.error("Error fetching admin guilds:", (data as any)?.message);
+          const err = data as ErrorResponse;
+          console.error(
+            "Error fetching admin guilds:",
+            err.message ?? "Unknown error"
+          );
         }
       } catch (error) {
         console.error("Failed to fetch admin guilds:", error);
