@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight } from "lucide-react";
+import { Check } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -71,6 +72,27 @@ const Sidebar = ({
               </DropdownMenuTrigger>
 
               <DropdownMenuContent className="bg-[#1f1f1f] border border-gray-700 text-white mt-2">
+                <DropdownMenuItem
+                  disabled
+                  className="flex items-center justify-between opacity-50 cursor-default select-none"
+                >
+                  <span className="flex items-center gap-2">
+                    {guildAvatar && (
+                      <Image
+                        src={guildAvatar}
+                        alt={guildName}
+                        width={20}
+                        height={20}
+                        className="rounded-full"
+                      />
+                    )}
+                    {guildName}
+                  </span>
+                  <Check className="w-4 h-4 text-[#00f8ff]" />
+                </DropdownMenuItem>
+
+                <div className="border-t border-gray-700 my-1" />
+
                 {adminGuilds
                   .filter((guild) => guild.id !== guildId)
                   .map((guild) => (
