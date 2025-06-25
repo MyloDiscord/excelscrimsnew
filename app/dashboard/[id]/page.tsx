@@ -112,6 +112,7 @@ export default function GuildDashboardPage() {
               ? `https://cdn.discordapp.com/icons/${currentGuild.id}/${currentGuild.icon}.png`
               : null
           }
+          guildId={currentGuild.id}
         />
       )}
 

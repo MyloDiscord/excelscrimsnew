@@ -9,10 +9,12 @@ const Sidebar = ({
   current,
   guildName,
   guildAvatar,
+  guildId,
 }: {
   current: string;
   guildName: string;
   guildAvatar: string | null;
+  guildId: string;
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -70,14 +72,14 @@ const Sidebar = ({
         <ul className="space-y-3 flex-grow">
           <li>
             <Link
-              href="/epr"
+              href={`/dashboard/${guildId}`}
               className={`block p-3 rounded-lg hover:bg-gray-700 transition-colors ${
-                current === "EPR"
+                current === "Dashboard"
                   ? "bg-gray-800 text-white border-l-4 border-red-500 font-semibold"
                   : ""
               }`}
             >
-              EPR Leaderboards
+              Dashboard
             </Link>
           </li>
           <li>
@@ -153,7 +155,7 @@ const Sidebar = ({
               rel="noopener noreferrer"
               className="text-blue-500 hover:text-blue-400 transition-colors"
             >
-              Informed
+              Mylo
             </a>
           </p>
         </footer>
