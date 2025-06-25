@@ -18,7 +18,7 @@ type AdminGuildsResponse = {
 };
 
 export default function GuildDashboardPage() {
-  const { guildId } = useParams();
+  const { id: guildId } = useParams();
 
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
