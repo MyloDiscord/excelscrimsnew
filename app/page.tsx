@@ -78,6 +78,13 @@ export default function HomePage() {
           Socials
         </button>
 
+        <a
+          href="/privacy-policy"
+          className="mt-6 bg-[#1e1e1e] hover:bg-[#292929] text-gray-300 font-medium px-10 py-3 rounded-xl transition-all duration-300 ease-in-out shadow-md shadow-black/40"
+        >
+          Privacy Policy
+        </a>
+
         <div
           className={`flex flex-col items-center gap-3 mt-4 transition-all duration-300 ease-in-out
           ${
