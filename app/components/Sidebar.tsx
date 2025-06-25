@@ -68,21 +68,21 @@ const Sidebar = ({
               <DropdownMenuTrigger asChild>
                 <button
                   className="
-      text-sm 
-      bg-[#1f1f1f] 
-      text-[#00f8ff] 
-      px-3 py-1 
-      rounded-md 
-      border border-[#00f8ff] 
-      mt-1 
-      cursor-pointer 
-      hover:bg-[#2a2a2a] 
-      hover:text-[#00f8ff] 
-      transition-colors duration-200
-      focus:outline-none
-      focus:ring-2 focus:ring-[#00f8ff] 
-      focus:ring-offset-1
-    "
+                    text-sm 
+                    bg-[#1f1f1f] 
+                    text-[#00f8ff] 
+                    px-3 py-1 
+                    rounded-md 
+                    border border-[#00f8ff] 
+                    mt-1 
+                    cursor-pointer 
+                    hover:bg-[#2a2a2a] 
+                    hover:text-[#00f8ff] 
+                    transition-colors duration-200
+                    focus:outline-none
+                    focus:ring-2 focus:ring-[#00f8ff] 
+                    focus:ring-offset-1
+                  "
                 >
                   Switch Server
                 </button>
@@ -116,7 +116,7 @@ const Sidebar = ({
                     <DropdownMenuItem
                       key={guild.id}
                       asChild
-                      className="hover:bg-[#2a2a2a] hover:text-[#00f8ff]"
+                      className="cursor-pointer hover:bg-[#2a2a2a] hover:text-[#00f8ff]"
                     >
                       <Link
                         href={`/dashboard/${guild.id}`}
@@ -145,7 +145,7 @@ const Sidebar = ({
         {isOpen && (
           <button
             onClick={toggleSidebar}
-            className="mb-4 p-2 bg-[#00f8ff] text-white rounded"
+            className="mb-4 p-2 bg-[#00f8ff] text-white rounded cursor-pointer"
             aria-label="Close Sidebar"
           >
             Close
