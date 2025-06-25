@@ -54,7 +54,6 @@ export async function GET() {
 
         return NextResponse.json({ known, unknown });
     } catch (error) {
-        // @ts-expect-error
-        return NextResponse.json({ message: "Error fetching admin guilds", error: error.message }, { status: 500 });
+        return NextResponse.json({ message: "Error fetching admin guilds" }, { status: 500 });
     }
 }

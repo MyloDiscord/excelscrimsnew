@@ -42,7 +42,6 @@ export async function GET() {
 
         return NextResponse.json({ me });
     } catch (error) {
-        // @ts-expect-error
-        return NextResponse.json({ message: "Error fetching Discord user data", error: error.message }, { status: 500 });
+        return NextResponse.json({ message: "Error fetching Discord user data" }, { status: 500 });
     }
 }
