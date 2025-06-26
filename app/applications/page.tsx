@@ -67,7 +67,7 @@ export default function ApplicationsPage() {
 
       <div className="z-10 w-full max-w-2xl bg-[#1e1e1e] p-8 rounded-2xl shadow-xl border border-white/10">
         <h1 className="text-3xl font-bold text-center mb-4 capitalize">
-          {selectedRole ? `${selectedRole} Application` : "Apply for a Role"}
+          {selectedRole ? `${selectedRole} Application` : "Applications"}
         </h1>
 
         <div className="mb-6">
