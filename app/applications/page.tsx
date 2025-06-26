@@ -159,11 +159,11 @@ export default function ApplicationsPage() {
         valid = false;
       }
       if (!adminContribution.trim()) {
-        setWhyJobError("Please explain what you can tribute to Excel Scrims.");
+        setContributionError("Please explain what you can tribute to Excel Scrims.");
         valid = false;
       }
       if (!adminActivity.trim()) {
-        setWhyJobError("Please describe your activity in Excel Scrims.");
+        setActivityError("Please describe your activity in Excel Scrims.");
         valid = false;
       }
     }
