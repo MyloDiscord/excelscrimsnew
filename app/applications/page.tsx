@@ -170,6 +170,14 @@ export default function ApplicationsPage() {
             >
               ← Back
             </Button>
+
+            <Button
+              type="submit"
+              disabled={!!ageError}
+              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
+            >
+              Submit Application
+            </Button>
           </div>
         </>
       )}
@@ -258,19 +266,6 @@ export default function ApplicationsPage() {
             </SelectContent>
           </Select>
         </div>
-
-        {selectedRole && (
-          <form className="flex flex-col gap-4">
-            {getQuestions()}
-            <Button
-              type="submit"
-              disabled={!!ageError}
-              className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
-            >
-              Submit Application
-            </Button>
-          </form>
-        )}
       </div>
     </div>
   );
