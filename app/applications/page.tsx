@@ -731,7 +731,7 @@ export default function ApplicationsPage() {
               </div>
 
               <div className="text-sm text-zinc-300 leading-snug">
-                If you aren&#39;t in our Discord, join&nbsp;
+                If you aren&apos;t in our Discord, join&nbsp;
                 <a
                   href="https://discord.gg/scrims"
                   target="_blank"
