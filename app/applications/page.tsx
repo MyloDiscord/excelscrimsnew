@@ -434,7 +434,7 @@ export default function ApplicationsPage() {
             value={pastExp}
             onChange={(e) => {
               setPastExp(e.target.value);
-              if (pastExpError) setActivityError("");
+              if (pastExpError) setPastExpError("");
             }}
           />
           {pastExpError && (
