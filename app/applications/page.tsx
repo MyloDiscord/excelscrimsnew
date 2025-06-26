@@ -53,16 +53,7 @@ export default function ApplicationsPage() {
 
   const adminQuestions = (
     <>
-      <label className="font-semibold">
-        What makes you a good fit for Admin?
-      </label>
-      <Textarea className="mb-4" placeholder="Explain your qualifications..." />
-      <label className="font-semibold">
-        How would you handle a conflict between staff?
-      </label>
-      <Textarea className="mb-4" placeholder="Describe your approach..." />
-
-      <div className="mt-6 bg-[#292929] p-4 rounded-md border border-white/20 text-zinc-300 space-y-4">
+      <div className="mb-6 mt-2 bg-[#292929] p-4 rounded-md border border-white/20 text-zinc-300 space-y-4">
         <h2 className="text-lg font-semibold text-white">Overview</h2>
         <p>
           If your application is successful, you will be recruited as an{" "}
@@ -86,6 +77,15 @@ export default function ApplicationsPage() {
           you should expect your application to have been denied.
         </p>
       </div>
+
+      <label className="font-semibold">
+        What makes you a good fit for Admin?
+      </label>
+      <Textarea className="mb-4" placeholder="Explain your qualifications..." />
+      <label className="font-semibold">
+        How would you handle a conflict between staff?
+      </label>
+      <Textarea className="mb-4" placeholder="Describe your approach..." />
     </>
   );
 
