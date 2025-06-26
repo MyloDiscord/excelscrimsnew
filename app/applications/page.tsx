@@ -55,7 +55,6 @@ const scenario3Options = [
     label: "Get the Admin side of the story before taking action.",
   },
   { value: "discuss", label: "Discuss it with other Admins." },
-  { value: "other", label: "Other:" },
 ];
 
 export default function ApplicationsPage() {
