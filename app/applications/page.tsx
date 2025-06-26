@@ -13,6 +13,18 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
+
 export default function ApplicationsPage() {
   const { user, isSignedIn, isLoaded } = useUser();
 
@@ -38,6 +50,12 @@ export default function ApplicationsPage() {
   // Admin answers
   const [adminRegion, setAdminRegion] = useState("");
   const [adminWhyJob, setAdminWhyJob] = useState("");
+
+  // Alert dialog open state
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
+
+  // Store answers to submit after alert confirm
+  const [pendingSubmitData, setPendingSubmitData] = useState(null);
 
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
@@ -185,7 +203,7 @@ export default function ApplicationsPage() {
           <Button
             type="button"
             onClick={() => setFormPage(2)}
-            className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition"
+            className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition cursor-pointer"
           >
             Next →
           </Button>
@@ -208,23 +226,77 @@ export default function ApplicationsPage() {
             <Button
               type="button"
               onClick={() => setFormPage(1)}
-              className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition"
+              className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition cursor-pointer"
             >
               ← Back
             </Button>
 
-            <Button
-              type="submit"
-              disabled={!!ageError}
-              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
-            >
-              Submit Application
-            </Button>
+            {/* Use AlertDialogTrigger to wrap submit button to open alert dialog */}
+            <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+              <AlertDialogTrigger asChild>
+                <Button
+                  type="button"
+                  disabled={!!ageError}
+                  className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+                >
+                  Submit Application
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    Are you sure you want to submit your application? This
+                    action cannot be undone.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel className="cursor-pointer">
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    className="cursor-pointer"
+                    onClick={() => {
+                      setIsAlertOpen(false);
+                      handleSubmit();
+                    }}
+                  >
+                    Confirm
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </div>
         </>
       )}
     </>
   );
+
+  function handleSubmit() {
+    let answers;
+    if (selectedRole === "host") {
+      answers = {
+        role: "host",
+        answer1: hostAnswer1,
+        answer2: hostAnswer2,
+      };
+    } else if (selectedRole === "helper") {
+      answers = {
+        role: "helper",
+        answer1: helperAnswer1,
+        answer2: helperAnswer2,
+      };
+    } else if (selectedRole === "admin") {
+      answers = {
+        role: "admin",
+        age,
+        region: adminRegion,
+        whyJob: adminWhyJob,
+      };
+    }
+    console.log("Submitted answers:", answers);
+    // TODO: Replace this with your actual submit logic (API call, etc)
+  }
 
   const getQuestions = () => {
     if (selectedRole === "host") return hostQuestions;
@@ -256,7 +328,6 @@ export default function ApplicationsPage() {
               <button
                 onClick={() => {
                   setCardVisible(false);
-
                   setTimeout(() => {
                     setHideDiscordCard(true);
                     localStorage.setItem("hideDiscordCard", "true");
@@ -311,33 +382,7 @@ export default function ApplicationsPage() {
 
         {selectedRole && (
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-
-              let answers;
-              if (selectedRole === "host") {
-                answers = {
-                  role: "host",
-                  answer1: hostAnswer1,
-                  answer2: hostAnswer2,
-                };
-              } else if (selectedRole === "helper") {
-                answers = {
-                  role: "helper",
-                  answer1: helperAnswer1,
-                  answer2: helperAnswer2,
-                };
-              } else if (selectedRole === "admin") {
-                answers = {
-                  role: "admin",
-                  age,
-                  region: adminRegion,
-                  whyJob: adminWhyJob,
-                };
-              }
-
-              console.log("Submitted answers:", answers);
-            }}
+            onSubmit={(e) => e.preventDefault()} // prevent default submit, submit handled on alert confirm
             className="flex flex-col gap-4"
           >
             {getQuestions()}
