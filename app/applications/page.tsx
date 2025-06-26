@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export default function ApplicationsPage() {
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
-  const [cardVisible, setCardVisible] = useState(false);
+  const [cardVisible, setCardVisible] = useState(true);
 
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
