@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 export default function ApplicationsPage() {
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
-  const [cardVisible, setCardVisible] = useState(true);
+  const [cardVisible, setCardVisible] = useState(false);
 
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
@@ -93,8 +93,12 @@ export default function ApplicationsPage() {
             <div className="relative flex items-center gap-3 p-4 rounded-xl bg-[#1A1A1A] border border-white/10 shadow-sm">
               <button
                 onClick={() => {
-                  setHideDiscordCard(true);
-                  localStorage.setItem("hideDiscordCard", "true");
+                  setCardVisible(false);
+
+                  setTimeout(() => {
+                    setHideDiscordCard(true);
+                    localStorage.setItem("hideDiscordCard", "true");
+                  }, 500);
                 }}
                 className="absolute top-2 right-2 text-zinc-500 hover:text-white text-sm cursor-pointer"
                 aria-label="Close"
