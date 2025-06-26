@@ -39,23 +39,16 @@ export default function ApplicationsPage() {
   const [ageError, setAgeError] = useState("");
   const [formPage, setFormPage] = useState(1);
 
-  // Host answers
   const [hostAnswer1, setHostAnswer1] = useState("");
   const [hostAnswer2, setHostAnswer2] = useState("");
 
-  // Helper answers
   const [helperAnswer1, setHelperAnswer1] = useState("");
   const [helperAnswer2, setHelperAnswer2] = useState("");
 
-  // Admin answers
   const [adminRegion, setAdminRegion] = useState("");
   const [adminWhyJob, setAdminWhyJob] = useState("");
 
-  // Alert dialog open state
   const [isAlertOpen, setIsAlertOpen] = useState(false);
-
-  // Store answers to submit after alert confirm
-  const [pendingSubmitData, setPendingSubmitData] = useState(null);
 
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
