@@ -61,6 +61,31 @@ export default function ApplicationsPage() {
         How would you handle a conflict between staff?
       </label>
       <Textarea className="mb-4" placeholder="Describe your approach..." />
+
+      <div className="mt-6 bg-[#292929] p-4 rounded-md border border-white/20 text-zinc-300 space-y-4">
+        <h2 className="text-lg font-semibold text-white">Overview</h2>
+        <p>
+          If your application is successful, you will be recruited as an{" "}
+          <span className="font-semibold">Excel Admin</span>. This role involves
+          major leadership when dealing with staff and server members. This role
+          involves running our scrims operations for our players. Experience
+          with being in charge of staff.
+        </p>
+        <h2 className="text-lg font-semibold text-white">Benefits</h2>
+        <ul className="list-disc list-inside space-y-1">
+          <li>Gain experience in one of the best Scrims Servers in NA.</li>
+          <li>Be a part of our staff community and meet new people.</li>
+          <li>
+            Contribute to the server to allow us to provide an amazing
+            experience.
+          </li>
+        </ul>
+        <p className="text-sm text-zinc-400">
+          Due to the large volume of applicants, we do not contact those whose
+          application is denied. If you don't receive a DM within a week, you
+          should expect your application to have been denied.
+        </p>
+      </div>
     </>
   );
 
