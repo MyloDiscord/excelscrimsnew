@@ -23,6 +23,9 @@ export default function ApplicationsPage() {
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
+  const [age, setAge] = useState("");
+  const [ageError, setAgeError] = useState("");
+  const [formPage, setFormPage] = useState(1);
 
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
@@ -76,48 +79,97 @@ export default function ApplicationsPage() {
 
   const adminQuestions = (
     <>
-      <div className="mb-6 mt-2 bg-[#292929] p-4 rounded-md border border-white/20 text-zinc-300 space-y-4">
-        <h2 className="text-lg font-semibold text-white">Overview</h2>
-        <p>
-          If your application is successful, you will be recruited as an{" "}
-          <span className="font-semibold">Excel Admin</span>. This role involves
-          major leadership when dealing with staff and server members. This role
-          involves running our scrims operations for our players. Experience
-          with being in charge of staff.
-        </p>
-        <h2 className="text-lg font-semibold text-white">Benefits</h2>
-        <ul className="list-disc list-inside space-y-1">
-          <li>Gain experience in one of the best Scrims Servers in NA.</li>
-          <li>Be a part of our staff community and meet new people.</li>
-          <li>
-            Contribute to the server to allow us to provide an amazing
-            experience.
-          </li>
-        </ul>
-        <p className="text-sm text-zinc-400">
-          Due to the large volume of applicants, we do not contact those whose
-          application is denied. If you don&#39;t receive a DM within a week,
-          you should expect your application to have been denied.
-        </p>
-      </div>
+      {formPage === 1 && (
+        <>
+          <div className="mb-6 mt-2 bg-[#292929] p-4 rounded-md border border-white/20 text-zinc-300 space-y-4">
+            <h2 className="text-lg font-semibold text-white">Overview</h2>
+            <p>
+              If your application is successful, you will be recruited as an{" "}
+              <span className="font-semibold">Excel Admin</span>. This role
+              involves...
+            </p>
+            <h2 className="text-lg font-semibold text-white">Benefits</h2>
+            <ul className="list-disc list-inside space-y-1">
+              <li>Gain experience...</li>
+              <li>Be a part of...</li>
+              <li>Contribute to the server...</li>
+            </ul>
+          </div>
 
-      <label className="font-semibold">
-        How old are you?
-        <p className="text-sm text-zinc-400">
-          You must be at least 14 years of age.
-        </p>
-      </label>
-      <Textarea className="mb-4" placeholder="Age..." />
+          <label className="font-semibold">
+            How old are you?
+            <p className="text-sm text-zinc-400">
+              You must be at least 14 years of age.
+            </p>
+          </label>
+          <Textarea
+            className="mb-2"
+            placeholder="Age..."
+            value={age}
+            onChange={(e) => {
+              const value = e.target.value;
+              setAge(value);
+              const numericAge = parseInt(value);
+              if (!isNaN(numericAge) && numericAge < 14) {
+                setAgeError("You must be 14 or older.");
+              } else {
+                setAgeError("");
+              }
+            }}
+          />
+          {ageError && <p className="text-red-500 text-sm">{ageError}</p>}
 
-      <label className="font-semibold">What is your Discord Username?</label>
-      <Textarea
-        className="mb-4"
-        value={user?.username || user?.fullName || "Loading..."}
-        disabled
-      />
+          <label className="font-semibold">
+            What is your Discord Username?
+          </label>
+          <Textarea
+            className="mb-4"
+            value={user?.username || user?.fullName || "Loading..."}
+            disabled
+          />
 
-      <label className="font-semibold">What is your Discord ID?</label>
-      <Textarea className="mb-4" value={discordId} disabled />
+          <label className="font-semibold">What is your Discord ID?</label>
+          <Textarea className="mb-4" value={discordId} disabled />
+
+          <label className="font-semibold">What region are you?</label>
+          <Textarea className="mb-4" placeholder="Region..." />
+
+          <Button
+            type="button"
+            onClick={() => setFormPage(2)}
+            className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition"
+          >
+            Next →
+          </Button>
+        </>
+      )}
+
+      {formPage === 2 && (
+        <>
+          <label className="font-semibold">
+            Why do you want to do this job?
+          </label>
+          <Textarea className="mb-4" placeholder="Explain..." />
+
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              onClick={() => setFormPage(1)}
+              className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition"
+            >
+              ← Back
+            </Button>
+
+            <Button
+              type="submit"
+              disabled={!!ageError}
+              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
+            >
+              Submit Application
+            </Button>
+          </div>
+        </>
+      )}
     </>
   );
 
@@ -209,6 +261,7 @@ export default function ApplicationsPage() {
             {getQuestions()}
             <Button
               type="submit"
+              disabled={!!ageError}
               className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
             >
               Submit Application
