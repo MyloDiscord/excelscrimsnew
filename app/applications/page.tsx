@@ -450,6 +450,75 @@ export default function ApplicationsPage() {
               ← Back
             </Button>
 
+            {/* <Button
+              type="button"
+              disabled={!!ageError}
+              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+              onClick={() => {
+                if (validateApplication()) {
+                  setIsAlertOpen(true);
+                }
+              }}
+            >
+              Submit Application
+            </Button> */}
+          </div>
+
+          <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+            <AlertDialogContent className="bg-[#1e1e1e] text-white border border-white/10">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to submit your application? This action
+                  cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="cursor-pointer text-black">
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="cursor-pointer"
+                  onClick={() => {
+                    setIsAlertOpen(false);
+                    handleSubmit();
+                  }}
+                >
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        </>
+      )}
+
+      {formPage === 3 && (
+        <>
+          <label className="font-semibold">
+            test label
+          </label>
+          <Textarea
+            className={`mb-2 ${whyJobError ? "border-red-500" : ""}`}
+            placeholder="Explain..."
+            value={adminWhyJob}
+            onChange={(e) => {
+              setAdminWhyJob(e.target.value);
+              if (whyJobError) setWhyJobError("");
+            }}
+          />
+          {whyJobError && (
+            <p className="text-red-500 text-sm mb-3">{whyJobError}</p>
+          )}
+
+          <div className="flex justify-between">
+            <Button
+              type="button"
+              onClick={() => setFormPage(2)}
+              className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition cursor-pointer"
+            >
+              ← Back
+            </Button>
+
             <Button
               type="button"
               disabled={!!ageError}
