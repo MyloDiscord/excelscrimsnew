@@ -45,6 +45,8 @@ export default function ApplicationsPage() {
   const [activityError, setActivityError] = useState("");
   const [adminUnderstanding, setAdminUnderstanding] = useState("");
   const [understandingError, setUnderstandingError] = useState("");
+  const [pastExp, setPastExp] = useState("");
+  const [pastExpError, setPastExpError] = useState("");
 
   // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
@@ -172,6 +174,10 @@ export default function ApplicationsPage() {
       }
       if (!adminUnderstanding.trim()) {
         setUnderstandingError("Please select Yes or No.");
+        valid = false;
+      }
+      if (!pastExp.trim()) {
+        setPastExpError("Please explain what experience you have.");
         valid = false;
       }
     }
@@ -414,6 +420,25 @@ export default function ApplicationsPage() {
           </Select>
           {understandingError && (
             <p className="text-red-500 text-sm mb-3">{understandingError}</p>
+          )}
+
+          <label className="font-semibold">
+            Do you have any past experience being an Administrator?
+          </label>
+          <p className="text-sm text-zinc-400">
+            Preferably experience in a Fortnite Scrim server. (List them below)
+          </p>
+          <Textarea
+            className={`mb-2 ${pastExpError ? "border-red-500" : ""}`}
+            placeholder="Answer..."
+            value={pastExp}
+            onChange={(e) => {
+              setPastExp(e.target.value);
+              if (pastExpError) setActivityError("");
+            }}
+          />
+          {pastExpError && (
+            <p className="text-red-500 text-sm mb-3">{pastExpError}</p>
           )}
 
           <div className="flex justify-between">
