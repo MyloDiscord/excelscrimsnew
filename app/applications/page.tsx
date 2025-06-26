@@ -43,6 +43,8 @@ export default function ApplicationsPage() {
   const [contributionError, setContributionError] = useState("");
   const [adminActivity, setAdminActivity] = useState("");
   const [activityError, setActivityError] = useState("");
+  const [adminUnderstanding, setAdminUnderstanding] = useState("");
+  const [understandingError, setUnderstandingError] = useState("");
 
   // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
@@ -159,11 +161,17 @@ export default function ApplicationsPage() {
         valid = false;
       }
       if (!adminContribution.trim()) {
-        setContributionError("Please explain what you can tribute to Excel Scrims.");
+        setContributionError(
+          "Please explain what you can tribute to Excel Scrims."
+        );
         valid = false;
       }
       if (!adminActivity.trim()) {
         setActivityError("Please describe your activity in Excel Scrims.");
+        valid = false;
+      }
+      if (!adminUnderstanding.trim()) {
+        setUnderstandingError("Please select Yes or No.");
         valid = false;
       }
     }
@@ -384,6 +392,30 @@ export default function ApplicationsPage() {
             <p className="text-red-500 text-sm mb-3">{activityError}</p>
           )}
 
+          <label className="font-semibold">
+            Do you understand the importance of this job?
+          </label>
+          <Select
+            value={adminUnderstanding}
+            onValueChange={(val) => {
+              setAdminUnderstanding(val);
+              if (understandingError) setUnderstandingError("");
+            }}
+          >
+            <SelectTrigger
+              className={`mb-2 ${understandingError ? "border-red-500" : ""}`}
+            >
+              <SelectValue placeholder="Select an answer" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="yes">Yes</SelectItem>
+              <SelectItem value="no">No</SelectItem>
+            </SelectContent>
+          </Select>
+          {understandingError && (
+            <p className="text-red-500 text-sm mb-3">{understandingError}</p>
+          )}
+
           <div className="flex justify-between">
             <Button
               type="button"
@@ -457,6 +489,9 @@ export default function ApplicationsPage() {
         age,
         region: adminRegion,
         whyJob: adminWhyJob,
+        contribution: adminContribution,
+        activity: adminActivity,
+        understanding: adminUnderstanding,
       };
     }
     console.log("Submitted answers:", answers);
