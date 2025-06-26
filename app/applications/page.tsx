@@ -91,7 +91,6 @@ export default function ApplicationsPage() {
   function validateAdminStep1() {
     let valid = true;
 
-    // Reset errors first
     setAgeError("");
     setRegionError("");
 
@@ -116,7 +115,6 @@ export default function ApplicationsPage() {
 
   // Validate all questions on submit and set errors
   function validateApplication() {
-    // Reset errors
     setRoleError("");
     setHostAnswer1Error("");
     setHostAnswer2Error("");
@@ -151,7 +149,6 @@ export default function ApplicationsPage() {
       }
     } else if (selectedRole === "admin") {
       if (!validateAdminStep1()) {
-        // errors already set inside validateAdminStep1
         valid = false;
       }
       if (!adminWhyJob.trim()) {
@@ -368,6 +365,7 @@ export default function ApplicationsPage() {
                   Submit Application
                 </Button>
               </AlertDialogTrigger>
+
               <AlertDialogContent className="bg-[#1e1e1e] text-white border border-white/10">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
@@ -498,7 +496,7 @@ export default function ApplicationsPage() {
             onValueChange={(val) => {
               setSelectedRole(val);
               setRoleError("");
-              setFormPage(1); // reset form page when changing role
+              setFormPage(1);
             }}
             value={selectedRole}
           >
