@@ -35,18 +35,29 @@ export default function ApplicationsPage() {
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
-  const [age, setAge] = useState("");
-  const [ageError, setAgeError] = useState("");
-  const [formPage, setFormPage] = useState(1);
 
+  // Admin form fields
+  const [age, setAge] = useState("");
+  const [adminRegion, setAdminRegion] = useState("");
+  const [adminWhyJob, setAdminWhyJob] = useState("");
+
+  // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
   const [hostAnswer2, setHostAnswer2] = useState("");
-
   const [helperAnswer1, setHelperAnswer1] = useState("");
   const [helperAnswer2, setHelperAnswer2] = useState("");
 
-  const [adminRegion, setAdminRegion] = useState("");
-  const [adminWhyJob, setAdminWhyJob] = useState("");
+  const [formPage, setFormPage] = useState(1);
+
+  // Error states for validation messages
+  const [ageError, setAgeError] = useState("");
+  const [regionError, setRegionError] = useState("");
+  const [whyJobError, setWhyJobError] = useState("");
+  const [hostAnswer1Error, setHostAnswer1Error] = useState("");
+  const [hostAnswer2Error, setHostAnswer2Error] = useState("");
+  const [helperAnswer1Error, setHelperAnswer1Error] = useState("");
+  const [helperAnswer2Error, setHelperAnswer2Error] = useState("");
+  const [roleError, setRoleError] = useState("");
 
   const [isAlertOpen, setIsAlertOpen] = useState(false);
 
@@ -76,64 +87,113 @@ export default function ApplicationsPage() {
     );
   }
 
-  // Validation for Admin Step 1 (Next button)
+  // Validate Admin Step 1 fields and set errors
   function validateAdminStep1() {
-    if (!age) {
-      window.alert("Please enter your age.");
-      return false;
+    let valid = true;
+
+    // Reset errors first
+    setAgeError("");
+    setRegionError("");
+
+    if (!age.trim()) {
+      setAgeError("Please enter your age.");
+      valid = false;
+    } else {
+      const numericAge = parseInt(age);
+      if (isNaN(numericAge) || numericAge < 14) {
+        setAgeError("You must be at least 14 years old.");
+        valid = false;
+      }
     }
-    const numericAge = parseInt(age);
-    if (isNaN(numericAge) || numericAge < 14) {
-      window.alert("You must be at least 14 years old.");
-      return false;
-    }
+
     if (!adminRegion.trim()) {
-      window.alert("Please enter your region.");
-      return false;
+      setRegionError("Please enter your region.");
+      valid = false;
     }
-    return true;
+
+    return valid;
   }
 
-  // Validation before submit (all roles)
+  // Validate all questions on submit and set errors
   function validateApplication() {
+    // Reset errors
+    setRoleError("");
+    setHostAnswer1Error("");
+    setHostAnswer2Error("");
+    setHelperAnswer1Error("");
+    setHelperAnswer2Error("");
+    setWhyJobError("");
+
+    let valid = true;
+
+    if (!selectedRole) {
+      setRoleError("Please select a role.");
+      valid = false;
+    }
+
     if (selectedRole === "host") {
-      if (!hostAnswer1.trim() || !hostAnswer2.trim()) {
-        window.alert("Please answer all Host questions.");
-        return false;
+      if (!hostAnswer1.trim()) {
+        setHostAnswer1Error("This field is required.");
+        valid = false;
+      }
+      if (!hostAnswer2.trim()) {
+        setHostAnswer2Error("This field is required.");
+        valid = false;
       }
     } else if (selectedRole === "helper") {
-      if (!helperAnswer1.trim() || !helperAnswer2.trim()) {
-        window.alert("Please answer all Helper questions.");
-        return false;
+      if (!helperAnswer1.trim()) {
+        setHelperAnswer1Error("This field is required.");
+        valid = false;
+      }
+      if (!helperAnswer2.trim()) {
+        setHelperAnswer2Error("This field is required.");
+        valid = false;
       }
     } else if (selectedRole === "admin") {
-      if (!adminWhyJob.trim()) {
-        window.alert("Please explain why you want to do this job.");
-        return false;
+      if (!validateAdminStep1()) {
+        // errors already set inside validateAdminStep1
+        valid = false;
       }
-      // Admin step 1 already validated on Next button
+      if (!adminWhyJob.trim()) {
+        setWhyJobError("Please explain why you want to do this job.");
+        valid = false;
+      }
     }
-    return true;
+
+    return valid;
   }
 
   const hostQuestions = (
     <>
       <label className="font-semibold">Why do you want to be a Host?</label>
       <Textarea
-        className="mb-4"
+        className={`mb-1 ${hostAnswer1Error ? "border-red-500" : ""}`}
         placeholder="Explain in detail..."
         value={hostAnswer1}
-        onChange={(e) => setHostAnswer1(e.target.value)}
+        onChange={(e) => {
+          setHostAnswer1(e.target.value);
+          if (hostAnswer1Error) setHostAnswer1Error("");
+        }}
       />
+      {hostAnswer1Error && (
+        <p className="text-red-500 text-sm mb-3">{hostAnswer1Error}</p>
+      )}
+
       <label className="font-semibold">
         Do you have experience hosting events?
       </label>
       <Textarea
-        className="mb-4"
+        className={`mb-1 ${hostAnswer2Error ? "border-red-500" : ""}`}
         placeholder="Tell us about it..."
         value={hostAnswer2}
-        onChange={(e) => setHostAnswer2(e.target.value)}
+        onChange={(e) => {
+          setHostAnswer2(e.target.value);
+          if (hostAnswer2Error) setHostAnswer2Error("");
+        }}
       />
+      {hostAnswer2Error && (
+        <p className="text-red-500 text-sm mb-3">{hostAnswer2Error}</p>
+      )}
     </>
   );
 
@@ -143,20 +203,33 @@ export default function ApplicationsPage() {
         Why should we choose you as a Helper?
       </label>
       <Textarea
-        className="mb-4"
+        className={`mb-1 ${helperAnswer1Error ? "border-red-500" : ""}`}
         placeholder="Explain your strengths..."
         value={helperAnswer1}
-        onChange={(e) => setHelperAnswer1(e.target.value)}
+        onChange={(e) => {
+          setHelperAnswer1(e.target.value);
+          if (helperAnswer1Error) setHelperAnswer1Error("");
+        }}
       />
+      {helperAnswer1Error && (
+        <p className="text-red-500 text-sm mb-3">{helperAnswer1Error}</p>
+      )}
+
       <label className="font-semibold">
         Have you helped moderate a community before?
       </label>
       <Textarea
-        className="mb-4"
+        className={`mb-1 ${helperAnswer2Error ? "border-red-500" : ""}`}
         placeholder="Share your experience..."
         value={helperAnswer2}
-        onChange={(e) => setHelperAnswer2(e.target.value)}
+        onChange={(e) => {
+          setHelperAnswer2(e.target.value);
+          if (helperAnswer2Error) setHelperAnswer2Error("");
+        }}
       />
+      {helperAnswer2Error && (
+        <p className="text-red-500 text-sm mb-3">{helperAnswer2Error}</p>
+      )}
     </>
   );
 
@@ -196,7 +269,7 @@ export default function ApplicationsPage() {
             </p>
           </label>
           <Textarea
-            className="mb-2"
+            className={`mb-2 ${ageError ? "border-red-500" : ""}`}
             placeholder="Age..."
             value={age}
             onChange={(e) => {
@@ -211,7 +284,7 @@ export default function ApplicationsPage() {
               }
             }}
           />
-          {ageError && <p className="text-red-500 text-sm">{ageError}</p>}
+          {ageError && <p className="text-red-500 text-sm mb-3">{ageError}</p>}
 
           <label className="font-semibold">
             What is your Discord Username?
@@ -227,11 +300,17 @@ export default function ApplicationsPage() {
 
           <label className="font-semibold">What region are you?</label>
           <Textarea
-            className="mb-4"
+            className={`mb-2 ${regionError ? "border-red-500" : ""}`}
             placeholder="Region..."
             value={adminRegion}
-            onChange={(e) => setAdminRegion(e.target.value)}
+            onChange={(e) => {
+              setAdminRegion(e.target.value);
+              if (regionError) setRegionError("");
+            }}
           />
+          {regionError && (
+            <p className="text-red-500 text-sm mb-3">{regionError}</p>
+          )}
 
           <Button
             type="button"
@@ -253,11 +332,17 @@ export default function ApplicationsPage() {
             Why do you want to do this job?
           </label>
           <Textarea
-            className="mb-4"
+            className={`mb-2 ${whyJobError ? "border-red-500" : ""}`}
             placeholder="Explain..."
             value={adminWhyJob}
-            onChange={(e) => setAdminWhyJob(e.target.value)}
+            onChange={(e) => {
+              setAdminWhyJob(e.target.value);
+              if (whyJobError) setWhyJobError("");
+            }}
           />
+          {whyJobError && (
+            <p className="text-red-500 text-sm mb-3">{whyJobError}</p>
+          )}
 
           <div className="flex justify-between">
             <Button
@@ -274,6 +359,11 @@ export default function ApplicationsPage() {
                   type="button"
                   disabled={!!ageError}
                   className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+                  onClick={() => {
+                    if (validateApplication()) {
+                      setIsAlertOpen(true);
+                    }
+                  }}
                 >
                   Submit Application
                 </Button>
@@ -293,10 +383,8 @@ export default function ApplicationsPage() {
                   <AlertDialogAction
                     className="cursor-pointer"
                     onClick={() => {
-                      if (validateApplication()) {
-                        setIsAlertOpen(false);
-                        handleSubmit();
-                      }
+                      setIsAlertOpen(false);
+                      handleSubmit();
                     }}
                   >
                     Confirm
@@ -406,7 +494,14 @@ export default function ApplicationsPage() {
 
         <div className="mb-6">
           <label className="block mb-2 font-semibold">Select Role</label>
-          <Select onValueChange={setSelectedRole} value={selectedRole}>
+          <Select
+            onValueChange={(val) => {
+              setSelectedRole(val);
+              setRoleError("");
+              setFormPage(1); // reset form page when changing role
+            }}
+            value={selectedRole}
+          >
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a role" />
             </SelectTrigger>
@@ -416,6 +511,9 @@ export default function ApplicationsPage() {
               <SelectItem value="admin">Admin</SelectItem>
             </SelectContent>
           </Select>
+          {roleError && (
+            <p className="text-red-500 text-sm mt-1">{roleError}</p>
+          )}
         </div>
 
         {selectedRole && (
