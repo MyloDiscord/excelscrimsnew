@@ -669,6 +669,16 @@ export default function ApplicationsPage() {
     </>
   );
 
+  type ScenarioOption = {
+    value: string;
+    label: string;
+  };
+
+  function getLabel(options: ScenarioOption[], value: string): string {
+    const found = options.find((opt) => opt.value === value);
+    return found ? found.label : value;
+  }
+
   function handleSubmit() {
     let answers;
     if (selectedRole === "host") {
@@ -693,9 +703,9 @@ export default function ApplicationsPage() {
         activity: adminActivity,
         understanding: adminUnderstanding,
         pastExp,
-        scenario1,
-        scenario2,
-        scenario3,
+        scenario1: getLabel(scenario1Options, scenario1),
+        scenario2: getLabel(scenario2Options, scenario2),
+        scenario3: getLabel(scenario3Options, scenario3),
       };
     }
     console.log("Submitted answers:", answers);
