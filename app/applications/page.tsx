@@ -47,6 +47,8 @@ export default function ApplicationsPage() {
   const [understandingError, setUnderstandingError] = useState("");
   const [pastExp, setPastExp] = useState("");
   const [pastExpError, setPastExpError] = useState("");
+  const [scenarioAnswer, setScenarioAnswer] = useState("");
+  const [scenarioError, setScenarioError] = useState("");
 
   // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
@@ -553,21 +555,86 @@ export default function ApplicationsPage() {
 
       {formPage === 3 && (
         <>
-          <label className="font-semibold">test label</label>
-          <Textarea
-            className={`mb-2 ${whyJobError ? "border-red-500" : ""}`}
-            placeholder="Explain..."
-            value={adminWhyJob}
-            onChange={(e) => {
-              setAdminWhyJob(e.target.value);
-              if (whyJobError) setWhyJobError("");
-            }}
-          />
-          {whyJobError && (
-            <p className="text-red-500 text-sm mb-3">{whyJobError}</p>
-          )}
+          <div className="mb-6 bg-[#222226] p-4 rounded-lg border border-white/10">
+            <p className="text-zinc-200 mb-2 font-semibold">
+              This section will give you scenarios and you will have to answer
+              the question about what action you would take when facing said
+              scenario.
+            </p>
+          </div>
 
-          <div className="flex justify-between">
+          <div className="mb-3">
+            <label className="font-semibold block mb-1">
+              Question #4: How should you handle an Admin leaking private staff
+              information?
+            </label>
+            <div className="flex flex-col gap-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="scenario"
+                  value="delete"
+                  checked={scenarioAnswer === "delete"}
+                  onChange={() => {
+                    setScenarioAnswer("delete");
+                    setScenarioError("");
+                  }}
+                  className="accent-blue-600 w-4 h-4"
+                />
+                <span>Just delete it and move on.</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="scenario"
+                  value="tell"
+                  checked={scenarioAnswer === "tell"}
+                  onChange={() => {
+                    setScenarioAnswer("tell");
+                    setScenarioError("");
+                  }}
+                  className="accent-blue-600 w-4 h-4"
+                />
+                <span>Tell Management</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="scenario"
+                  value="demote"
+                  checked={scenarioAnswer === "demote"}
+                  onChange={() => {
+                    setScenarioAnswer("demote");
+                    setScenarioError("");
+                  }}
+                  className="accent-blue-600 w-4 h-4"
+                />
+                <span>Demote them immediately.</span>
+              </label>
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="scenario"
+                  value="discuss"
+                  checked={scenarioAnswer === "discuss"}
+                  onChange={() => {
+                    setScenarioAnswer("discuss");
+                    setScenarioError("");
+                  }}
+                  className="accent-blue-600 w-4 h-4"
+                />
+                <span>
+                  Discuss the issue with the staff member and make sure it's not
+                  too serious information.
+                </span>
+              </label>
+            </div>
+            {scenarioError && (
+              <p className="text-red-500 text-sm mt-2">{scenarioError}</p>
+            )}
+          </div>
+
+          <div className="flex justify-between mt-6">
             <Button
               type="button"
               onClick={() => setFormPage(2)}
@@ -578,10 +645,12 @@ export default function ApplicationsPage() {
 
             <Button
               type="button"
-              disabled={!!ageError}
               className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
               onClick={() => {
-                if (validateApplication()) {
+                if (!scenarioAnswer) {
+                  setScenarioError("Please select an answer.");
+                } else {
+                  setScenarioError("");
                   setIsAlertOpen(true);
                 }
               }}
@@ -643,6 +712,7 @@ export default function ApplicationsPage() {
         contribution: adminContribution,
         activity: adminActivity,
         understanding: adminUnderstanding,
+        scenarioAnswer,
       };
     }
     console.log("Submitted answers:", answers);
