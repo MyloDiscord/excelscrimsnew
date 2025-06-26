@@ -426,26 +426,26 @@ export default function ApplicationsPage() {
   }
 
   // Optional: reset form function
-  function resetForm() {
-    setSelectedRole("");
-    setAge("");
-    setAdminRegion("");
-    setAdminWhyJob("");
-    setHostAnswer1("");
-    setHostAnswer2("");
-    setHelperAnswer1("");
-    setHelperAnswer2("");
-    setFormPage(1);
+//   function resetForm() {
+//     setSelectedRole("");
+//     setAge("");
+//     setAdminRegion("");
+//     setAdminWhyJob("");
+//     setHostAnswer1("");
+//     setHostAnswer2("");
+//     setHelperAnswer1("");
+//     setHelperAnswer2("");
+//     setFormPage(1);
 
-    setAgeError("");
-    setRegionError("");
-    setWhyJobError("");
-    setHostAnswer1Error("");
-    setHostAnswer2Error("");
-    setHelperAnswer1Error("");
-    setHelperAnswer2Error("");
-    setRoleError("");
-  }
+//     setAgeError("");
+//     setRegionError("");
+//     setWhyJobError("");
+//     setHostAnswer1Error("");
+//     setHostAnswer2Error("");
+//     setHelperAnswer1Error("");
+//     setHelperAnswer2Error("");
+//     setRoleError("");
+//   }
 
   const getQuestions = () => {
     if (selectedRole === "host") return hostQuestions;
