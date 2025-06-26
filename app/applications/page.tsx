@@ -39,6 +39,10 @@ export default function ApplicationsPage() {
   const [age, setAge] = useState("");
   const [adminRegion, setAdminRegion] = useState("");
   const [adminWhyJob, setAdminWhyJob] = useState("");
+  const [adminContribution, setAdminContribution] = useState("");
+  const [contributionError, setContributionError] = useState("");
+  const [adminActivity, setAdminActivity] = useState("");
+  const [activityError, setActivityError] = useState("");
 
   // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
@@ -152,6 +156,14 @@ export default function ApplicationsPage() {
       }
       if (!adminWhyJob.trim()) {
         setWhyJobError("Please explain why you want to do this job.");
+        valid = false;
+      }
+      if (!adminContribution.trim()) {
+        setWhyJobError("Please explain what you can tribute to Excel Scrims.");
+        valid = false;
+      }
+      if (!adminActivity.trim()) {
+        setWhyJobError("Please describe your activity in Excel Scrims.");
         valid = false;
       }
     }
@@ -338,6 +350,38 @@ export default function ApplicationsPage() {
           />
           {whyJobError && (
             <p className="text-red-500 text-sm mb-3">{whyJobError}</p>
+          )}
+
+          <label className="font-semibold">
+            What can you contribute to Excel Scrims?
+          </label>
+          <Textarea
+            className={`mb-2 ${contributionError ? "border-red-500" : ""}`}
+            placeholder="Explain..."
+            value={adminContribution}
+            onChange={(e) => {
+              setAdminContribution(e.target.value);
+              if (contributionError) setContributionError("");
+            }}
+          />
+          {contributionError && (
+            <p className="text-red-500 text-sm mb-3">{contributionError}</p>
+          )}
+
+          <label className="font-semibold">
+            Are you highly active in Excel Scrims?
+          </label>
+          <Textarea
+            className={`mb-2 ${activityError ? "border-red-500" : ""}`}
+            placeholder="Answer..."
+            value={adminActivity}
+            onChange={(e) => {
+              setAdminActivity(e.target.value);
+              if (activityError) setActivityError("");
+            }}
+          />
+          {activityError && (
+            <p className="text-red-500 text-sm mb-3">{activityError}</p>
           )}
 
           <div className="flex justify-between">
