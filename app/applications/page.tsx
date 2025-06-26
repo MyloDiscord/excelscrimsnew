@@ -69,7 +69,7 @@ export default function ApplicationsPage() {
         <h1 className="text-3xl font-bold text-center mb-6 capitalize">
           {selectedRole ? `${selectedRole} Application` : "Apply for a Role"}
         </h1>
-
+ 
         <div className="mb-6">
           <label className="block mb-2 font-semibold">Select Role</label>
           <Select onValueChange={setSelectedRole}>
