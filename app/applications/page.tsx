@@ -76,6 +76,46 @@ export default function ApplicationsPage() {
     );
   }
 
+  // Validation for Admin Step 1 (Next button)
+  function validateAdminStep1() {
+    if (!age) {
+      window.alert("Please enter your age.");
+      return false;
+    }
+    const numericAge = parseInt(age);
+    if (isNaN(numericAge) || numericAge < 14) {
+      window.alert("You must be at least 14 years old.");
+      return false;
+    }
+    if (!adminRegion.trim()) {
+      window.alert("Please enter your region.");
+      return false;
+    }
+    return true;
+  }
+
+  // Validation before submit (all roles)
+  function validateApplication() {
+    if (selectedRole === "host") {
+      if (!hostAnswer1.trim() || !hostAnswer2.trim()) {
+        window.alert("Please answer all Host questions.");
+        return false;
+      }
+    } else if (selectedRole === "helper") {
+      if (!helperAnswer1.trim() || !helperAnswer2.trim()) {
+        window.alert("Please answer all Helper questions.");
+        return false;
+      }
+    } else if (selectedRole === "admin") {
+      if (!adminWhyJob.trim()) {
+        window.alert("Please explain why you want to do this job.");
+        return false;
+      }
+      // Admin step 1 already validated on Next button
+    }
+    return true;
+  }
+
   const hostQuestions = (
     <>
       <label className="font-semibold">Why do you want to be a Host?</label>
@@ -84,7 +124,6 @@ export default function ApplicationsPage() {
         placeholder="Explain in detail..."
         value={hostAnswer1}
         onChange={(e) => setHostAnswer1(e.target.value)}
-        required
       />
       <label className="font-semibold">
         Do you have experience hosting events?
@@ -94,7 +133,6 @@ export default function ApplicationsPage() {
         placeholder="Tell us about it..."
         value={hostAnswer2}
         onChange={(e) => setHostAnswer2(e.target.value)}
-        required
       />
     </>
   );
@@ -109,7 +147,6 @@ export default function ApplicationsPage() {
         placeholder="Explain your strengths..."
         value={helperAnswer1}
         onChange={(e) => setHelperAnswer1(e.target.value)}
-        required
       />
       <label className="font-semibold">
         Have you helped moderate a community before?
@@ -119,7 +156,6 @@ export default function ApplicationsPage() {
         placeholder="Share your experience..."
         value={helperAnswer2}
         onChange={(e) => setHelperAnswer2(e.target.value)}
-        required
       />
     </>
   );
@@ -174,7 +210,6 @@ export default function ApplicationsPage() {
                 setAgeError("");
               }
             }}
-            required
           />
           {ageError && <p className="text-red-500 text-sm">{ageError}</p>}
 
@@ -196,12 +231,15 @@ export default function ApplicationsPage() {
             placeholder="Region..."
             value={adminRegion}
             onChange={(e) => setAdminRegion(e.target.value)}
-            required
           />
 
           <Button
             type="button"
-            onClick={() => setFormPage(2)}
+            onClick={() => {
+              if (validateAdminStep1()) {
+                setFormPage(2);
+              }
+            }}
             className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition cursor-pointer"
           >
             Next →
@@ -219,7 +257,6 @@ export default function ApplicationsPage() {
             placeholder="Explain..."
             value={adminWhyJob}
             onChange={(e) => setAdminWhyJob(e.target.value)}
-            required
           />
 
           <div className="flex justify-between">
@@ -231,7 +268,6 @@ export default function ApplicationsPage() {
               ← Back
             </Button>
 
-            {/* Use AlertDialogTrigger to wrap submit button to open alert dialog */}
             <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
               <AlertDialogTrigger asChild>
                 <Button
@@ -251,14 +287,16 @@ export default function ApplicationsPage() {
                   </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer">
+                  <AlertDialogCancel className="cursor-pointer text-black">
                     Cancel
                   </AlertDialogCancel>
                   <AlertDialogAction
                     className="cursor-pointer"
                     onClick={() => {
-                      setIsAlertOpen(false);
-                      handleSubmit();
+                      if (validateApplication()) {
+                        setIsAlertOpen(false);
+                        handleSubmit();
+                      }
                     }}
                   >
                     Confirm
@@ -368,7 +406,7 @@ export default function ApplicationsPage() {
 
         <div className="mb-6">
           <label className="block mb-2 font-semibold">Select Role</label>
-          <Select onValueChange={setSelectedRole} value={selectedRole} required>
+          <Select onValueChange={setSelectedRole} value={selectedRole}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a role" />
             </SelectTrigger>
@@ -382,7 +420,7 @@ export default function ApplicationsPage() {
 
         {selectedRole && (
           <form
-            onSubmit={(e) => e.preventDefault()} // prevent default submit, submit handled on alert confirm
+            onSubmit={(e) => e.preventDefault()}
             className="flex flex-col gap-4"
           >
             {getQuestions()}
