@@ -123,14 +123,34 @@ export default function ApplicationsPage() {
 
   function validateAdminStep2() {
     let valid = true;
+    setWhyJobError("");
+    setContributionError("");
+    setActivityError("");
+    setUnderstandingError("");
+    setPastExpError("");
 
-    setTestError("");
-
-    if (!testError.trim()) {
-      setTestError("test error");
+    if (!adminWhyJob.trim()) {
+      setWhyJobError("Please explain why you want to do this job.");
       valid = false;
     }
-
+    if (!adminContribution.trim()) {
+      setContributionError(
+        "Please explain what you can tribute to Excel Scrims."
+      );
+      valid = false;
+    }
+    if (!adminActivity.trim()) {
+      setActivityError("Please describe your activity in Excel Scrims.");
+      valid = false;
+    }
+    if (!adminUnderstanding.trim()) {
+      setUnderstandingError("Please select Yes or No.");
+      valid = false;
+    }
+    if (!pastExp.trim()) {
+      setPastExpError("Please explain what experience you have.");
+      valid = false;
+    }
     return valid;
   }
 
