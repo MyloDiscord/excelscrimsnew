@@ -354,15 +354,29 @@ export default function ApplicationsPage() {
           <Textarea className="mb-4" value={discordId} disabled />
 
           <label className="font-semibold">What region are you?</label>
-          <Textarea
-            className={`mb-2 ${regionError ? "border-red-500" : ""}`}
-            placeholder="Region..."
+          <Select
             value={adminRegion}
-            onChange={(e) => {
-              setAdminRegion(e.target.value);
+            onValueChange={(val) => {
+              setAdminRegion(val);
               if (regionError) setRegionError("");
             }}
-          />
+          >
+            <SelectTrigger
+              className={`mb-2 ${regionError ? "border-red-500" : ""}`}
+            >
+              <SelectValue placeholder="Select your region" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="NA-East">NA-East</SelectItem>
+              <SelectItem value="NA-West">NA-West</SelectItem>
+              <SelectItem value="Europe">Europe</SelectItem>
+              <SelectItem value="Oceania">Oceania</SelectItem>
+              <SelectItem value="Brazil">Brazil</SelectItem>
+              <SelectItem value="Asia">Asia</SelectItem>
+              <SelectItem value="Middle East">Middle East</SelectItem>
+            </SelectContent>
+          </Select>
+
           {regionError && (
             <p className="text-red-500 text-sm mb-3">{regionError}</p>
           )}
