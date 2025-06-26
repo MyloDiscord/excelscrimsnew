@@ -326,7 +326,7 @@ export default function ApplicationsPage() {
             }}
             className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition cursor-pointer"
           >
-            Next →
+            Next &rarr;
           </Button>
         </>
       )}
@@ -430,21 +430,8 @@ export default function ApplicationsPage() {
               onClick={() => setFormPage(1)}
               className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition cursor-pointer"
             >
-              ← Back
+              &larr; Back
             </Button>
-
-            {/* <Button
-              type="button"
-              disabled={!!ageError}
-              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
-              onClick={() => {
-                if (validateApplication()) {
-                  setIsAlertOpen(true);
-                }
-              }}
-            >
-              Submit Application
-            </Button> */}
 
             <Button
               type="button"
@@ -455,7 +442,7 @@ export default function ApplicationsPage() {
               }}
               className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition cursor-pointer"
             >
-              Next →
+              Next &rarr;
             </Button>
           </div>
 
@@ -558,8 +545,8 @@ export default function ApplicationsPage() {
                   className="accent-blue-600 w-4 h-4"
                 />
                 <span>
-                  Discuss the issue with the staff member and make sure it's not
-                  too serious information.
+                  Discuss the issue with the staff member and make sure
+                  it&apos;s not too serious information.
                 </span>
               </label>
             </div>
@@ -574,7 +561,7 @@ export default function ApplicationsPage() {
               onClick={() => setFormPage(2)}
               className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition cursor-pointer"
             >
-              ← Back
+              &larr; Back
             </Button>
 
             <Button
@@ -655,28 +642,6 @@ export default function ApplicationsPage() {
     // Reset form if desired:
     // resetForm();
   }
-
-  // Optional: reset form function
-  //   function resetForm() {
-  //     setSelectedRole("");
-  //     setAge("");
-  //     setAdminRegion("");
-  //     setAdminWhyJob("");
-  //     setHostAnswer1("");
-  //     setHostAnswer2("");
-  //     setHelperAnswer1("");
-  //     setHelperAnswer2("");
-  //     setFormPage(1);
-
-  //     setAgeError("");
-  //     setRegionError("");
-  //     setWhyJobError("");
-  //     setHostAnswer1Error("");
-  //     setHostAnswer2Error("");
-  //     setHelperAnswer1Error("");
-  //     setHelperAnswer2Error("");
-  //     setRoleError("");
-  //   }
 
   const getQuestions = () => {
     if (selectedRole === "host") return hostQuestions;
