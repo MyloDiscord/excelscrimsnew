@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
+import { useUser } from "@clerk/nextjs";
 import {
   Select,
   SelectContent,
@@ -13,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 
 export default function ApplicationsPage() {
+  const { user, isSignedIn, isLoaded } = useUser();
+
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
@@ -26,6 +29,14 @@ export default function ApplicationsPage() {
       setHideDiscordCard(true);
     }
   }, []);
+
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#121212] text-white text-lg">
+        Loading...
+      </div>
+    );
+  }
 
   const hostQuestions = (
     <>
@@ -79,13 +90,19 @@ export default function ApplicationsPage() {
       </div>
 
       <label className="font-semibold">
-        What makes you a good fit for Admin?
+        How old are you?
+        <p className="text-sm text-zinc-400">
+          You must be at least 14 years of age.
+        </p>
       </label>
-      <Textarea className="mb-4" placeholder="Explain your qualifications..." />
-      <label className="font-semibold">
-        How would you handle a conflict between staff?
-      </label>
-      <Textarea className="mb-4" placeholder="Describe your approach..." />
+      <Textarea className="mb-4" placeholder="Age..." />
+
+      <label className="font-semibold">What is your Discord Username?</label>
+      <Textarea
+        className="mb-4"
+        value={user?.username || user?.fullName || "Loading..."}
+        disabled
+      />
     </>
   );
 
