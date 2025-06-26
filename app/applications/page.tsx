@@ -96,7 +96,7 @@ export default function ApplicationsPage() {
                   setHideDiscordCard(true);
                   localStorage.setItem("hideDiscordCard", "true");
                 }}
-                className="absolute top-2 right-2 text-zinc-500 hover:text-white text-sm"
+                className="absolute top-2 right-2 text-zinc-500 hover:text-white text-sm cursor-pointer"
                 aria-label="Close"
               >
                 &times;
@@ -114,7 +114,7 @@ export default function ApplicationsPage() {
               </div>
 
               <div className="text-sm text-zinc-300 leading-snug">
-                If you aren&#39;t in our Discord,&nbsp;, join
+                If you aren&#39;t in our Discord, join&nbsp;
                 <a
                   href="https://discord.gg/scrims"
                   target="_blank"
