@@ -420,6 +420,31 @@ export default function ApplicationsPage() {
     }
     console.log("Submitted answers:", answers);
     // TODO: Replace this with your actual submit logic (API call, etc)
+    alert("Application submitted successfully!"); // For user feedback; replace as needed
+    // Reset form if desired:
+    // resetForm();
+  }
+
+  // Optional: reset form function
+  function resetForm() {
+    setSelectedRole("");
+    setAge("");
+    setAdminRegion("");
+    setAdminWhyJob("");
+    setHostAnswer1("");
+    setHostAnswer2("");
+    setHelperAnswer1("");
+    setHelperAnswer2("");
+    setFormPage(1);
+
+    setAgeError("");
+    setRegionError("");
+    setWhyJobError("");
+    setHostAnswer1Error("");
+    setHostAnswer2Error("");
+    setHelperAnswer1Error("");
+    setHelperAnswer2Error("");
+    setRoleError("");
   }
 
   const getQuestions = () => {
