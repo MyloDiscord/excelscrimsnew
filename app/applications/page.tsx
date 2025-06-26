@@ -84,6 +84,7 @@ export default function ApplicationsPage() {
         placeholder="Explain in detail..."
         value={hostAnswer1}
         onChange={(e) => setHostAnswer1(e.target.value)}
+        required
       />
       <label className="font-semibold">
         Do you have experience hosting events?
@@ -93,6 +94,7 @@ export default function ApplicationsPage() {
         placeholder="Tell us about it..."
         value={hostAnswer2}
         onChange={(e) => setHostAnswer2(e.target.value)}
+        required
       />
     </>
   );
@@ -107,6 +109,7 @@ export default function ApplicationsPage() {
         placeholder="Explain your strengths..."
         value={helperAnswer1}
         onChange={(e) => setHelperAnswer1(e.target.value)}
+        required
       />
       <label className="font-semibold">
         Have you helped moderate a community before?
@@ -116,6 +119,7 @@ export default function ApplicationsPage() {
         placeholder="Share your experience..."
         value={helperAnswer2}
         onChange={(e) => setHelperAnswer2(e.target.value)}
+        required
       />
     </>
   );
@@ -170,6 +174,7 @@ export default function ApplicationsPage() {
                 setAgeError("");
               }
             }}
+            required
           />
           {ageError && <p className="text-red-500 text-sm">{ageError}</p>}
 
@@ -191,6 +196,7 @@ export default function ApplicationsPage() {
             placeholder="Region..."
             value={adminRegion}
             onChange={(e) => setAdminRegion(e.target.value)}
+            required
           />
 
           <Button
@@ -213,6 +219,7 @@ export default function ApplicationsPage() {
             placeholder="Explain..."
             value={adminWhyJob}
             onChange={(e) => setAdminWhyJob(e.target.value)}
+            required
           />
 
           <div className="flex justify-between">
@@ -235,7 +242,7 @@ export default function ApplicationsPage() {
                   Submit Application
                 </Button>
               </AlertDialogTrigger>
-              <AlertDialogContent>
+              <AlertDialogContent className="bg-[#1e1e1e] text-white border border-white/10">
                 <AlertDialogHeader>
                   <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
                   <AlertDialogDescription>
@@ -361,7 +368,7 @@ export default function ApplicationsPage() {
 
         <div className="mb-6">
           <label className="block mb-2 font-semibold">Select Role</label>
-          <Select onValueChange={setSelectedRole} value={selectedRole}>
+          <Select onValueChange={setSelectedRole} value={selectedRole} required>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a role" />
             </SelectTrigger>
