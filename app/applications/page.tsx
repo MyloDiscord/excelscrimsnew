@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 
 import {
   AlertDialog,
@@ -23,6 +24,26 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+
+const scenarioOptions = [
+  {
+    value: "delete",
+    label: "Just delete it and move on.",
+  },
+  {
+    value: "tell",
+    label: "Tell Management",
+  },
+  {
+    value: "demote",
+    label: "Demote them immediately.",
+  },
+  {
+    value: "discuss",
+    label:
+      "Discuss the issue with the staff member and make sure it&apos;s not too serious information.",
+  },
+];
 
 export default function ApplicationsPage() {
   const { user, isSignedIn, isLoaded } = useUser();
@@ -478,9 +499,7 @@ export default function ApplicationsPage() {
         <>
           <div className="mb-6 bg-[#222226] p-4 rounded-lg border border-white/10">
             <p className="text-zinc-200 mb-2 font-semibold">
-              This section will give you scenarios and you will have to answer
-              the question about what action you would take when facing said
-              scenario.
+              {/* This is no longer needed, see below. */}
             </p>
           </div>
 
@@ -490,65 +509,21 @@ export default function ApplicationsPage() {
               information?
             </label>
             <div className="flex flex-col gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="scenario"
-                  value="delete"
-                  checked={scenarioAnswer === "delete"}
-                  onChange={() => {
-                    setScenarioAnswer("delete");
-                    setScenarioError("");
-                  }}
-                  className="accent-blue-600 w-4 h-4"
-                />
-                <span>Just delete it and move on.</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="scenario"
-                  value="tell"
-                  checked={scenarioAnswer === "tell"}
-                  onChange={() => {
-                    setScenarioAnswer("tell");
-                    setScenarioError("");
-                  }}
-                  className="accent-blue-600 w-4 h-4"
-                />
-                <span>Tell Management</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="scenario"
-                  value="demote"
-                  checked={scenarioAnswer === "demote"}
-                  onChange={() => {
-                    setScenarioAnswer("demote");
-                    setScenarioError("");
-                  }}
-                  className="accent-blue-600 w-4 h-4"
-                />
-                <span>Demote them immediately.</span>
-              </label>
-              <label className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="radio"
-                  name="scenario"
-                  value="discuss"
-                  checked={scenarioAnswer === "discuss"}
-                  onChange={() => {
-                    setScenarioAnswer("discuss");
-                    setScenarioError("");
-                  }}
-                  className="accent-blue-600 w-4 h-4"
-                />
-                <span>
-                  Discuss the issue with the staff member and make sure
-                  it&apos;s not too serious information.
-                </span>
-              </label>
+              {scenarioOptions.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={scenarioAnswer === opt.value}
+                    onCheckedChange={() => {
+                      setScenarioAnswer(opt.value);
+                      setScenarioError("");
+                    }}
+                  />
+                  <span dangerouslySetInnerHTML={{ __html: opt.label }} />
+                </label>
+              ))}
             </div>
             {scenarioError && (
               <p className="text-red-500 text-sm mt-2">{scenarioError}</p>
@@ -660,6 +635,14 @@ export default function ApplicationsPage() {
         <h1 className="text-3xl font-bold text-center mb-4 capitalize">
           {selectedRole ? `${selectedRole} Application` : "Applications"}
         </h1>
+
+        {/* SCENARIO INFO SECTION - now above Select Role */}
+        <div className="mb-6 bg-[#222226] p-4 rounded-lg border border-white/10">
+          <p className="text-zinc-200 font-semibold">
+            This section will give you scenarios and you will have to answer the
+            question about what action you would take when facing said scenario.
+          </p>
+        </div>
 
         {!hideDiscordCard && (
           <div
