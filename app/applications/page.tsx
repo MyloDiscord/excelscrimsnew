@@ -58,7 +58,6 @@ export default function ApplicationsPage() {
 
   // Error states for validation messages
   const [ageError, setAgeError] = useState("");
-  const [testError, setTestError] = useState("");
   const [regionError, setRegionError] = useState("");
   const [whyJobError, setWhyJobError] = useState("");
   const [hostAnswer1Error, setHostAnswer1Error] = useState("");
