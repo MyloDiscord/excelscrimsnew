@@ -350,47 +350,45 @@ export default function ApplicationsPage() {
               ← Back
             </Button>
 
-            <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
-              <AlertDialogTrigger asChild>
-                <Button
-                  type="button"
-                  disabled={!!ageError}
-                  className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+            <Button
+              type="button"
+              disabled={!!ageError}
+              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+              onClick={() => {
+                if (validateApplication()) {
+                  setIsAlertOpen(true);
+                }
+              }}
+            >
+              Submit Application
+            </Button>
+          </div>
+
+          <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+            <AlertDialogContent className="bg-[#1e1e1e] text-white border border-white/10">
+              <AlertDialogHeader>
+                <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
+                <AlertDialogDescription>
+                  Are you sure you want to submit your application? This action
+                  cannot be undone.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel className="cursor-pointer text-black">
+                  Cancel
+                </AlertDialogCancel>
+                <AlertDialogAction
+                  className="cursor-pointer"
                   onClick={() => {
-                    if (validateApplication()) {
-                      setIsAlertOpen(true); // only open dialog if valid
-                    }
+                    setIsAlertOpen(false);
+                    handleSubmit();
                   }}
                 >
-                  Submit Application
-                </Button>
-              </AlertDialogTrigger>
-
-              <AlertDialogContent className="bg-[#1e1e1e] text-white border border-white/10">
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Confirm Submission</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    Are you sure you want to submit your application? This
-                    action cannot be undone.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel className="cursor-pointer text-black">
-                    Cancel
-                  </AlertDialogCancel>
-                  <AlertDialogAction
-                    className="cursor-pointer"
-                    onClick={() => {
-                      setIsAlertOpen(false);
-                      handleSubmit();
-                    }}
-                  >
-                    Confirm
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
-          </div>
+                  Confirm
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </>
       )}
     </>
