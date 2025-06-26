@@ -27,6 +27,18 @@ export default function ApplicationsPage() {
   const [ageError, setAgeError] = useState("");
   const [formPage, setFormPage] = useState(1);
 
+  // Host answers
+  const [hostAnswer1, setHostAnswer1] = useState("");
+  const [hostAnswer2, setHostAnswer2] = useState("");
+
+  // Helper answers
+  const [helperAnswer1, setHelperAnswer1] = useState("");
+  const [helperAnswer2, setHelperAnswer2] = useState("");
+
+  // Admin answers
+  const [adminRegion, setAdminRegion] = useState("");
+  const [adminWhyJob, setAdminWhyJob] = useState("");
+
   useEffect(() => {
     const hide = localStorage.getItem("hideDiscordCard");
     if (hide !== "true") {
@@ -56,11 +68,21 @@ export default function ApplicationsPage() {
   const hostQuestions = (
     <>
       <label className="font-semibold">Why do you want to be a Host?</label>
-      <Textarea className="mb-4" placeholder="Explain in detail..." />
+      <Textarea
+        className="mb-4"
+        placeholder="Explain in detail..."
+        value={hostAnswer1}
+        onChange={(e) => setHostAnswer1(e.target.value)}
+      />
       <label className="font-semibold">
         Do you have experience hosting events?
       </label>
-      <Textarea className="mb-4" placeholder="Tell us about it..." />
+      <Textarea
+        className="mb-4"
+        placeholder="Tell us about it..."
+        value={hostAnswer2}
+        onChange={(e) => setHostAnswer2(e.target.value)}
+      />
     </>
   );
 
@@ -69,11 +91,21 @@ export default function ApplicationsPage() {
       <label className="font-semibold">
         Why should we choose you as a Helper?
       </label>
-      <Textarea className="mb-4" placeholder="Explain your strengths..." />
+      <Textarea
+        className="mb-4"
+        placeholder="Explain your strengths..."
+        value={helperAnswer1}
+        onChange={(e) => setHelperAnswer1(e.target.value)}
+      />
       <label className="font-semibold">
         Have you helped moderate a community before?
       </label>
-      <Textarea className="mb-4" placeholder="Share your experience..." />
+      <Textarea
+        className="mb-4"
+        placeholder="Share your experience..."
+        value={helperAnswer2}
+        onChange={(e) => setHelperAnswer2(e.target.value)}
+      />
     </>
   );
 
@@ -143,7 +175,12 @@ export default function ApplicationsPage() {
           <Textarea className="mb-4" value={discordId} disabled />
 
           <label className="font-semibold">What region are you?</label>
-          <Textarea className="mb-4" placeholder="Region..." />
+          <Textarea
+            className="mb-4"
+            placeholder="Region..."
+            value={adminRegion}
+            onChange={(e) => setAdminRegion(e.target.value)}
+          />
 
           <Button
             type="button"
@@ -160,7 +197,12 @@ export default function ApplicationsPage() {
           <label className="font-semibold">
             Why do you want to do this job?
           </label>
-          <Textarea className="mb-4" placeholder="Explain..." />
+          <Textarea
+            className="mb-4"
+            placeholder="Explain..."
+            value={adminWhyJob}
+            onChange={(e) => setAdminWhyJob(e.target.value)}
+          />
 
           <div className="flex justify-between">
             <Button
@@ -255,7 +297,7 @@ export default function ApplicationsPage() {
 
         <div className="mb-6">
           <label className="block mb-2 font-semibold">Select Role</label>
-          <Select onValueChange={setSelectedRole}>
+          <Select onValueChange={setSelectedRole} value={selectedRole}>
             <SelectTrigger className="w-full">
               <SelectValue placeholder="Choose a role" />
             </SelectTrigger>
@@ -266,6 +308,41 @@ export default function ApplicationsPage() {
             </SelectContent>
           </Select>
         </div>
+
+        {selectedRole && (
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+
+              let answers;
+              if (selectedRole === "host") {
+                answers = {
+                  role: "host",
+                  answer1: hostAnswer1,
+                  answer2: hostAnswer2,
+                };
+              } else if (selectedRole === "helper") {
+                answers = {
+                  role: "helper",
+                  answer1: helperAnswer1,
+                  answer2: helperAnswer2,
+                };
+              } else if (selectedRole === "admin") {
+                answers = {
+                  role: "admin",
+                  age,
+                  region: adminRegion,
+                  whyJob: adminWhyJob,
+                };
+              }
+
+              console.log("Submitted answers:", answers);
+            }}
+            className="flex flex-col gap-4"
+          >
+            {getQuestions()}
+          </form>
+        )}
       </div>
     </div>
   );
