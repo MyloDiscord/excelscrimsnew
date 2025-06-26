@@ -16,6 +16,10 @@ import { Button } from "@/components/ui/button";
 export default function ApplicationsPage() {
   const { user, isSignedIn, isLoaded } = useUser();
 
+  const discordId =
+    user?.externalAccounts?.find((acc) => acc.provider === "discord")
+      ?.providerUserId || "Unavailable";
+
   const [selectedRole, setSelectedRole] = useState("");
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
@@ -111,6 +115,9 @@ export default function ApplicationsPage() {
         value={user?.username || user?.fullName || "Loading..."}
         disabled
       />
+
+      <label className="font-semibold">What is your Discord ID?</label>
+      <Textarea className="mb-4" value={discordId} disabled />
     </>
   );
 
