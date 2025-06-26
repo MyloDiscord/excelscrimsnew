@@ -82,8 +82,8 @@ export default function ApplicationsPage() {
         </ul>
         <p className="text-sm text-zinc-400">
           Due to the large volume of applicants, we do not contact those whose
-          application is denied. If you don't receive a DM within a week, you
-          should expect your application to have been denied.
+          application is denied. If you don&#39;t receive a DM within a week,
+          you should expect your application to have been denied.
         </p>
       </div>
     </>
