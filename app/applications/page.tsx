@@ -96,7 +96,6 @@ export default function ApplicationsPage() {
     );
   }
 
-  // Validate Admin Step 1 fields and set errors
   function validateAdminStep1() {
     let valid = true;
 
@@ -152,71 +151,6 @@ export default function ApplicationsPage() {
       setPastExpError("Please explain what experience you have.");
       valid = false;
     }
-    return valid;
-  }
-
-  // Validate all questions on submit and set errors
-  function validateApplication() {
-    setRoleError("");
-    setHostAnswer1Error("");
-    setHostAnswer2Error("");
-    setHelperAnswer1Error("");
-    setHelperAnswer2Error("");
-    setWhyJobError("");
-
-    let valid = true;
-
-    if (!selectedRole) {
-      setRoleError("Please select a role.");
-      valid = false;
-    }
-
-    if (selectedRole === "host") {
-      if (!hostAnswer1.trim()) {
-        setHostAnswer1Error("This field is required.");
-        valid = false;
-      }
-      if (!hostAnswer2.trim()) {
-        setHostAnswer2Error("This field is required.");
-        valid = false;
-      }
-    } else if (selectedRole === "helper") {
-      if (!helperAnswer1.trim()) {
-        setHelperAnswer1Error("This field is required.");
-        valid = false;
-      }
-      if (!helperAnswer2.trim()) {
-        setHelperAnswer2Error("This field is required.");
-        valid = false;
-      }
-    } else if (selectedRole === "admin") {
-      if (!validateAdminStep1()) {
-        valid = false;
-      }
-      if (!adminWhyJob.trim()) {
-        setWhyJobError("Please explain why you want to do this job.");
-        valid = false;
-      }
-      if (!adminContribution.trim()) {
-        setContributionError(
-          "Please explain what you can tribute to Excel Scrims."
-        );
-        valid = false;
-      }
-      if (!adminActivity.trim()) {
-        setActivityError("Please describe your activity in Excel Scrims.");
-        valid = false;
-      }
-      if (!adminUnderstanding.trim()) {
-        setUnderstandingError("Please select Yes or No.");
-        valid = false;
-      }
-      if (!pastExp.trim()) {
-        setPastExpError("Please explain what experience you have.");
-        valid = false;
-      }
-    }
-
     return valid;
   }
 
