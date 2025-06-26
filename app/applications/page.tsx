@@ -86,14 +86,24 @@ export default function ApplicationsPage() {
             <p>
               If your application is successful, you will be recruited as an{" "}
               <span className="font-semibold">Excel Admin</span>. This role
-              involves...
+              involves major leadership when dealing with staff and server
+              members. This role involves running our scrims operations for our
+              players. Experience with being in charge of staff.
             </p>
             <h2 className="text-lg font-semibold text-white">Benefits</h2>
             <ul className="list-disc list-inside space-y-1">
-              <li>Gain experience...</li>
-              <li>Be a part of...</li>
-              <li>Contribute to the server...</li>
+              <li>Gain experience in one of the best Scrims Servers in NA.</li>
+              <li>Be a part of our staff community and meet new people.</li>
+              <li>
+                Contribute to the server to allow us to provide an amazing
+                experience.
+              </li>
             </ul>
+            <p className="text-sm text-zinc-400">
+              Due to the large volume of applicants, we do not contact those
+              whose application is denied. If you don&#39;t receive a DM within
+              a week, you should expect your application to have been denied.
+            </p>
           </div>
 
           <label className="font-semibold">
@@ -109,6 +119,7 @@ export default function ApplicationsPage() {
             onChange={(e) => {
               const value = e.target.value;
               setAge(value);
+
               const numericAge = parseInt(value);
               if (!isNaN(numericAge) && numericAge < 14) {
                 setAgeError("You must be 14 or older.");
@@ -158,14 +169,6 @@ export default function ApplicationsPage() {
               className="px-3 py-1 text-sm rounded-md font-medium text-white bg-zinc-700/20 hover:bg-zinc-700/40 transition"
             >
               ← Back
-            </Button>
-
-            <Button
-              type="submit"
-              disabled={!!ageError}
-              className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition"
-            >
-              Submit Application
             </Button>
           </div>
         </>
