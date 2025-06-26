@@ -25,24 +25,37 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 
-const scenarioOptions = [
+const scenario1Options = [
   {
-    value: "delete",
-    label: "Just delete it and move on.",
+    value: "understand",
+    label: "Learn about the situation for a better understanding.",
+  },
+  { value: "demote", label: "Demote the Admin immediately." },
+  { value: "warning", label: "Give the Admin member a Warning." },
+  { value: "moveon", label: "Just end the argument and move on." },
+];
+
+const scenario2Options = [
+  { value: "staff", label: "Check for new staff/host applications." },
+  {
+    value: "general",
+    label: "Go to #general and start having a conversation.",
   },
   {
-    value: "tell",
-    label: "Tell Management",
+    value: "communicate",
+    label: "Communicate with other Admins/Management to discuss todays agenda.",
   },
+];
+
+const scenario3Options = [
+  { value: "demote", label: "Demote the Admin immediately." },
+  { value: "tell", label: "Tell Management." },
   {
-    value: "demote",
-    label: "Demote them immediately.",
+    value: "side",
+    label: "Get the Admin side of the story before taking action.",
   },
-  {
-    value: "discuss",
-    label:
-      "Discuss the issue with the staff member and make sure it&apos;s not too serious information.",
-  },
+  { value: "discuss", label: "Discuss it with other Admins." },
+  { value: "other", label: "Other:" },
 ];
 
 export default function ApplicationsPage() {
@@ -68,8 +81,13 @@ export default function ApplicationsPage() {
   const [understandingError, setUnderstandingError] = useState("");
   const [pastExp, setPastExp] = useState("");
   const [pastExpError, setPastExpError] = useState("");
-  const [scenarioAnswer, setScenarioAnswer] = useState("");
-  const [scenarioError, setScenarioError] = useState("");
+
+  const [scenario1, setScenario1] = useState("");
+  const [scenario2, setScenario2] = useState("");
+  const [scenario3, setScenario3] = useState("");
+  const [scenario1Error, setScenario1Error] = useState("");
+  const [scenario2Error, setScenario2Error] = useState("");
+  const [scenario3Error, setScenario3Error] = useState("");
 
   // Role-specific questions
   const [hostAnswer1, setHostAnswer1] = useState("");
@@ -498,35 +516,92 @@ export default function ApplicationsPage() {
       {formPage === 3 && (
         <>
           <div className="mb-6 bg-[#222226] p-4 rounded-lg border border-white/10">
-            <p className="text-zinc-200 mb-2 font-semibold">
-              {/* This is no longer needed, see below. */}
+            <p className="text-zinc-200 font-semibold">
+              This section will give you scenarios and you will have to answer
+              the question about what action you would take when facing said
+              scenario.
             </p>
           </div>
 
-          <div className="mb-3">
+          {/* Question 1 */}
+          <div className="mb-6">
             <label className="font-semibold block mb-1">
-              Question #4: How should you handle an Admin leaking private staff
-              information?
+              Question #1: How would you handle seeing an Admin being
+              unprofessional and disrespectful towards server members?
             </label>
             <div className="flex flex-col gap-3">
-              {scenarioOptions.map((opt) => (
+              {scenario1Options.map((opt) => (
                 <label
                   key={opt.value}
                   className="flex items-center gap-2 cursor-pointer"
                 >
                   <Checkbox
-                    checked={scenarioAnswer === opt.value}
+                    checked={scenario1 === opt.value}
                     onCheckedChange={() => {
-                      setScenarioAnswer(opt.value);
-                      setScenarioError("");
+                      setScenario1(opt.value);
+                      setScenario1Error("");
                     }}
                   />
-                  <span dangerouslySetInnerHTML={{ __html: opt.label }} />
+                  <span>{opt.label}</span>
                 </label>
               ))}
             </div>
-            {scenarioError && (
-              <p className="text-red-500 text-sm mt-2">{scenarioError}</p>
+            {scenario1Error && (
+              <p className="text-red-500 text-sm mt-2">{scenario1Error}</p>
+            )}
+          </div>
+
+          {/* Question 2 */}
+          <div className="mb-6">
+            <label className="font-semibold block mb-1">
+              Question #2: When you get on for the day, you should do what?
+            </label>
+            <div className="flex flex-col gap-3">
+              {scenario2Options.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={scenario2 === opt.value}
+                    onCheckedChange={() => {
+                      setScenario2(opt.value);
+                      setScenario2Error("");
+                    }}
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              ))}
+            </div>
+            {scenario2Error && (
+              <p className="text-red-500 text-sm mt-2">{scenario2Error}</p>
+            )}
+          </div>
+
+          {/* Question 3 */}
+          <div className="mb-6">
+            <label className="font-semibold block mb-1">
+              Question #3: How would you handle a report on another Admin?
+            </label>
+            <div className="flex flex-col gap-3">
+              {scenario3Options.map((opt) => (
+                <label
+                  key={opt.value}
+                  className="flex items-center gap-2 cursor-pointer"
+                >
+                  <Checkbox
+                    checked={scenario3 === opt.value}
+                    onCheckedChange={() => {
+                      setScenario3(opt.value);
+                      setScenario3Error("");
+                    }}
+                  />
+                  <span>{opt.label}</span>
+                </label>
+              ))}
+            </div>
+            {scenario3Error && (
+              <p className="text-red-500 text-sm mt-2">{scenario3Error}</p>
             )}
           </div>
 
@@ -543,12 +618,21 @@ export default function ApplicationsPage() {
               type="button"
               className="px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
               onClick={() => {
-                if (!scenarioAnswer) {
-                  setScenarioError("Please select an answer.");
-                } else {
-                  setScenarioError("");
-                  setIsAlertOpen(true);
+                // Validate all questions
+                let valid = true;
+                if (!scenario1) {
+                  setScenario1Error("Please select an answer.");
+                  valid = false;
                 }
+                if (!scenario2) {
+                  setScenario2Error("Please select an answer.");
+                  valid = false;
+                }
+                if (!scenario3) {
+                  setScenario3Error("Please select an answer.");
+                  valid = false;
+                }
+                if (valid) setIsAlertOpen(true);
               }}
             >
               Submit Application
@@ -608,7 +692,10 @@ export default function ApplicationsPage() {
         contribution: adminContribution,
         activity: adminActivity,
         understanding: adminUnderstanding,
-        scenarioAnswer,
+        pastExp,
+        scenario1,
+        scenario2,
+        scenario3,
       };
     }
     console.log("Submitted answers:", answers);
@@ -635,14 +722,6 @@ export default function ApplicationsPage() {
         <h1 className="text-3xl font-bold text-center mb-4 capitalize">
           {selectedRole ? `${selectedRole} Application` : "Applications"}
         </h1>
-
-        {/* SCENARIO INFO SECTION - now above Select Role */}
-        <div className="mb-6 bg-[#222226] p-4 rounded-lg border border-white/10">
-          <p className="text-zinc-200 font-semibold">
-            This section will give you scenarios and you will have to answer the
-            question about what action you would take when facing said scenario.
-          </p>
-        </div>
 
         {!hideDiscordCard && (
           <div
