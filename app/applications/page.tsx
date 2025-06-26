@@ -143,7 +143,7 @@ export default function ApplicationsPage() {
       setActivityError("Please describe your activity in Excel Scrims.");
       valid = false;
     }
-    if (!adminUnderstanding.trim()) {
+    if (!adminUnderstanding || adminUnderstanding === "") {
       setUnderstandingError("Please select Yes or No.");
       valid = false;
     }
