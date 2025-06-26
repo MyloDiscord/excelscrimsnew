@@ -58,6 +58,7 @@ export default function ApplicationsPage() {
 
   // Error states for validation messages
   const [ageError, setAgeError] = useState("");
+  const [testError, setTestError] = useState("");
   const [regionError, setRegionError] = useState("");
   const [whyJobError, setWhyJobError] = useState("");
   const [hostAnswer1Error, setHostAnswer1Error] = useState("");
@@ -114,6 +115,19 @@ export default function ApplicationsPage() {
 
     if (!adminRegion.trim()) {
       setRegionError("Please enter your region.");
+      valid = false;
+    }
+
+    return valid;
+  }
+
+  function validateAdminStep2() {
+    let valid = true;
+
+    setTestError("");
+
+    if (!testError.trim()) {
+      setTestError("test error");
       valid = false;
     }
 
@@ -462,6 +476,18 @@ export default function ApplicationsPage() {
             >
               Submit Application
             </Button> */}
+
+            <Button
+              type="button"
+              onClick={() => {
+                if (validateAdminStep2()) {
+                  setFormPage(3);
+                }
+              }}
+              className="self-end px-3 py-1 text-sm rounded-md font-medium text-white bg-blue-700/20 hover:bg-blue-700/40 transition cursor-pointer"
+            >
+              Next →
+            </Button>
           </div>
 
           <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
@@ -494,9 +520,7 @@ export default function ApplicationsPage() {
 
       {formPage === 3 && (
         <>
-          <label className="font-semibold">
-            test label
-          </label>
+          <label className="font-semibold">test label</label>
           <Textarea
             className={`mb-2 ${whyJobError ? "border-red-500" : ""}`}
             placeholder="Explain..."
