@@ -38,6 +38,14 @@ export default function ApplicationsPage() {
     );
   }
 
+  if (!isSignedIn) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#121212] text-white text-lg">
+        You must be logged in to submit an application.
+      </div>
+    );
+  }
+
   const hostQuestions = (
     <>
       <label className="font-semibold">Why do you want to be a Host?</label>
