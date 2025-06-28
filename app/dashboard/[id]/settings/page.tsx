@@ -7,6 +7,7 @@ import Sidebar from "../../../components/Sidebar";
 import ClipLoader from "react-spinners/ClipLoader";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 import {
   Dialog,
@@ -74,11 +75,6 @@ export default function SettingsGuildPage() {
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const [logChannelDialogOpen, setLogChannelDialogOpen] = useState(false);
 
-  type NotificationType = "success" | "error";
-  const [notificationType, setNotificationType] =
-    useState<NotificationType>("success");
-  const [notification, setNotification] = useState<string | null>(null);
-
   useEffect(() => {
     async function loadAllData() {
       if (!guildId || typeof guildId !== "string") {
@@ -104,7 +100,6 @@ export default function SettingsGuildPage() {
           `/api/discord/guild/${guildId}/fetch-roles`
         );
         if (!resRoles.ok) {
-          setNotificationType("error");
           setError("Failed to fetch roles");
           setLoading(false);
           return;
@@ -127,7 +122,6 @@ export default function SettingsGuildPage() {
           `/api/discord/guild/${guildId}/fetch-channels`
         );
         if (!resChannels.ok) {
-          setNotificationType("error");
           setError("Failed to fetch channels");
           setLoading(false);
           return;
@@ -144,7 +138,6 @@ export default function SettingsGuildPage() {
             setSelectedChannel(savedChannelData.channelId);
         }
       } catch {
-        setNotificationType("error");
         setError("Error loading data");
       } finally {
         setLoading(false);
@@ -165,13 +158,6 @@ export default function SettingsGuildPage() {
       setDropdownWidth(triggerRef.current.offsetWidth);
     }
   }, [dropdownOpen]);
-
-  useEffect(() => {
-    if (notification) {
-      const timer = setTimeout(() => setNotification(null), 3000);
-      return () => clearTimeout(timer);
-    }
-  }, [notification]);
 
   const toggleRole = (role: DiscordRole) => {
     const alreadySelected = selectedRoles.find((r) => r.id === role.id);
@@ -209,17 +195,14 @@ export default function SettingsGuildPage() {
       );
       const data = await res.json();
       if (res.ok) {
-        setNotificationType("success");
-        setNotification(data.message || "Staff roles saved successfully");
+        toast.success(data.message || "Staff roles saved successfully");
         setOpen(false);
         window.location.reload();
       } else {
-        setNotificationType("error");
-        setNotification(data.message || "Failed to save staff roles");
+        toast.error(data.message || "Failed to save staff roles");
       }
     } catch {
-      setNotificationType("error");
-      setNotification("Failed to save staff roles");
+      toast.error("Failed to save staff roles");
     } finally {
       setSaving(false);
     }
@@ -240,16 +223,13 @@ export default function SettingsGuildPage() {
 
       const data = await res.json();
       if (res.ok) {
-        setNotificationType("success");
-        setNotification(data.message || "Log channel saved");
+        toast.success(data.message || "Log channel saved");
         setLogChannelDialogOpen(false);
       } else {
-        setNotificationType("error");
-        setNotification(data.message || "Failed to save log channel");
+        toast.error(data.message || "Failed to save log channel");
       }
     } catch {
-      setNotificationType("error");
-      setNotification("Error saving log channel");
+      toast.error("Error saving log channel");
     }
   };
 
@@ -548,25 +528,6 @@ export default function SettingsGuildPage() {
           </CardContent>
         </Card>
       </main>
-
-      {notification && (
-        <div
-          className={`fixed top-4 right-4 sm:right-8 w-[90vw] sm:w-auto max-w-sm flex items-center gap-2 px-4 py-3 rounded-md shadow-lg animate-fade-in-out z-[9999] ${
-            notificationType === "success"
-              ? "bg-green-700/20 text-green-400"
-              : "bg-red-700/20 text-red-400"
-          }`}
-          role="alert"
-          aria-live="assertive"
-        >
-          {notificationType === "success" ? (
-            <Check className="w-5 h-5 flex-shrink-0" />
-          ) : (
-            <X className="w-5 h-5 flex-shrink-0" />
-          )}
-          <span className="font-semibold break-words">{notification}</span>
-        </div>
-      )}
     </div>
   );
 }
