@@ -3,11 +3,12 @@
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import GuildCard from "../components/dashboard/GuildCard";
 import { fetchUserDiscordToken } from "@/lib/fetchUserDiscordToken";
 import { fetchUserAdminGuilds } from "@/lib/fetchUserAdminGuilds";
+import { toast } from "sonner";
 
 type DiscordGuild = {
   id: string;
@@ -38,6 +39,9 @@ export default function DashboardPage() {
   const [isMobile, setIsMobile] = useState(false);
 
   const router = useRouter();
+
+  // Ref for toast id so we can dismiss it later
+  const loadingToastId = useRef<string | number | null>(null);
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
@@ -70,13 +74,40 @@ export default function DashboardPage() {
   useEffect(() => {
     const getGuilds = async () => {
       if (!accessToken) return;
-      const result = await fetchUserAdminGuilds();
 
-      if ("known" in result) {
-        setAdminGuilds(result);
+      // Show loading toast, save id so we can dismiss it
+      loadingToastId.current = toast.loading("Loading your servers...", {
+        duration: 999999,
+      });
+
+      try {
+        const result = await fetchUserAdminGuilds();
+
+        if ("known" in result) {
+          setAdminGuilds(result);
+          setIsLoadingGuilds(false);
+
+          // Dismiss the loading toast
+          if (loadingToastId.current !== null)
+            toast.dismiss(loadingToastId.current);
+
+          if (result.known.length > 0) {
+            toast.success("Guilds loaded successfully!");
+          } else {
+            toast.info("No admin guilds found.");
+          }
+        } else {
+          // Dismiss loading toast and show error
+          if (loadingToastId.current !== null)
+            toast.dismiss(loadingToastId.current);
+          toast.error("Error fetching admin guilds.");
+          setIsLoadingGuilds(false);
+        }
+      } catch (err) {
+        if (loadingToastId.current !== null)
+          toast.dismiss(loadingToastId.current);
+        toast.error("An unexpected error occurred loading your servers.");
         setIsLoadingGuilds(false);
-      } else {
-        console.error("Error fetching admin guilds:", result.message);
       }
     };
 

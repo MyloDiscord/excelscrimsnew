@@ -13,6 +13,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { toast } from "sonner";
 
 import {
   AlertDialog,
@@ -708,10 +709,9 @@ export default function ApplicationsPage() {
       };
     }
     console.log("Submitted answers:", answers);
-    // TODO: Replace this with your actual submit logic (API call, etc)
-    alert("Application submitted successfully!"); // For user feedback; replace as needed
-    // Reset form if desired:
-    // resetForm();
+    toast.success(
+      "Application submitted successfully - you will hear back from us within a week. Best of luck!"
+    );
   }
 
   const getQuestions = () => {
