@@ -197,7 +197,6 @@ export default function SettingsGuildPage() {
       if (res.ok) {
         toast.success(data.message || "Staff roles saved successfully");
         setOpen(false);
-        window.location.reload();
       } else {
         toast.error(data.message || "Failed to save staff roles");
       }
