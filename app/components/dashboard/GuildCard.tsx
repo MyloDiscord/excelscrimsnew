@@ -118,12 +118,14 @@ export default function GuildCard({
           style={{ willChange: "max-height, opacity" }}
         >
           <div className="flex gap-2">
-            <span className="flex items-center px-3 py-1 rounded-full border border-green-500 bg-green-500/10 text-green-400 font-semibold text-sm">
-              <span className="w-3 h-3 rounded-full bg-green-500 mr-2" />
+            {/* Online badge */}
+            <span className="flex items-center px-3 py-1 rounded-md bg-green-700/80 text-white font-medium text-[15px]">
+              <span className="w-3 h-3 rounded-full bg-green-400 mr-2" />
               Online: {onlineCount}
             </span>
-            <span className="flex items-center px-3 py-1 rounded-full border border-red-500 bg-red-500/10 text-red-400 font-semibold text-sm">
-              <span className="w-3 h-3 rounded-full bg-red-500 mr-2" />
+            {/* Offline badge */}
+            <span className="flex items-center px-3 py-1 rounded-md bg-red-700/80 text-white font-medium text-[15px]">
+              <span className="w-3 h-3 rounded-full bg-red-400 mr-2" />
               Offline: {offlineCount}
             </span>
           </div>
