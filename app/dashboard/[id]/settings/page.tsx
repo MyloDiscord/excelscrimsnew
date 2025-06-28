@@ -286,7 +286,9 @@ export default function SettingsGuildPage() {
             <div className="mb-4">
               <div className="flex gap-2 flex-wrap">
                 {savedRoles.length === 0 && (
-                  <span className="text-gray-400">None set.</span>
+                  <span className="text-gray-400">
+                    None set. Set up some staff roles!
+                  </span>
                 )}
                 {savedRoles.map((role) => (
                   <span
