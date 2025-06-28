@@ -283,11 +283,7 @@ export default function SettingsGuildPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {/* --- Show current staff roles at all times --- */}
             <div className="mb-4">
-              <h2 className="text-lg font-semibold mb-2">
-                Current Staff Roles:
-              </h2>
               <div className="flex gap-2 flex-wrap">
                 {savedRoles.length === 0 && (
                   <span className="text-gray-400">None set.</span>
