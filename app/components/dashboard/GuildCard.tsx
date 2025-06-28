@@ -70,6 +70,7 @@ export default function GuildCard({
     rounded-full
     font-bold
     border
+    cursor-pointer
     border-[#00f8ff]
     bg-[#181818]
     text-[#00f8ff]
