@@ -37,21 +37,18 @@ export default function GuildCard({
   const isLoading = loadingGuildId === guild.id;
   const showCounts = isMobile || hoveredGuildId === guild.id;
 
-  const handleDashboardClick = (e: React.MouseEvent) => {
+  const handleDashboardClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.stopPropagation();
     if (isLoading) return;
     setArrowAnim(true);
     setTimeout(() => {
       setArrowAnim(false);
       onClick();
-    }, 320); 
+    }, 320);
   };
 
   return (
     <div
-      role="button"
-      tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && handleDashboardClick(e as any)}
       onMouseEnter={() => setHoveredGuildId(guild.id)}
       onMouseLeave={() => setHoveredGuildId(null)}
       className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
@@ -74,6 +71,7 @@ export default function GuildCard({
         </h4>
 
         <button
+          type="button"
           disabled={isLoading}
           onClick={handleDashboardClick}
           className={`
