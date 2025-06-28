@@ -65,39 +65,26 @@ export default function GuildCard({
         <button
           disabled={isLoading}
           className={`
-    mt-2 w-full flex items-center justify-center gap-2
-    px-4 py-1.5
+    mt-2 w-full flex items-center justify-center gap-3
+    px-4 py-2
     rounded-full
-    font-semibold
+    font-bold
     border
     border-[#00f8ff]
-    bg-[#181414] bg-opacity-90
+    bg-[#181818]
     text-[#00f8ff]
-    text-base
+    text-lg
     transition-all duration-150
     hover:bg-[#00f8ff]/10
     hover:text-white
     hover:border-white
     active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/50
+    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
     ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
   `}
         >
           Dashboard
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 20 20"
-            className="w-4 h-4 ml-1"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M7 5l5 5-5 5"
-            />
-          </svg>
+          <span className="text-xl leading-none">➜</span>
         </button>
 
         <div
