@@ -88,7 +88,7 @@ export default function GuildDashboardPage() {
     } else if (!loading && unauthorized) {
       toast.error("You are not authorized to view this page.");
     } else if (!loading && !error && !unauthorized) {
-      toast.success("Successfully loaded Dashboard!");
+      toast.success("Successfully loaded Dashboard.");
     }
   }, [loading, error, unauthorized]);
 
