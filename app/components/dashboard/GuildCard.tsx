@@ -65,13 +65,47 @@ export default function GuildCard({
 
         <button
           disabled={isLoading}
-          className={`mt-2 w-full py-2 rounded-xl font-semibold text-white transition-colors duration-300 ${
-            isLoading
-              ? "bg-gray-600 cursor-not-allowed"
-              : "bg-red-600 hover:bg-red-700 active:scale-95 shadow-md"
-          }`}
+          className={`
+            mt-2 w-full py-2 rounded-xl font-semibold
+            border-2
+            border-[#FF4B3E]
+            bg-white/5
+            text-[#FF4B3E]
+            shadow-lg
+            backdrop-blur-sm
+            transition-all duration-200
+            hover:bg-[#FF4B3E]/10
+            hover:border-white
+            hover:text-white
+            focus:outline-none
+            focus:ring-2 focus:ring-[#FF4B3E]/50
+            active:scale-95
+            flex items-center justify-center gap-2
+            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+          `}
         >
-          {isLoading ? <ClipLoader color="#FFF" size={20} /> : "Dashboard"}
+          {isLoading ? (
+            <ClipLoader color="#FF4B3E" size={20} />
+          ) : (
+            <>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="inline-block mr-2 -mt-1 w-5 h-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                aria-hidden="true"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
+                />
+              </svg>
+              Dashboard
+            </>
+          )}
         </button>
 
         <div

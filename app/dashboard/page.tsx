@@ -160,7 +160,7 @@ export default function DashboardPage() {
               d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
             />
           </svg>
-          Dashboard
+          Sign in
         </button>
       </div>
     );
