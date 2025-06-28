@@ -179,6 +179,7 @@ export default function SettingsGuildPage() {
     setOpen(false);
   };
 
+  // >>>> UPDATED: This now updates savedRoles and does not reload page <<<<
   const handleSave = async () => {
     if (!guildId) return;
     setSaving(true);
@@ -196,7 +197,9 @@ export default function SettingsGuildPage() {
       const data = await res.json();
       if (res.ok) {
         toast.success(data.message || "Staff roles saved successfully");
+        setSavedRoles(selectedRoles); // Update shown saved roles immediately
         setOpen(false);
+        // No page reload
       } else {
         toast.error(data.message || "Failed to save staff roles");
       }
@@ -280,6 +283,32 @@ export default function SettingsGuildPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            {/* --- Show current staff roles at all times --- */}
+            <div className="mb-4">
+              <h2 className="text-lg font-semibold mb-2">
+                Current Staff Roles:
+              </h2>
+              <div className="flex gap-2 flex-wrap">
+                {savedRoles.length === 0 && (
+                  <span className="text-gray-400">None set.</span>
+                )}
+                {savedRoles.map((role) => (
+                  <span
+                    key={role.id}
+                    className="px-3 py-1 rounded bg-neutral-800 text-white flex items-center gap-2"
+                    style={{ backgroundColor: intToHex(role.color) + "22" }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: intToHex(role.color) }}
+                    />
+                    {role.name}
+                  </span>
+                ))}
+              </div>
+            </div>
+            {/* ---- END staff roles display ---- */}
+
             <Dialog open={open} onOpenChange={setOpen}>
               <DialogTrigger asChild>
                 <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
