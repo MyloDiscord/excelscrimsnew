@@ -66,46 +66,39 @@ export default function GuildCard({
         <button
           disabled={isLoading}
           className={`
-            mt-2 w-full py-2 rounded-xl font-semibold
-            border-2
-            border-[#FF4B3E]
-            bg-white/5
-            text-[#FF4B3E]
-            shadow-lg
-            backdrop-blur-sm
-            transition-all duration-200
-            hover:bg-[#FF4B3E]/10
-            hover:border-white
-            hover:text-white
-            focus:outline-none
-            focus:ring-2 focus:ring-[#FF4B3E]/50
-            active:scale-95
-            flex items-center justify-center gap-2
-            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-          `}
+    mt-2 w-full flex items-center justify-center gap-2
+    px-4 py-1.5
+    rounded-full
+    font-semibold
+    border
+    border-[#00f8ff]
+    bg-[#181414] bg-opacity-90
+    text-[#00f8ff]
+    text-base
+    transition-all duration-150
+    hover:bg-[#00f8ff]/10
+    hover:text-white
+    hover:border-white
+    active:scale-95
+    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/50
+    ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+  `}
         >
-          {isLoading ? (
-            <ClipLoader color="#FF4B3E" size={20} />
-          ) : (
-            <>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="inline-block mr-2 -mt-1 w-5 h-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
-                />
-              </svg>
-              Dashboard
-            </>
-          )}
+          Dashboard
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 20 20"
+            className="w-4 h-4 ml-1"
+            stroke="currentColor"
+            strokeWidth={2}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M7 5l5 5-5 5"
+            />
+          </svg>
         </button>
 
         <div
