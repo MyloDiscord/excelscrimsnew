@@ -112,19 +112,21 @@ export default function GuildCard({
         </button>
 
         <div
-          className={`overflow-hidden transition-all duration-300 ease-in-out text-sm mt-2 text-gray-300 select-none ${
+          className={`overflow-hidden transition-all duration-300 ease-in-out text-sm mt-4 flex flex-col gap-2 items-center select-none ${
             showCounts ? "max-h-20 opacity-100" : "max-h-0 opacity-0"
           }`}
           style={{ willChange: "max-height, opacity" }}
         >
-          <p className="flex items-center justify-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-green-500 inline-block" />
-            Online: {onlineCount}
-          </p>
-          <p className="flex items-center justify-center gap-2">
-            <span className="w-3 h-3 rounded-full bg-red-500 inline-block" />
-            Offline: {offlineCount}
-          </p>
+          <div className="flex gap-2">
+            <span className="flex items-center px-3 py-1 rounded-full border border-green-500 bg-green-500/10 text-green-400 font-semibold text-sm">
+              <span className="w-3 h-3 rounded-full bg-green-500 mr-2" />
+              Online: {onlineCount}
+            </span>
+            <span className="flex items-center px-3 py-1 rounded-full border border-red-500 bg-red-500/10 text-red-400 font-semibold text-sm">
+              <span className="w-3 h-3 rounded-full bg-red-500 mr-2" />
+              Offline: {offlineCount}
+            </span>
+          </div>
         </div>
       </div>
     </div>
