@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import ClipLoader from "react-spinners/ClipLoader";
 
 type DiscordGuild = {
   id: string;
