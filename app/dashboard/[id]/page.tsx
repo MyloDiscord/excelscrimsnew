@@ -2,9 +2,10 @@
 
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useParams } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../components/Sidebar";
+import { toast } from "sonner";
 
 type DiscordGuild = {
   id: string;
@@ -29,14 +30,19 @@ export default function GuildDashboardPage() {
   const [currentGuild, setCurrentGuild] = useState<DiscordGuild | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
 
+  const loadingToastId = useRef<string | number | null>(null);
+
   useEffect(() => {
     async function checkAccess() {
       if (!guildId || typeof guildId !== "string") {
-        console.warn("guildId is invalid:", guildId);
         setError("Invalid guild ID.");
         setLoading(false);
         return;
       }
+
+      loadingToastId.current = toast.loading("Loading Dashboard...", {
+        duration: 999999,
+      });
 
       try {
         const res = await fetch("/api/discord/user/adminGuilds", {
@@ -62,7 +68,7 @@ export default function GuildDashboardPage() {
         } else {
           setUnauthorized(true);
         }
-      } catch {
+      } catch (e) {
         setError("Error checking access");
       } finally {
         setLoading(false);
@@ -71,6 +77,20 @@ export default function GuildDashboardPage() {
 
     checkAccess();
   }, [guildId]);
+
+  useEffect(() => {
+    if (!loading && loadingToastId.current !== null) {
+      toast.dismiss(loadingToastId.current);
+    }
+
+    if (!loading && error) {
+      toast.error(error);
+    } else if (!loading && unauthorized) {
+      toast.error("You are not authorized to view this page.");
+    } else if (!loading && !error && !unauthorized) {
+      toast.success("Successfully loaded Dashboard!");
+    }
+  }, [loading, error, unauthorized]);
 
   if (loading) {
     return (
