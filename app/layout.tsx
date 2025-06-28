@@ -12,7 +12,6 @@ import {
   SignInButton,
   UserButton,
 } from "@clerk/nextjs";
-import { useTopbar, TopbarProvider } from "./components/TopbarContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,41 +33,29 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
+}>) {
   return (
     <ClerkProvider>
-      <TopbarProvider>
-        <html lang="en">
-          <body
-            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-          >
-            <TopbarHeader />
-            <div className="flex-grow">{children}</div>
-            <Toaster />
-            <SpeedInsights />
-            <Analytics />
-          </body>
-        </html>
-      </TopbarProvider>
+      <html lang="en">
+        <body
+          className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+          <header className="flex justify-end items-center p-4 gap-4 bg-[#0d0d0d] text-white">
+            <SignedOut>
+              <SignInButton />
+            </SignedOut>
+            <SignedIn>
+              <UserButton />
+            </SignedIn>
+          </header>
+          <div className="flex-grow">{children}</div>
+          <Toaster />
+          <SpeedInsights />
+          <Analytics />
+        </body>
+      </html>
     </ClerkProvider>
-  );
-}
-
-function TopbarHeader() {
-  const { content } = useTopbar();
-  return (
-    <header className="flex justify-between items-center p-4 gap-4 bg-[#0d0d0d] text-white">
-      <div>{content}</div>
-      <div>
-        <SignedOut>
-          <SignInButton />
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </div>
-    </header>
   );
 }

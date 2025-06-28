@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "sonner";
-import { useTopbar } from "@/app/components/TopbarContext";
 
 type DiscordGuild = {
   id: string;
@@ -25,8 +24,6 @@ type AdminGuildsResponse = {
 export default function GuildDashboardPage() {
   const { id: guildId } = useParams();
 
-  const { setContent } = useTopbar();
-
   const [loading, setLoading] = useState(true);
   const [unauthorized, setUnauthorized] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -34,15 +31,6 @@ export default function GuildDashboardPage() {
   const [adminGuilds, setAdminGuilds] = useState<DiscordGuild[]>([]);
 
   const loadingToastId = useRef<string | number | null>(null);
-
-  useEffect(() => {
-    if (!loading && !error && !unauthorized) {
-      setContent(
-        <span className="text-xl font-bold text-[#00f8ff]">Dashboard</span>
-      );
-      return () => setContent(null);
-    }
-  }, [loading, error, unauthorized, setContent]);
 
   useEffect(() => {
     async function checkAccess() {
