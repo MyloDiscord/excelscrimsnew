@@ -6,7 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "sonner";
-import { useTopbar } from "@/components/TopbarContext";
+import { useTopbar } from "@/app/components/TopbarContext";
 
 type DiscordGuild = {
   id: string;
