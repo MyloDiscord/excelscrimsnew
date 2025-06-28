@@ -40,7 +40,6 @@ export default function DashboardPage() {
 
   const router = useRouter();
 
-  // Ref for toast id so we can dismiss it later
   const loadingToastId = useRef<string | number | null>(null);
 
   useEffect(() => {
@@ -75,7 +74,6 @@ export default function DashboardPage() {
     const getGuilds = async () => {
       if (!accessToken) return;
 
-      // Show loading toast, save id so we can dismiss it
       loadingToastId.current = toast.loading("Loading your servers...", {
         duration: 999999,
       });
@@ -87,7 +85,6 @@ export default function DashboardPage() {
           setAdminGuilds(result);
           setIsLoadingGuilds(false);
 
-          // Dismiss the loading toast
           if (loadingToastId.current !== null)
             toast.dismiss(loadingToastId.current);
 
@@ -97,13 +94,12 @@ export default function DashboardPage() {
             toast.info("No admin guilds found.");
           }
         } else {
-          // Dismiss loading toast and show error
           if (loadingToastId.current !== null)
             toast.dismiss(loadingToastId.current);
           toast.error("Error fetching admin guilds.");
           setIsLoadingGuilds(false);
         }
-      } catch (err) {
+      } catch {
         if (loadingToastId.current !== null)
           toast.dismiss(loadingToastId.current);
         toast.error("An unexpected error occurred loading your servers.");
