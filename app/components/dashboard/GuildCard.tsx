@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
 
 type DiscordGuild = {
@@ -32,18 +33,28 @@ export default function GuildCard({
   setHoveredGuildId,
   isMobile,
 }: GuildCardProps) {
+  const [arrowAnim, setArrowAnim] = useState(false);
   const isLoading = loadingGuildId === guild.id;
   const showCounts = isMobile || hoveredGuildId === guild.id;
 
+  const handleDashboardClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isLoading) return;
+    setArrowAnim(true);
+    setTimeout(() => {
+      setArrowAnim(false);
+      onClick();
+    }, 320); 
+  };
+
   return (
     <div
-      onClick={onClick}
       role="button"
       tabIndex={0}
-      onKeyDown={(e) => e.key === "Enter" && onClick()}
+      onKeyDown={(e) => e.key === "Enter" && handleDashboardClick(e as any)}
       onMouseEnter={() => setHoveredGuildId(guild.id)}
       onMouseLeave={() => setHoveredGuildId(null)}
-      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl cursor-pointer transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
+      className="w-64 bg-[#1a1a1a] rounded-2xl shadow-lg hover:shadow-2xl transition-transform transform hover:-translate-y-1 hover:scale-105 text-center select-none"
     >
       <div className="p-6 flex flex-col items-center">
         <Image
@@ -64,28 +75,42 @@ export default function GuildCard({
 
         <button
           disabled={isLoading}
+          onClick={handleDashboardClick}
           className={`
-    mt-2 w-full flex items-center justify-center gap-3
-    px-4 py-2
-    rounded-full
-    font-bold
-    border
-    cursor-pointer
-    border-[#00f8ff]
-    bg-[#181818]
-    text-[#00f8ff]
-    text-lg
-    transition-all duration-150
-    hover:bg-[#00f8ff]/10
-    hover:text-white
-    hover:border-white
-    active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
-    ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-  `}
+            mt-2 w-full flex items-center justify-center gap-3
+            px-4 py-2
+            rounded-full
+            font-bold
+            border
+            cursor-pointer
+            border-[#00f8ff]
+            bg-[#181818]
+            text-[#00f8ff]
+            text-lg
+            transition-all duration-150
+            hover:bg-[#00f8ff]/10
+            hover:text-white
+            hover:border-white
+            active:scale-95
+            focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
+            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+            ${arrowAnim ? "scale-95" : ""}
+          `}
         >
           Dashboard
-          <span className="text-xl leading-none">➜</span>
+          <span
+            className={`
+              text-xl leading-none transition-all duration-300
+              ${
+                arrowAnim
+                  ? "translate-x-3 opacity-0"
+                  : "translate-x-0 opacity-100"
+              }
+            `}
+            style={{ display: "inline-block" }}
+          >
+            ➜
+          </span>
         </button>
 
         <div
