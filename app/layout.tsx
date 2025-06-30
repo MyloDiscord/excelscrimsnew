@@ -51,7 +51,7 @@ export default function RootLayout({
             </SignedIn>
           </header>
           <div className="flex-grow">{children}</div>
-          <Toaster />
+          <Toaster theme="dark" />
           <SpeedInsights />
           <Analytics />
         </body>
