@@ -12,7 +12,6 @@ import {
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
 
-// Spinner Component
 function Spinner() {
   return (
     <svg
@@ -46,22 +45,24 @@ interface SidebarProps {
   adminGuilds: { id: string; name: string; icon?: string | null }[];
 }
 
-const sidebarLinks = [
+type SidebarExtra = {
+  label: string;
+  href: (guildId: string) => string;
+  icon?: React.ReactNode;
+};
+type SidebarLink = {
+  label: string;
+  href: (guildId: string) => string;
+  match: string;
+  extras: SidebarExtra[];
+};
+
+const sidebarLinks: SidebarLink[] = [
   {
     label: "Dashboard",
     href: (guildId: string) => `/dashboard/${guildId}`,
     match: "Dashboard",
-    extras: [
-      {
-        label: "Invite Members",
-        href: (guildId: string) => `/dashboard/${guildId}/invite`,
-        icon: <ChevronRight className="w-4 h-4" />,
-      },
-      {
-        label: "Audit Logs",
-        href: (guildId: string) => `/dashboard/${guildId}/logs`,
-      },
-    ],
+    extras: [],
   },
   {
     label: "Staff Overview",
@@ -294,7 +295,8 @@ const Sidebar = ({
 
         <ul className="flex flex-col gap-0.5 px-1 flex-grow">
           {sidebarLinks.map((item) => {
-            const hasExtras = item.extras && item.extras.length > 0;
+            const hasExtras =
+              Array.isArray(item.extras) && item.extras.length > 0;
             const isExpanded = !!collapse[item.label];
             const mainHref = item.href(guildId);
 
@@ -303,18 +305,18 @@ const Sidebar = ({
                 <div className="flex flex-col">
                   <div
                     className={`
-              flex items-center gap-2 px-3 py-2 rounded-md
-              font-medium text-sm
-              transition-colors duration-150
-              focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
-              select-none cursor-pointer
-              ${
-                current === item.match
-                  ? "bg-[#161b20] text-[#00f8ff] font-semibold shadow"
-                  : "hover:bg-[#191e23] hover:text-[#00f8ff] text-gray-200"
-              }
-              relative
-            `}
+                      flex items-center gap-2 px-3 py-2 rounded-md
+                      font-medium text-sm
+                      transition-colors duration-150
+                      focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
+                      select-none cursor-pointer
+                      ${
+                        current === item.match
+                          ? "bg-[#161b20] text-[#00f8ff] font-semibold shadow"
+                          : "hover:bg-[#191e23] hover:text-[#00f8ff] text-gray-200"
+                      }
+                      relative
+                    `}
                   >
                     <span
                       className={`absolute left-1.5 transition-opacity duration-200 ${
@@ -359,14 +361,14 @@ const Sidebar = ({
                   {hasExtras && (
                     <div
                       className={`
-                transition-all duration-300
-                ${
-                  isExpanded
-                    ? "max-h-32 opacity-100"
-                    : "max-h-0 opacity-0 pointer-events-none"
-                }
-                ml-8
-              `}
+                        transition-all duration-300
+                        ${
+                          isExpanded
+                            ? "max-h-32 opacity-100"
+                            : "max-h-0 opacity-0 pointer-events-none"
+                        }
+                        ml-8
+                      `}
                       style={{ overflow: "hidden" }}
                     >
                       <ul>
@@ -376,11 +378,15 @@ const Sidebar = ({
                             <li key={extra.label}>
                               <button
                                 className={`
-                          flex items-center gap-2 px-2 py-1.5 rounded-md text-xs w-full
-                          text-gray-300 hover:text-[#00f8ff] hover:bg-[#191e23]
-                          transition-colors duration-100 text-left bg-transparent border-0
-                          ${loadingHref === extraHref ? "opacity-70" : ""}
-                        `}
+                                  flex items-center gap-2 px-2 py-1.5 rounded-md text-xs w-full
+                                  text-gray-300 hover:text-[#00f8ff] hover:bg-[#191e23]
+                                  transition-colors duration-100 text-left bg-transparent border-0
+                                  ${
+                                    loadingHref === extraHref
+                                      ? "opacity-70"
+                                      : ""
+                                  }
+                                `}
                                 disabled={loadingHref === extraHref}
                                 onClick={() => handleNav(extraHref)}
                               >
