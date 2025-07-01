@@ -318,13 +318,16 @@ const Sidebar = ({
                       relative
                     `}
                   >
-                    <span
-                      className={`absolute left-1.5 transition-opacity duration-200 ${
-                        current === item.match ? "opacity-100" : "opacity-0"
-                      }`}
-                    >
-                      <ChevronRight className="w-3 h-3" />
-                    </span>
+                    {!hasExtras && (
+                      <span
+                        className={`absolute left-1.5 transition-opacity duration-200 ${
+                          current === item.match ? "opacity-100" : "opacity-0"
+                        }`}
+                      >
+                        <ChevronRight className="w-3 h-3" />
+                      </span>
+                    )}
+
                     {hasExtras ? (
                       <button
                         type="button"
