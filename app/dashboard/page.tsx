@@ -28,7 +28,6 @@ type AdminGuildsResponse = {
 
 export default function DashboardPage() {
   const { isSignedIn, isLoaded } = useUser();
-  const [message, setMessage] = useState<string | null>(null);
   const [accessToken, setAccessToken] = useState<string | null>(null);
   const [adminGuilds, setAdminGuilds] = useState<AdminGuildsResponse>({
     known: [],
@@ -41,12 +40,6 @@ export default function DashboardPage() {
   const router = useRouter();
 
   const loadingToastId = useRef<string | number | null>(null);
-
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      setMessage("You are not logged in!");
-    }
-  }, [isLoaded, isSignedIn]);
 
   useEffect(() => {
     function handleResize() {
@@ -126,36 +119,46 @@ export default function DashboardPage() {
     );
   }
 
-  <SignInButton mode="modal">
-    <button
-      className="
-      z-10 mt-6 px-8 py-3 rounded-xl font-semibold
-      border-2 border-[#FF4B3E] bg-white/5 text-[#FF4B3E]
-      shadow-md backdrop-blur-sm
-      transition-all duration-200
-      hover:bg-[#FF4B3E]/10 hover:text-white hover:border-white
-      focus:outline-none focus:ring-2 focus:ring-[#FF4B3E]/50
-      active:scale-95
-      flex items-center gap-2
-    "
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        className="h-5 w-5"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
-        />
-      </svg>
-      Sign in
-    </button>
-  </SignInButton>;
+  if (!isSignedIn) {
+    return (
+      <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center text-center overflow-hidden px-4">
+        <div className="absolute inset-0 z-0 pointer-events-none">
+          <BackgroundBeams />
+        </div>
+        <p className="text-white text-lg z-10">You are not logged in!</p>
+        <SignInButton mode="modal">
+          <button
+            className="
+              z-10 mt-6 px-8 py-3 rounded-xl font-semibold
+              border-2 border-[#FF4B3E] bg-white/5 text-[#FF4B3E]
+              shadow-md backdrop-blur-sm
+              transition-all duration-200
+              hover:bg-[#FF4B3E]/10 hover:text-white hover:border-white
+              focus:outline-none focus:ring-2 focus:ring-[#FF4B3E]/50
+              active:scale-95
+              flex items-center gap-2
+            "
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
+              />
+            </svg>
+            Sign in
+          </button>
+        </SignInButton>
+      </div>
+    );
+  }
 
   return (
     <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white overflow-hidden">
