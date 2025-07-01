@@ -129,11 +129,10 @@ export default function DashboardPage() {
         <SignInButton mode="modal">
           <button
             className="
-      group relative z-10 mt-8 px-8 py-3 rounded-2xl font-semibold
+      z-10 mt-8 px-8 py-3 rounded-2xl font-semibold
       border border-[#00f8ff] bg-[#181a1b]/90 text-[#00f8ff]
       shadow-xl shadow-[#00f8ff1a]/10 backdrop-blur-md
       transition-all duration-200
-      hover:bg-[#101112] hover:text-white hover:border-[#00f8ff] hover:shadow-[#00f8ff44]
       focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/60
       active:scale-97
       flex items-center gap-3
@@ -141,18 +140,10 @@ export default function DashboardPage() {
     "
             style={{ letterSpacing: "0.01em" }}
           >
-            <span
-              className="
-        absolute left-0 top-0 w-full h-full pointer-events-none
-        rounded-2xl opacity-0 group-hover:opacity-70 transition duration-300
-        bg-gradient-to-r from-[#00f8ff55] via-transparent to-transparent
-        blur-[3px]
-      "
-            />
             <span className="flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5 text-[#00f8ff] group-hover:text-white transition-colors"
+                className="h-5 w-5 text-[#00f8ff]"
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
