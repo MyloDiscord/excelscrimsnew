@@ -129,31 +129,43 @@ export default function DashboardPage() {
         <SignInButton mode="modal">
           <button
             className="
-              z-10 mt-6 px-8 py-3 rounded-xl font-semibold
-              border-2 border-[#FF4B3E] bg-white/5 text-[#FF4B3E]
-              shadow-md backdrop-blur-sm
-              transition-all duration-200
-              hover:bg-[#FF4B3E]/10 hover:text-white hover:border-white
-              focus:outline-none focus:ring-2 focus:ring-[#FF4B3E]/50
-              active:scale-95
-              flex items-center gap-2
-            "
+      group relative z-10 mt-8 px-8 py-3 rounded-2xl font-semibold
+      border border-[#00f8ff] bg-[#181a1b]/90 text-[#00f8ff]
+      shadow-xl shadow-[#00f8ff1a]/10 backdrop-blur-md
+      transition-all duration-200
+      hover:bg-[#101112] hover:text-white hover:border-[#00f8ff] hover:shadow-[#00f8ff44]
+      focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/60
+      active:scale-97
+      flex items-center gap-3
+      overflow-hidden
+    "
+            style={{ letterSpacing: "0.01em" }}
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              className="h-5 w-5"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
-              />
-            </svg>
-            Sign in
+            <span
+              className="
+        absolute left-0 top-0 w-full h-full pointer-events-none
+        rounded-2xl opacity-0 group-hover:opacity-70 transition duration-300
+        bg-gradient-to-r from-[#00f8ff55] via-transparent to-transparent
+        blur-[3px]
+      "
+            />
+            <span className="flex items-center justify-center">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-5 w-5 text-[#00f8ff] group-hover:text-white transition-colors"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M9 17v-2a4 4 0 114 0v2M12 19a7 7 0 110-14 7 7 0 010 14z"
+                />
+              </svg>
+            </span>
+            <span className="relative z-10">Sign in with Discord</span>
           </button>
         </SignInButton>
       </div>
