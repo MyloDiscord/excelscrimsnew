@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, ChevronLeft, Check } from "lucide-react";
+import { ChevronRight, ChevronLeft, ChevronDown, Check } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuTrigger,
@@ -24,31 +24,56 @@ const sidebarLinks = [
     label: "Dashboard",
     href: (guildId: string) => `/dashboard/${guildId}`,
     match: "Dashboard",
-    icon: null,
+    extras: [
+      {
+        label: "Invite Members",
+        href: (guildId: string) => `/dashboard/${guildId}/invite`,
+        icon: <ChevronRight className="w-4 h-4" />,
+      },
+      {
+        label: "Audit Logs",
+        href: (guildId: string) => `/dashboard/${guildId}/logs`,
+      },
+    ],
   },
   {
     label: "Staff Overview",
     href: (guildId: string) => `/dashboard/${guildId}/staff-overview`,
     match: "Scrims Overview",
-    icon: null,
+    extras: [
+      {
+        label: "Add Staff",
+        href: (guildId: string) => `/dashboard/${guildId}/staff-overview/add`,
+      },
+      {
+        label: "Staff Settings",
+        href: (guildId: string) =>
+          `/dashboard/${guildId}/staff-overview/settings`,
+      },
+    ],
   },
   {
     label: "Applications Overview",
     href: (guildId: string) => `/dashboard/${guildId}/applications/overview`,
     match: "Applications Overview",
-    icon: null,
+    extras: [],
   },
   {
     label: "Activity Checks",
     href: (guildId: string) => `/dashboard/${guildId}/activity-checks/overview`,
     match: "Activity Checks",
-    icon: null,
+    extras: [
+      {
+        label: "New Check",
+        href: (guildId: string) => `/dashboard/${guildId}/activity-checks/new`,
+      },
+    ],
   },
   {
     label: "Settings",
     href: (guildId: string) => `/dashboard/${guildId}/settings`,
     match: "Settings",
-    icon: null,
+    extras: [],
   },
 ];
 
@@ -60,6 +85,7 @@ const Sidebar = ({
   adminGuilds,
 }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [collapse, setCollapse] = useState<Record<string, boolean>>({});
   const sidebarRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
 
@@ -104,6 +130,13 @@ const Sidebar = ({
     if (window.innerWidth < 768) setIsOpen(false);
   };
 
+  const handleCollapseToggle = (label: string) => {
+    setCollapse((prev) => ({
+      ...prev,
+      [label]: !prev[label],
+    }));
+  };
+
   return (
     <>
       <div
@@ -122,9 +155,7 @@ const Sidebar = ({
         aria-label="Open Sidebar"
         style={{ outline: "none" }}
       >
-        <ChevronRight
-          className={`w-7 h-7 transition-transform duration-300 group-hover:translate-x-1`}
-        />
+        <ChevronRight className="w-7 h-7 transition-transform duration-300 group-hover:translate-x-1" />
       </button>
 
       <nav
@@ -226,37 +257,97 @@ const Sidebar = ({
         <hr className="my-3 border-[#23272a]" />
 
         <ul className="flex flex-col gap-1 px-1 flex-grow">
-          {sidebarLinks.map((item) => (
-            <li key={item.label}>
-              <Link
-                href={item.href(guildId)}
-                onClick={handleSidebarLinkClick}
-                className={`
-                  group flex items-center gap-2 px-4 py-3 rounded-lg
-                  font-medium transition-all duration-200
-                  focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
-                  ${
-                    current === item.match
-                      ? "bg-[#18191c] text-[#00f8ff] border-l-4 border-[#00f8ff] shadow"
-                      : "hover:bg-[#18191c] hover:text-[#00f8ff] text-gray-300"
-                  }
-                  relative overflow-hidden
-                `}
-                tabIndex={0}
-              >
-                <span
-                  className={`absolute left-2 transition-transform duration-200 ${
-                    current === item.match
-                      ? "opacity-100 translate-x-0"
-                      : "opacity-0 -translate-x-2"
-                  }`}
-                >
-                  <ChevronRight className="w-4 h-4" />
-                </span>
-                <span className="ml-5">{item.label}</span>
-              </Link>
-            </li>
-          ))}
+          {sidebarLinks.map((item) => {
+            const hasExtras = item.extras && item.extras.length > 0;
+            const isExpanded = !!collapse[item.label];
+            return (
+              <li key={item.label}>
+                <div className="flex flex-col">
+                  <div
+                    className={`
+                      group flex items-center gap-2 px-4 py-3 rounded-lg
+                      font-medium transition-all duration-200
+                      focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
+                      cursor-pointer select-none
+                      ${
+                        current === item.match
+                          ? "bg-[#18191c] text-[#00f8ff] border-l-4 border-[#00f8ff] shadow"
+                          : "hover:bg-[#18191c] hover:text-[#00f8ff] text-gray-300"
+                      }
+                      relative overflow-hidden
+                    `}
+                  >
+                    <span
+                      className={`absolute left-2 transition-transform duration-200 ${
+                        current === item.match
+                          ? "opacity-100 translate-x-0"
+                          : "opacity-0 -translate-x-2"
+                      }`}
+                    >
+                      <ChevronRight className="w-4 h-4" />
+                    </span>
+                    {hasExtras ? (
+                      <button
+                        type="button"
+                        aria-label={isExpanded ? "Collapse" : "Expand"}
+                        aria-expanded={isExpanded}
+                        tabIndex={0}
+                        onClick={() => handleCollapseToggle(item.label)}
+                        className="flex items-center focus:outline-none"
+                      >
+                        <ChevronDown
+                          className={`w-4 h-4 mr-1 transition-transform duration-200 ${
+                            isExpanded ? "rotate-180" : ""
+                          }`}
+                        />
+                      </button>
+                    ) : (
+                      <span className="w-5" />
+                    )}
+                    <Link
+                      href={item.href(guildId)}
+                      onClick={handleSidebarLinkClick}
+                      className="ml-1 flex-1 truncate"
+                    >
+                      {item.label}
+                    </Link>
+                  </div>
+                  {hasExtras && (
+                    <div
+                      className={`
+                        overflow-hidden transition-all duration-300
+                        ${
+                          isExpanded
+                            ? "max-h-40 opacity-100"
+                            : "max-h-0 opacity-0"
+                        }
+                        bg-[#18191c] ml-8 rounded-b-md
+                      `}
+                    >
+                      <ul>
+                        {item.extras.map((extra) => (
+                          <li key={extra.label}>
+                            <Link
+                              href={extra.href(guildId)}
+                              className="
+                                flex items-center gap-2 px-3 py-2 rounded-lg text-sm
+                                text-gray-300 hover:text-[#00f8ff] hover:bg-[#23272a]
+                                transition-colors duration-150
+                              "
+                              onClick={handleSidebarLinkClick}
+                            >
+                              {extra.icon}
+                              {extra.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </li>
+            );
+          })}
         </ul>
 
         <hr className="my-4 border-[#23272a]" />
