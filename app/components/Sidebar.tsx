@@ -292,7 +292,7 @@ const Sidebar = ({
 
         <hr className="my-3 border-[#23272a]" />
 
-        <ul className="flex flex-col gap-1 px-1 flex-grow">
+        <ul className="flex flex-col gap-0.5 px-1 flex-grow">
           {sidebarLinks.map((item) => {
             const hasExtras = item.extras && item.extras.length > 0;
             const isExpanded = !!collapse[item.label];
@@ -303,26 +303,25 @@ const Sidebar = ({
                 <div className="flex flex-col">
                   <div
                     className={`
-                      group flex items-center gap-2 px-4 py-3 rounded-lg
-                      font-medium transition-all duration-200
-                      focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
-                      cursor-pointer select-none
-                      ${
-                        current === item.match
-                          ? "bg-[#18191c] text-[#00f8ff] border-l-4 border-[#00f8ff] shadow"
-                          : "hover:bg-[#18191c] hover:text-[#00f8ff] text-gray-300"
-                      }
-                      relative overflow-hidden
-                    `}
+              flex items-center gap-2 px-3 py-2 rounded-md
+              font-medium text-sm
+              transition-colors duration-150
+              focus:outline-none focus:ring-2 focus:ring-[#00f8ff]
+              select-none cursor-pointer
+              ${
+                current === item.match
+                  ? "bg-[#161b20] text-[#00f8ff] font-semibold shadow"
+                  : "hover:bg-[#191e23] hover:text-[#00f8ff] text-gray-200"
+              }
+              relative
+            `}
                   >
                     <span
-                      className={`absolute left-2 transition-transform duration-200 ${
-                        current === item.match
-                          ? "opacity-100 translate-x-0"
-                          : "opacity-0 -translate-x-2"
+                      className={`absolute left-1.5 transition-opacity duration-200 ${
+                        current === item.match ? "opacity-100" : "opacity-0"
                       }`}
                     >
-                      <ChevronRight className="w-4 h-4" />
+                      <ChevronRight className="w-3 h-3" />
                     </span>
                     {hasExtras ? (
                       <button
@@ -331,23 +330,25 @@ const Sidebar = ({
                         aria-expanded={isExpanded}
                         tabIndex={0}
                         onClick={() => handleCollapseToggle(item.label)}
-                        className="flex items-center focus:outline-none"
+                        className="flex items-center focus:outline-none bg-transparent border-0 mr-1"
+                        style={{ marginRight: "0.2rem" }}
                       >
                         <ChevronDown
-                          className={`w-4 h-4 mr-1 transition-transform duration-200 ${
+                          className={`w-4 h-4 transition-transform duration-200 ${
                             isExpanded ? "rotate-180" : ""
                           }`}
                         />
                       </button>
                     ) : (
-                      <span className="w-5" />
+                      <span className="w-4" />
                     )}
                     <button
-                      className={`ml-1 flex-1 truncate text-left bg-transparent border-0 outline-none cursor-pointer ${
+                      className={`flex-1 truncate text-left bg-transparent border-0 outline-none cursor-pointer px-1 py-0 ${
                         loadingHref === mainHref ? "opacity-70" : ""
                       }`}
                       disabled={loadingHref === mainHref}
                       onClick={() => handleNav(mainHref)}
+                      style={{ minHeight: "32px" }}
                     >
                       <span className="flex items-center gap-2">
                         {item.label}
@@ -358,14 +359,15 @@ const Sidebar = ({
                   {hasExtras && (
                     <div
                       className={`
-                        overflow-hidden transition-all duration-300
-                        ${
-                          isExpanded
-                            ? "max-h-40 opacity-100"
-                            : "max-h-0 opacity-0"
-                        }
-                        bg-[#18191c] ml-8 rounded-b-md
-                      `}
+                transition-all duration-300
+                ${
+                  isExpanded
+                    ? "max-h-32 opacity-100"
+                    : "max-h-0 opacity-0 pointer-events-none"
+                }
+                ml-8
+              `}
+                      style={{ overflow: "hidden" }}
                     >
                       <ul>
                         {item.extras.map((extra) => {
@@ -374,19 +376,19 @@ const Sidebar = ({
                             <li key={extra.label}>
                               <button
                                 className={`
-                                  flex items-center gap-2 px-3 py-2 rounded-lg text-sm w-full
-                                  text-gray-300 hover:text-[#00f8ff] hover:bg-[#23272a]
-                                  transition-colors duration-150 text-left bg-transparent border-0
-                                  ${
-                                    loadingHref === extraHref
-                                      ? "opacity-70"
-                                      : ""
-                                  }
-                                `}
+                          flex items-center gap-2 px-2 py-1.5 rounded-md text-xs w-full
+                          text-gray-300 hover:text-[#00f8ff] hover:bg-[#191e23]
+                          transition-colors duration-100 text-left bg-transparent border-0
+                          ${loadingHref === extraHref ? "opacity-70" : ""}
+                        `}
                                 disabled={loadingHref === extraHref}
                                 onClick={() => handleNav(extraHref)}
                               >
-                                {extra.icon}
+                                {extra.icon && (
+                                  <span className="text-[#00f8ff] opacity-60">
+                                    {extra.icon}
+                                  </span>
+                                )}
                                 {extra.label}
                                 {loadingHref === extraHref && <Spinner />}
                               </button>
