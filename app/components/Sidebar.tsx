@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import { ChevronRight, ChevronLeft, ChevronDown, Check } from "lucide-react";
@@ -10,6 +11,32 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
 } from "@/components/ui/dropdown-menu";
+
+// Spinner Component
+function Spinner() {
+  return (
+    <svg
+      className="animate-spin h-4 w-4 text-[#00f8ff]"
+      xmlns="http://www.w3.org/2000/svg"
+      fill="none"
+      viewBox="0 0 24 24"
+    >
+      <circle
+        className="opacity-25"
+        cx="12"
+        cy="12"
+        r="10"
+        stroke="#00f8ff"
+        strokeWidth="4"
+      />
+      <path
+        className="opacity-75"
+        fill="#00f8ff"
+        d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"
+      />
+    </svg>
+  );
+}
 
 interface SidebarProps {
   current: string;
@@ -86,8 +113,15 @@ const Sidebar = ({
 }: SidebarProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [collapse, setCollapse] = useState<Record<string, boolean>>({});
+  const [loadingHref, setLoadingHref] = useState<string | null>(null);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const router = useRouter();
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setLoadingHref(null);
+  }, [pathname]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -126,15 +160,17 @@ const Sidebar = ({
     };
   }, [isOpen]);
 
-  const handleSidebarLinkClick = () => {
-    if (window.innerWidth < 768) setIsOpen(false);
-  };
-
   const handleCollapseToggle = (label: string) => {
     setCollapse((prev) => ({
       ...prev,
       [label]: !prev[label],
     }));
+  };
+
+  const handleNav = async (href: string) => {
+    setLoadingHref(href);
+    router.push(href);
+    if (window.innerWidth < 768) setIsOpen(false);
   };
 
   return (
@@ -260,6 +296,8 @@ const Sidebar = ({
           {sidebarLinks.map((item) => {
             const hasExtras = item.extras && item.extras.length > 0;
             const isExpanded = !!collapse[item.label];
+            const mainHref = item.href(guildId);
+
             return (
               <li key={item.label}>
                 <div className="flex flex-col">
@@ -304,13 +342,18 @@ const Sidebar = ({
                     ) : (
                       <span className="w-5" />
                     )}
-                    <Link
-                      href={item.href(guildId)}
-                      onClick={handleSidebarLinkClick}
-                      className="ml-1 flex-1 truncate"
+                    <button
+                      className={`ml-1 flex-1 truncate text-left bg-transparent border-0 outline-none cursor-pointer ${
+                        loadingHref === mainHref ? "opacity-70" : ""
+                      }`}
+                      disabled={loadingHref === mainHref}
+                      onClick={() => handleNav(mainHref)}
                     >
-                      {item.label}
-                    </Link>
+                      <span className="flex items-center gap-2">
+                        {item.label}
+                        {loadingHref === mainHref && <Spinner />}
+                      </span>
+                    </button>
                   </div>
                   {hasExtras && (
                     <div
@@ -325,22 +368,31 @@ const Sidebar = ({
                       `}
                     >
                       <ul>
-                        {item.extras.map((extra) => (
-                          <li key={extra.label}>
-                            <Link
-                              href={extra.href(guildId)}
-                              className="
-                                flex items-center gap-2 px-3 py-2 rounded-lg text-sm
-                                text-gray-300 hover:text-[#00f8ff] hover:bg-[#23272a]
-                                transition-colors duration-150
-                              "
-                              onClick={handleSidebarLinkClick}
-                            >
-                              {extra.icon}
-                              {extra.label}
-                            </Link>
-                          </li>
-                        ))}
+                        {item.extras.map((extra) => {
+                          const extraHref = extra.href(guildId);
+                          return (
+                            <li key={extra.label}>
+                              <button
+                                className={`
+                                  flex items-center gap-2 px-3 py-2 rounded-lg text-sm w-full
+                                  text-gray-300 hover:text-[#00f8ff] hover:bg-[#23272a]
+                                  transition-colors duration-150 text-left bg-transparent border-0
+                                  ${
+                                    loadingHref === extraHref
+                                      ? "opacity-70"
+                                      : ""
+                                  }
+                                `}
+                                disabled={loadingHref === extraHref}
+                                onClick={() => handleNav(extraHref)}
+                              >
+                                {extra.icon}
+                                {extra.label}
+                                {loadingHref === extraHref && <Spinner />}
+                              </button>
+                            </li>
+                          );
+                        })}
                       </ul>
                     </div>
                   )}
