@@ -179,7 +179,6 @@ export default function SettingsGuildPage() {
     setOpen(false);
   };
 
-  // >>>> UPDATED: This now updates savedRoles and does not reload page <<<<
   const handleSave = async () => {
     if (!guildId) return;
     setSaving(true);
@@ -197,9 +196,8 @@ export default function SettingsGuildPage() {
       const data = await res.json();
       if (res.ok) {
         toast.success(data.message || "Staff roles saved successfully");
-        setSavedRoles(selectedRoles); // Update shown saved roles immediately
+        setSavedRoles(selectedRoles);
         setOpen(false);
-        // No page reload
       } else {
         toast.error(data.message || "Failed to save staff roles");
       }
@@ -259,7 +257,7 @@ export default function SettingsGuildPage() {
 
       {currentGuild && (
         <Sidebar
-          current="Dashboard"
+          current="Settings"
           guildName={currentGuild.name}
           guildAvatar={
             currentGuild.icon
