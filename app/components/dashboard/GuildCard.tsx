@@ -94,6 +94,7 @@ export default function GuildCard({
     active:scale-95
     focus:outline-none focus:ring-2 focus:ring-blue-400/70
     transition-all duration-150
+    cursor-pointer
     ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
     ${arrowAnim ? "scale-95" : ""}
   `}
