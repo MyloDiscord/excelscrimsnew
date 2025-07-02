@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import { Button } from "@/components/ui/button";
 
 type DiscordGuild = {
   id: string;
@@ -70,46 +71,34 @@ export default function GuildCard({
           {guild.name}
         </h4>
 
-        <button
+        <Button
           type="button"
+          variant="outline"
+          size="lg"
           disabled={isLoading}
           onClick={handleDashboardClick}
           className={`
-            mt-2 w-full flex items-center justify-center gap-3
-            px-4 py-2
-            rounded-full
-            font-bold
-            border
-            cursor-pointer
-            border-[#00f8ff]
-            bg-[#181818]
-            text-[#00f8ff]
-            text-lg
-            transition-all duration-150
-            hover:bg-[#00f8ff]/10
-            hover:text-white
-            hover:border-white
-            active:scale-95
-            focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
-            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-            ${arrowAnim ? "scale-95" : ""}
-          `}
+    mt-2 w-full flex items-center justify-center gap-3 rounded-full text-lg font-bold
+    border-[#00f8ff] text-[#00f8ff] bg-[#181818]
+    hover:bg-[#00f8ff]/10 hover:text-white hover:border-white
+    active:scale-95
+    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
+    transition-all duration-150
+    ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+    ${arrowAnim ? "scale-95" : ""}
+  `}
         >
           Dashboard
           <span
             className={`
-              text-xl leading-none transition-all duration-300
-              ${
-                arrowAnim
-                  ? "translate-x-3 opacity-0"
-                  : "translate-x-0 opacity-100"
-              }
-            `}
+      text-xl leading-none transition-all duration-300
+      ${arrowAnim ? "translate-x-3 opacity-0" : "translate-x-0 opacity-100"}
+    `}
             style={{ display: "inline-block" }}
           >
             ➜
           </span>
-        </button>
+        </Button>
 
         <div
           className={`overflow-hidden transition-all duration-300 ease-in-out text-xs mt-3 flex flex-col gap-1 items-center select-none ${
