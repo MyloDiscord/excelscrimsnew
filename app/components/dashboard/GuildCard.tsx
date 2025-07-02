@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import { Loader2Icon } from "lucide-react";
 
 type DiscordGuild = {
   id: string;
@@ -16,7 +17,7 @@ type DiscordGuild = {
 type GuildCardProps = {
   guild: DiscordGuild;
   loadingGuildId: string | null;
-  onClick: () => void;
+  onClick: () => Promise<void>;
   onlineCount: number;
   offlineCount: number;
   hoveredGuildId: string | null;
@@ -35,17 +36,26 @@ export default function GuildCard({
   isMobile,
 }: GuildCardProps) {
   const [arrowAnim, setArrowAnim] = useState(false);
-  const isLoading = loadingGuildId === guild.id;
+  const [localLoading, setLocalLoading] = useState(false);
+  const isLoading = loadingGuildId === guild.id || localLoading;
   const showCounts = isMobile || hoveredGuildId === guild.id;
 
-  const handleDashboardClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+  const handleDashboardClick = async (
+    e: React.MouseEvent<HTMLButtonElement>
+  ) => {
     e.stopPropagation();
     if (isLoading) return;
     setArrowAnim(true);
+    setLocalLoading(true);
     setTimeout(() => {
       setArrowAnim(false);
-      onClick();
     }, 320);
+
+    try {
+      await onClick();
+    } finally {
+      setLocalLoading(false);
+    }
   };
 
   return (
@@ -78,26 +88,39 @@ export default function GuildCard({
           disabled={isLoading}
           onClick={handleDashboardClick}
           className={`
-    mt-2 w-full flex items-center justify-center gap-3 rounded-full text-lg font-bold
-    border-[#00f8ff] text-[#00f8ff] bg-[#181818]
-    hover:bg-[#00f8ff]/10 hover:text-white hover:border-white
-    active:scale-95
-    focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
-    transition-all duration-150
-    ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-    ${arrowAnim ? "scale-95" : ""}
-  `}
+            mt-2 w-full flex items-center justify-center gap-3 rounded-full text-lg font-bold
+            border-[#00f8ff] text-[#00f8ff] bg-[#181818]
+            hover:bg-[#00f8ff]/10 hover:text-white hover:border-white
+            active:scale-95
+            focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
+            transition-all duration-150
+            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+            ${arrowAnim ? "scale-95" : ""}
+          `}
         >
-          Dashboard
-          <span
-            className={`
-      text-xl leading-none transition-all duration-300
-      ${arrowAnim ? "translate-x-3 opacity-0" : "translate-x-0 opacity-100"}
-    `}
-            style={{ display: "inline-block" }}
-          >
-            ➜
-          </span>
+          {isLoading ? (
+            <>
+              <Loader2Icon className="animate-spin h-5 w-5" />
+              Loading
+            </>
+          ) : (
+            <>
+              Dashboard
+              <span
+                className={`
+                  text-xl leading-none transition-all duration-300
+                  ${
+                    arrowAnim
+                      ? "translate-x-3 opacity-0"
+                      : "translate-x-0 opacity-100"
+                  }
+                `}
+                style={{ display: "inline-block" }}
+              >
+                ➜
+              </span>
+            </>
+          )}
         </Button>
 
         <div

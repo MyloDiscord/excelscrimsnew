@@ -103,7 +103,7 @@ export default function DashboardPage() {
     getGuilds();
   }, [accessToken]);
 
-  const handleDashboardClick = (guildId: string) => {
+  const handleDashboardClick = async (guildId: string) => {
     setLoadingGuildId(guildId);
     router.push(`/dashboard/${guildId}`);
   };
