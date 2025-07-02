@@ -165,21 +165,43 @@ export default function DashboardPage() {
 
   return (
     <div className="relative min-h-screen bg-[#121212] flex flex-col justify-center items-center p-6 text-white overflow-hidden">
-      <div className="absolute inset-0 z-0 pointer-events-none">
+      {/* Background Beams */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-60">
         <BackgroundBeams />
       </div>
 
+      {/* Header */}
+      <header className="z-10 mb-10 flex flex-col items-center">
+        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight mb-2 bg-gradient-to-r from-[#5865F2] via-[#7289DA] to-[#00f2fe] text-transparent bg-clip-text">
+          Select a Server
+        </h1>
+        <p className="text-gray-400 text-lg max-w-2xl">
+          Manage your Discord servers below. Only servers where you have admin
+          access are shown.
+        </p>
+      </header>
+
+      {/* Main Content */}
       {isLoadingGuilds ? (
-        <div className="flex flex-col items-center gap-3 text-red-500 z-10">
-          <ClipLoader color="#FF4B3E" size={40} />
-          <p className="text-lg">Loading your servers...</p>
+        <div className="flex flex-col items-center gap-4 z-10 bg-[#23243a]/70 px-8 py-10 rounded-2xl shadow-xl animate-pulse">
+          <ClipLoader color="#5865F2" size={40} />
+          <p className="text-lg text-[#5865F2] font-medium">
+            Loading your servers...
+          </p>
         </div>
       ) : adminGuilds.known.length === 0 ? (
-        <p className="text-gray-400 text-xl mt-12 z-10">
-          No admin guilds found.
-        </p>
+        <div className="bg-[#23243a]/80 rounded-2xl px-8 py-10 shadow-md flex flex-col items-center gap-4 z-10">
+          <span className="text-5xl">🤔</span>
+          <p className="text-gray-300 text-xl mt-2">
+            No servers found where you have admin permissions.
+          </p>
+          <p className="text-sm text-gray-500">
+            Make sure you&apos;re an admin in at least one server, or try
+            refreshing.
+          </p>
+        </div>
       ) : (
-        <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8 z-10">
+        <section className="w-full max-w-7xl flex flex-wrap justify-center gap-8 z-10 animate-fade-in">
           {adminGuilds.known.map((guild) => {
             const counts = {
               online: guild.approximate_presence_count ?? 0,
