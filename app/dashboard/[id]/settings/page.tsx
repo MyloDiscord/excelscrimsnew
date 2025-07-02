@@ -257,31 +257,6 @@ export default function SettingsGuildPage() {
     }
   }, [loading, error, unauthorized]);
 
-  const saveLogChannel = async () => {
-    if (!guildId || !selectedChannel) return;
-
-    try {
-      const res = await fetch(
-        `/api/discord/guild/${guildId}/save-log-channel`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ channelId: selectedChannel }),
-        }
-      );
-
-      const data = await res.json();
-      if (res.ok) {
-        toast.success(data.message || "Log channel saved");
-        setLogChannelDialogOpen(false);
-      } else {
-        toast.error(data.message || "Failed to save log channel");
-      }
-    } catch {
-      toast.error("Error saving log channel");
-    }
-  };
-
   if (loading) {
     return (
       <div className="relative min-h-screen flex items-center justify-center bg-[#121212] text-white overflow-hidden">
