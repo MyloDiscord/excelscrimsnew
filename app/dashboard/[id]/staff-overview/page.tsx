@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import { BackgroundBeams } from "@/components/ui/background-beams";
 import { useParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -8,9 +9,8 @@ import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { User, ChevronDown, MoreHorizontal } from "lucide-react";
-import * as React from "react";
 
-// ---- DataTable imports ----
+// DataTable UI imports
 import {
   Table,
   TableHeader,
@@ -44,7 +44,7 @@ import {
   VisibilityState,
 } from "@tanstack/react-table";
 
-// ---- DataTable setup ----
+// Dummy staff data
 const staffRows = [
   {
     id: "1",
@@ -77,74 +77,6 @@ const staffRows = [
 ];
 
 type Staff = (typeof staffRows)[0];
-
-export const staffColumns: ColumnDef<Staff>[] = [
-  {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  { accessorKey: "id", header: "ID" },
-  { accessorKey: "name", header: "Name" },
-  { accessorKey: "role", header: "Role" },
-  { accessorKey: "joined", header: "Joined" },
-  {
-    accessorKey: "online",
-    header: "Online?",
-    cell: ({ row }) =>
-      row.original.online ? (
-        <span className="text-green-400 font-bold">Online</span>
-      ) : (
-        <span className="text-gray-400">Offline</span>
-      ),
-  },
-  {
-    id: "actions",
-    enableHiding: false,
-    cell: ({ row }) => {
-      const staff = row.original;
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(staff.id)}
-            >
-              Copy ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View profile</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
-  },
-];
-
-// ---- End DataTable setup ----
 
 type DiscordGuild = {
   id: string;
@@ -289,41 +221,22 @@ export default function StaffOverview() {
               <User className="text-red-400" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">1</p>
+              <p className="text-2xl font-bold">{staffRows.length}</p>
               <p className="text-xs text-gray-400">Total staff.</p>
             </CardContent>
           </Card>
 
+          {/* Add more cards here as needed */}
           <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle>Test</CardTitle>
-              <User className="text-red-400" />
+              <CardTitle>Online Staff</CardTitle>
+              <User className="text-green-400" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold">1</p>
-              <p className="text-xs text-gray-400">Test.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle>Test</CardTitle>
-              <User className="text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">1</p>
-              <p className="text-xs text-gray-400">Test.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
-            <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle>Test</CardTitle>
-              <User className="text-red-400" />
-            </CardHeader>
-            <CardContent>
-              <p className="text-2xl font-bold">1</p>
-              <p className="text-xs text-gray-400">Test.</p>
+              <p className="text-2xl font-bold">
+                {staffRows.filter((s) => s.online).length}
+              </p>
+              <p className="text-xs text-gray-400">Currently online.</p>
             </CardContent>
           </Card>
         </div>
@@ -339,6 +252,74 @@ export default function StaffOverview() {
 
 // ---- StaffDataTable component ----
 function StaffDataTable() {
+  // -- Move columns definition INSIDE the component --
+  const staffColumns: ColumnDef<Staff>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <Checkbox
+          checked={
+            table.getIsAllPageRowsSelected() ||
+            (table.getIsSomePageRowsSelected() && "indeterminate")
+          }
+          onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+          aria-label="Select all"
+        />
+      ),
+      cell: ({ row }) => (
+        <Checkbox
+          checked={row.getIsSelected()}
+          onCheckedChange={(value) => row.toggleSelected(!!value)}
+          aria-label="Select row"
+        />
+      ),
+      enableSorting: false,
+      enableHiding: false,
+    },
+    { accessorKey: "id", header: "ID" },
+    { accessorKey: "name", header: "Name" },
+    { accessorKey: "role", header: "Role" },
+    { accessorKey: "joined", header: "Joined" },
+    {
+      accessorKey: "online",
+      header: "Online?",
+      cell: ({ row }) =>
+        row.original.online ? (
+          <span className="text-green-400 font-bold">Online</span>
+        ) : (
+          <span className="text-gray-400">Offline</span>
+        ),
+    },
+    {
+      id: "actions",
+      enableHiding: false,
+      cell: ({ row }) => {
+        const staff = row.original;
+        return (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="h-8 w-8 p-0">
+                <span className="sr-only">Open menu</span>
+                <MoreHorizontal />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              <DropdownMenuLabel>Actions</DropdownMenuLabel>
+              <DropdownMenuItem
+                onClick={() => navigator.clipboard.writeText(staff.id)}
+              >
+                Copy ID
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+              <DropdownMenuItem>View profile</DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        );
+      },
+    },
+  ];
+
+  // --- DataTable logic ---
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     []
@@ -372,7 +353,7 @@ function StaffDataTable() {
         <Input
           placeholder="Filter by name..."
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
-          onChange={(event) =>
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm"
