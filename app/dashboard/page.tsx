@@ -82,7 +82,7 @@ export default function DashboardPage() {
             toast.dismiss(loadingToastId.current);
 
           if (result.known.length > 0) {
-            toast.success("Guilds loaded successfully!");
+            toast.success("Servers loaded successfully!");
           } else {
             toast.info("No admin guilds found.");
           }

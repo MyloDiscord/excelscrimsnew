@@ -74,6 +74,48 @@ export default function SettingsGuildPage() {
   const [channels, setChannels] = useState<DiscordChannel[]>([]);
   const [selectedChannel, setSelectedChannel] = useState<string | null>(null);
   const [logChannelDialogOpen, setLogChannelDialogOpen] = useState(false);
+  const [selectedLogChannel, setSelectedLogChannel] = useState<string | null>(
+    null
+  );
+  const [logSaving, setLogSaving] = useState(false);
+
+  useEffect(() => {
+    if (logChannelDialogOpen) {
+      setSelectedLogChannel(selectedChannel);
+    }
+  }, [logChannelDialogOpen, selectedChannel]);
+
+  const handleLogChannelSave = async () => {
+    if (!guildId || !selectedLogChannel) return;
+    setLogSaving(true);
+    try {
+      const res = await fetch(
+        `/api/discord/guild/${guildId}/save-log-channel`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ channelId: selectedLogChannel }),
+        }
+      );
+      const data = await res.json();
+      if (res.ok) {
+        toast.success(data.message || "Log channel saved");
+        setSelectedChannel(selectedLogChannel); // update page state!
+        setLogChannelDialogOpen(false);
+      } else {
+        toast.error(data.message || "Failed to save log channel");
+      }
+    } catch {
+      toast.error("Error saving log channel");
+    } finally {
+      setLogSaving(false);
+    }
+  };
+
+  const handleLogChannelCancel = () => {
+    setSelectedLogChannel(selectedChannel);
+    setLogChannelDialogOpen(false);
+  };
 
   useEffect(() => {
     async function loadAllData() {
@@ -471,6 +513,21 @@ export default function SettingsGuildPage() {
             </CardTitle>
           </CardHeader>
           <CardContent>
+            <div className="mb-4">
+              <div className="flex gap-2 flex-wrap">
+                {!selectedChannel && (
+                  <span className="text-gray-400">No log channel set.</span>
+                )}
+                {selectedChannel && (
+                  <span className="px-3 py-1 rounded bg-neutral-800 text-white flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-blue-500" />#
+                    {channels.find((c) => c.id === selectedChannel)?.name ||
+                      "Unknown"}
+                  </span>
+                )}
+              </div>
+            </div>
+
             <Dialog
               open={logChannelDialogOpen}
               onOpenChange={setLogChannelDialogOpen}
@@ -488,7 +545,7 @@ export default function SettingsGuildPage() {
                   </DialogDescription>
                 </DialogHeader>
 
-                <DropdownMenu>
+                <DropdownMenu onOpenChange={setDropdownOpen}>
                   <DropdownMenuTrigger asChild>
                     <button
                       type="button"
@@ -496,59 +553,106 @@ export default function SettingsGuildPage() {
                       aria-label="Select Log Channel"
                     >
                       <span className="truncate">
-                        {selectedChannel
+                        {selectedLogChannel
                           ? `#${
-                              channels.find((c) => c.id === selectedChannel)
+                              channels.find((c) => c.id === selectedLogChannel)
                                 ?.name || "Unknown"
                             }`
                           : "Select a channel..."}
                       </span>
-                      <ChevronDown className="h-5 w-5 text-gray-300 ml-2" />
+                      <ChevronDown
+                        className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
+                          dropdownOpen ? "rotate-180" : "rotate-0"
+                        }`}
+                      />
                     </button>
                   </DropdownMenuTrigger>
-
-                  <DropdownMenuContent className="bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md">
+                  <DropdownMenuContent
+                    style={{ width: dropdownWidth }}
+                    className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
+            scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
+            transition-opacity duration-300 ease-in-out
+            ${
+              dropdownOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none"
+            }`}
+                  >
                     <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
                       Available Channels
                     </DropdownMenuLabel>
                     <DropdownMenuSeparator />
-                    {channels.map((channel) => (
-                      <DropdownMenuItem
-                        key={channel.id}
-                        onSelect={(e) => {
-                          e.preventDefault();
-                          setSelectedChannel(channel.id);
-                        }}
-                        className={`flex justify-between items-center px-4 py-2 ${
-                          selectedChannel === channel.id
-                            ? "bg-[#1a1a1a] text-white"
-                            : "hover:bg-gray-700 text-gray-300"
-                        }`}
-                      >
-                        #{channel.name}
-                        {selectedChannel === channel.id && (
-                          <Check className="h-4 w-4" />
-                        )}
-                      </DropdownMenuItem>
-                    ))}
+                    {channels.map((channel) => {
+                      const isSelected = selectedLogChannel === channel.id;
+                      return (
+                        <DropdownMenuItem
+                          key={channel.id}
+                          onSelect={(e) => {
+                            e.preventDefault();
+                            setSelectedLogChannel(channel.id);
+                          }}
+                          className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
+                            isSelected
+                              ? "bg-[#1a1a1a] text-white shadow-md"
+                              : "hover:bg-gray-700 text-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
+                            <span className="select-none">#{channel.name}</span>
+                          </div>
+                          {isSelected && (
+                            <Check className="h-5 w-5 text-white" />
+                          )}
+                        </DropdownMenuItem>
+                      );
+                    })}
                   </DropdownMenuContent>
                 </DropdownMenu>
 
+                {selectedLogChannel && (
+                  <div className="mt-4 flex flex-wrap gap-2 items-center">
+                    <div
+                      className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group bg-blue-900/30 text-white"
+                      title="Remove selection"
+                      onClick={() => setSelectedLogChannel(null)}
+                    >
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />#
+                      {channels.find((c) => c.id === selectedLogChannel)
+                        ?.name || "Unknown"}
+                      <X className="w-3 h-3 ml-1 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <button
+                      onClick={() => setSelectedLogChannel(null)}
+                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+
                 <div className="mt-6 flex justify-end gap-4">
                   <button
-                    onClick={() => setLogChannelDialogOpen(false)}
-                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition"
+                    onClick={handleLogChannelCancel}
+                    disabled={logSaving}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
                     <X className="w-4 h-4" />
                     Cancel
                   </button>
                   <button
-                    onClick={saveLogChannel}
-                    disabled={!selectedChannel}
+                    onClick={handleLogChannelSave}
+                    disabled={logSaving || !selectedLogChannel}
                     className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <Check className="w-4 h-4" />
-                    Save
+                    {logSaving ? (
+                      "Saving..."
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Save
+                      </>
+                    )}
                   </button>
                 </div>
               </DialogContent>
