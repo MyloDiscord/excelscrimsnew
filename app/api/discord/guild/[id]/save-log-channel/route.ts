@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
         }
 
         const body = await req.json();
-        const logChannel = body.logChannel;
+        const logChannel = body.channelId;
 
         if (!logChannel || typeof logChannel !== "string") {
             return NextResponse.json({ message: "Invalid or missing logChannel" }, { status: 400 });

@@ -298,357 +298,340 @@ export default function SettingsGuildPage() {
           Settings
         </h1>
 
-        {/* STAFF ROLES CARD */}
-        <Card
-          className="
-          w-full max-w-2xl mx-auto
-          bg-gradient-to-br from-[#212936]/80 to-[#181825]/80
-          border border-[#232337]/80 shadow-2xl rounded-2xl
-          backdrop-blur-lg p-0 mb-8 transition hover:shadow-3xl
-        "
-        >
-          <CardHeader className="pb-0 pt-6 px-8">
-            <CardTitle className="text-2xl font-bold text-white/90 tracking-tight">
+        <Card className="w-full bg-[#1c1c1c] border border-neutral-700 shadow-lg rounded-lg">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-gray-300">
               Set Discord Staff Roles
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-4 pb-6 px-8 flex flex-col gap-5">
-            <div>
-              <div className="flex gap-2 flex-wrap mb-2">
-                {savedRoles.length === 0 ? (
+          <CardContent>
+            <div className="mb-4">
+              <div className="flex gap-2 flex-wrap">
+                {savedRoles.length === 0 && (
                   <span className="text-gray-400">No staff roles set.</span>
-                ) : (
-                  savedRoles.map((role) => (
-                    <span
-                      key={role.id}
-                      className="px-3 py-1 rounded bg-neutral-800/70 text-white flex items-center gap-2 shadow"
-                      style={{ backgroundColor: intToHex(role.color) + "22" }}
-                    >
-                      <span
-                        className="w-2 h-2 rounded-full"
-                        style={{ backgroundColor: intToHex(role.color) }}
-                      />
-                      {role.name}
-                    </span>
-                  ))
                 )}
+                {savedRoles.map((role) => (
+                  <span
+                    key={role.id}
+                    className="px-3 py-1 rounded bg-neutral-800 text-white flex items-center gap-2"
+                    style={{ backgroundColor: intToHex(role.color) + "22" }}
+                  >
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{ backgroundColor: intToHex(role.color) }}
+                    />
+                    {role.name}
+                  </span>
+                ))}
               </div>
-              <Dialog open={open} onOpenChange={setOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full h-11 bg-[#232f43] hover:bg-[#2c3a57] transition-all font-bold shadow-inner rounded-xl cursor-pointer text-white text-base tracking-wide ring-1 ring-inset ring-[#3b4252]/40 focus:ring-2 focus:ring-cyan-500/30">
-                    Set Staff Roles
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
-                  <DialogHeader>
-                    <DialogTitle>Set Discord Staff Roles</DialogTitle>
-                    <DialogDescription>
-                      Choose one or more Discord roles that should be recognized
-                      as staff.
-                    </DialogDescription>
-                  </DialogHeader>
+            </div>
 
-                  <DropdownMenu onOpenChange={(open) => setDropdownOpen(open)}>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        ref={triggerRef}
-                        type="button"
-                        className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
-                        aria-label="Select Staff Roles"
-                      >
-                        <span className="truncate">
-                          {selectedRoles.length > 0
-                            ? selectedRoles.map((r) => r.name).join(", ")
-                            : "Select roles..."}
-                        </span>
-                        <ChevronDown
-                          className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
-                            dropdownOpen ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
-                      </button>
-                    </DropdownMenuTrigger>
+            <Dialog open={open} onOpenChange={setOpen}>
+              <DialogTrigger asChild>
+                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
+                  Set Staff Roles
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
+                <DialogHeader>
+                  <DialogTitle>Set Discord Staff Roles</DialogTitle>
+                  <DialogDescription>
+                    Choose one or more Discord roles that should be recognized
+                    as staff.
+                  </DialogDescription>
+                </DialogHeader>
 
-                    <DropdownMenuContent
-                      style={{ width: dropdownWidth }}
-                      className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
-                        scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
-                        transition-opacity duration-300 ease-in-out
-                        ${
-                          dropdownOpen
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 -translate-y-2 pointer-events-none"
+                <DropdownMenu onOpenChange={(open) => setDropdownOpen(open)}>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      ref={triggerRef}
+                      type="button"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
+                      aria-label="Select Staff Roles"
+                    >
+                      <span className="truncate">
+                        {selectedRoles.length > 0
+                          ? selectedRoles.map((r) => r.name).join(", ")
+                          : "Select roles..."}
+                      </span>
+                      <ChevronDown
+                        className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
+                          dropdownOpen ? "rotate-180" : "rotate-0"
                         }`}
-                    >
-                      <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
-                        Available Roles
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {roles.map((role) => {
-                        const isSelected = selectedRoles.some(
-                          (r) => r.id === role.id
-                        );
-                        const hex = intToHex(role.color);
-
-                        return (
-                          <DropdownMenuItem
-                            key={role.id}
-                            onSelect={(e) => {
-                              e.preventDefault();
-                              toggleRole(role);
-                            }}
-                            className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
-                              isSelected
-                                ? "bg-[#1a1a1a] text-white shadow-md"
-                                : "hover:bg-gray-700 text-gray-300"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <span
-                                className="w-3 h-3 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: hex }}
-                                aria-hidden="true"
-                              />
-                              <span className="select-none">{role.name}</span>
-                            </div>
-                            {isSelected && (
-                              <Check className="h-5 w-5 text-white" />
-                            )}
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {selectedRoles.length > 0 && (
-                    <div className="mt-4 flex flex-wrap gap-2 items-center">
-                      {selectedRoles.map((role) => {
-                        const hex = intToHex(role.color);
-                        return (
-                          <div
-                            key={role.id}
-                            className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group"
-                            style={{
-                              backgroundColor: hex + "22",
-                              color: "#fff",
-                            }}
-                            onClick={() => removeRole(role.id)}
-                            title={`Remove ${role.name}`}
-                          >
-                            <span
-                              className="w-2 h-2 rounded-full relative flex-shrink-0 bg-[inherit]"
-                              style={{ backgroundColor: hex }}
-                            >
-                              <X
-                                className="absolute top-0 left-0 w-2 h-2 text-white opacity-0 group-hover:opacity-100 transition-opacity"
-                                strokeWidth={3}
-                              />
-                            </span>
-                            {role.name}
-                          </div>
-                        );
-                      })}
-
-                      <button
-                        onClick={() => setSelectedRoles([])}
-                        className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
-                      >
-                        Clear All
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="mt-6 flex justify-end gap-4">
-                    <button
-                      onClick={handleCancel}
-                      disabled={saving}
-                      className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <X className="w-4 h-4" />
-                      Cancel
+                      />
                     </button>
+                  </DropdownMenuTrigger>
+
+                  <DropdownMenuContent
+                    style={{ width: dropdownWidth }}
+                    className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
+                    scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
+                    transition-opacity duration-300 ease-in-out
+                    ${
+                      dropdownOpen
+                        ? "opacity-100 translate-y-0"
+                        : "opacity-0 -translate-y-2 pointer-events-none"
+                    }`}
+                  >
+                    <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
+                      Available Roles
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {roles.map((role) => {
+                      const isSelected = selectedRoles.some(
+                        (r) => r.id === role.id
+                      );
+                      const hex = intToHex(role.color);
+
+                      return (
+                        <DropdownMenuItem
+                          key={role.id}
+                          onSelect={(e) => {
+                            e.preventDefault();
+                            toggleRole(role);
+                          }}
+                          className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
+                            isSelected
+                              ? "bg-[#1a1a1a] text-white shadow-md"
+                              : "hover:bg-gray-700 text-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span
+                              className="w-3 h-3 rounded-full flex-shrink-0"
+                              style={{ backgroundColor: hex }}
+                              aria-hidden="true"
+                            />
+                            <span className="select-none">{role.name}</span>
+                          </div>
+                          {isSelected && (
+                            <Check className="h-5 w-5 text-white" />
+                          )}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {selectedRoles.length > 0 && (
+                  <div className="mt-4 flex flex-wrap gap-2 items-center">
+                    {selectedRoles.map((role) => {
+                      const hex = intToHex(role.color);
+                      return (
+                        <div
+                          key={role.id}
+                          className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group"
+                          style={{
+                            backgroundColor: hex + "22",
+                            color: "#fff",
+                          }}
+                          onClick={() => removeRole(role.id)}
+                          title={`Remove ${role.name}`}
+                        >
+                          <span
+                            className="w-2 h-2 rounded-full relative flex-shrink-0 bg-[inherit]"
+                            style={{ backgroundColor: hex }}
+                          >
+                            <X
+                              className="absolute top-0 left-0 w-2 h-2 text-white opacity-0 group-hover:opacity-100 transition-opacity"
+                              strokeWidth={3}
+                            />
+                          </span>
+                          {role.name}
+                        </div>
+                      );
+                    })}
 
                     <button
-                      onClick={handleSave}
-                      disabled={saving}
-                      className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => setSelectedRoles([])}
+                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
                     >
-                      {saving ? (
-                        "Saving..."
-                      ) : (
-                        <>
-                          <Check className="w-4 h-4" />
-                          Save
-                        </>
-                      )}
+                      Clear All
                     </button>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                )}
+
+                <div className="mt-6 flex justify-end gap-4">
+                  <button
+                    onClick={handleCancel}
+                    disabled={saving}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </button>
+
+                  <button
+                    onClick={handleSave}
+                    disabled={saving}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {saving ? (
+                      "Saving..."
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Save
+                      </>
+                    )}
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
 
-        {/* LOG CHANNEL CARD */}
-        <Card
-          className="
-          w-full max-w-2xl mx-auto
-          bg-gradient-to-br from-[#212936]/80 to-[#181825]/80
-          border border-[#232337]/80 shadow-2xl rounded-2xl
-          backdrop-blur-lg p-0 mb-8 transition hover:shadow-3xl
-        "
-        >
-          <CardHeader className="pb-0 pt-6 px-8">
-            <CardTitle className="text-2xl font-bold text-white/90 tracking-tight">
+        <Card className="w-full bg-[#1c1c1c] border border-neutral-700 shadow-lg rounded-lg mt-6">
+          <CardHeader>
+            <CardTitle className="text-xl font-semibold text-gray-300">
               Set Log Channel
             </CardTitle>
           </CardHeader>
-          <CardContent className="pt-4 pb-6 px-8 flex flex-col gap-5">
-            <div>
-              <div className="flex gap-2 flex-wrap mb-2">
-                {!selectedChannel ? (
+          <CardContent>
+            <div className="mb-4">
+              <div className="flex gap-2 flex-wrap">
+                {!selectedChannel && (
                   <span className="text-gray-400">No log channel set.</span>
-                ) : (
-                  <span className="px-3 py-1 rounded bg-neutral-800/70 text-white flex items-center gap-2 shadow">
+                )}
+                {selectedChannel && (
+                  <span className="px-3 py-1 rounded bg-neutral-800 text-white flex items-center gap-2">
                     <span className="w-2 h-2 rounded-full bg-blue-500" />#
                     {channels.find((c) => c.id === selectedChannel)?.name ||
                       "Unknown"}
                   </span>
                 )}
               </div>
-              <Dialog
-                open={logChannelDialogOpen}
-                onOpenChange={setLogChannelDialogOpen}
-              >
-                <DialogTrigger asChild>
-                  <Button className="w-full h-11 bg-[#232f43] hover:bg-[#2c3a57] transition-all font-bold shadow-inner rounded-xl cursor-pointer text-white text-base tracking-wide ring-1 ring-inset ring-[#3b4252]/40 focus:ring-2 focus:ring-cyan-500/30">
-                    Set Log Channel
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
-                  <DialogHeader>
-                    <DialogTitle>Set Log Channel</DialogTitle>
-                    <DialogDescription>
-                      Choose the channel where logs should be sent.
-                    </DialogDescription>
-                  </DialogHeader>
+            </div>
 
-                  <DropdownMenu onOpenChange={setDropdownOpen}>
-                    <DropdownMenuTrigger asChild>
-                      <button
-                        type="button"
-                        className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
-                        aria-label="Select Log Channel"
-                      >
-                        <span className="truncate">
-                          {selectedLogChannel
-                            ? `#${
-                                channels.find(
-                                  (c) => c.id === selectedLogChannel
-                                )?.name || "Unknown"
-                              }`
-                            : "Select a channel..."}
-                        </span>
-                        <ChevronDown
-                          className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
-                            dropdownOpen ? "rotate-180" : "rotate-0"
-                          }`}
-                        />
-                      </button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent
-                      style={{ width: dropdownWidth }}
-                      className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
-                        scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
-                        transition-opacity duration-300 ease-in-out
-                        ${
-                          dropdownOpen
-                            ? "opacity-100 translate-y-0"
-                            : "opacity-0 -translate-y-2 pointer-events-none"
+            <Dialog
+              open={logChannelDialogOpen}
+              onOpenChange={setLogChannelDialogOpen}
+            >
+              <DialogTrigger asChild>
+                <Button className="w-full bg-gray-800 hover:bg-gray-700 transition-all font-semibold shadow-sm rounded-md cursor-pointer">
+                  Set Log Channel
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
+                <DialogHeader>
+                  <DialogTitle>Set Log Channel</DialogTitle>
+                  <DialogDescription>
+                    Choose the channel where logs should be sent.
+                  </DialogDescription>
+                </DialogHeader>
+
+                <DropdownMenu onOpenChange={setDropdownOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <button
+                      type="button"
+                      className="mt-4 w-full bg-transparent border border-neutral-700 rounded-md h-10 flex items-center justify-between px-4 text-gray-300 hover:bg-gray-700 focus:outline-none"
+                      aria-label="Select Log Channel"
+                    >
+                      <span className="truncate">
+                        {selectedLogChannel
+                          ? `#${
+                              channels.find((c) => c.id === selectedLogChannel)
+                                ?.name || "Unknown"
+                            }`
+                          : "Select a channel..."}
+                      </span>
+                      <ChevronDown
+                        className={`h-5 w-5 text-gray-300 ml-2 flex-shrink-0 transform transition-transform duration-200 ${
+                          dropdownOpen ? "rotate-180" : "rotate-0"
                         }`}
-                    >
-                      <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
-                        Available Channels
-                      </DropdownMenuLabel>
-                      <DropdownMenuSeparator />
-                      {channels.map((channel) => {
-                        const isSelected = selectedLogChannel === channel.id;
-                        return (
-                          <DropdownMenuItem
-                            key={channel.id}
-                            onSelect={(e) => {
-                              e.preventDefault();
-                              setSelectedLogChannel(channel.id);
-                            }}
-                            className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
-                              isSelected
-                                ? "bg-[#1a1a1a] text-white shadow-md"
-                                : "hover:bg-gray-700 text-gray-300"
-                            }`}
-                          >
-                            <div className="flex items-center gap-3">
-                              <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
-                              <span className="select-none">
-                                #{channel.name}
-                              </span>
-                            </div>
-                            {isSelected && (
-                              <Check className="h-5 w-5 text-white" />
-                            )}
-                          </DropdownMenuItem>
-                        );
-                      })}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-
-                  {selectedLogChannel && (
-                    <div className="mt-4 flex flex-wrap gap-2 items-center">
-                      <div
-                        className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group bg-blue-900/30 text-white"
-                        title="Remove selection"
-                        onClick={() => setSelectedLogChannel(null)}
-                      >
-                        <span className="w-2 h-2 rounded-full bg-blue-500" />#
-                        {channels.find((c) => c.id === selectedLogChannel)
-                          ?.name || "Unknown"}
-                        <X className="w-3 h-3 ml-1 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                      <button
-                        onClick={() => setSelectedLogChannel(null)}
-                        className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
-                      >
-                        Clear
-                      </button>
-                    </div>
-                  )}
-
-                  <div className="mt-6 flex justify-end gap-4">
-                    <button
-                      onClick={handleLogChannelCancel}
-                      disabled={logSaving}
-                      className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      <X className="w-4 h-4" />
-                      Cancel
+                      />
                     </button>
-                    <button
-                      onClick={handleLogChannelSave}
-                      disabled={logSaving || !selectedLogChannel}
-                      className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    style={{ width: dropdownWidth }}
+                    className={`bg-[#1f1f1f] text-white border border-neutral-700 max-h-64 overflow-y-auto shadow-lg rounded-md
+            scrollbar-thin scrollbar-thumb-neutral-600 scrollbar-track-transparent
+            transition-opacity duration-300 ease-in-out
+            ${
+              dropdownOpen
+                ? "opacity-100 translate-y-0"
+                : "opacity-0 -translate-y-2 pointer-events-none"
+            }`}
+                  >
+                    <DropdownMenuLabel className="px-4 py-2 text-sm font-semibold text-gray-400">
+                      Available Channels
+                    </DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    {channels.map((channel) => {
+                      const isSelected = selectedLogChannel === channel.id;
+                      return (
+                        <DropdownMenuItem
+                          key={channel.id}
+                          onSelect={(e) => {
+                            e.preventDefault();
+                            setSelectedLogChannel(channel.id);
+                          }}
+                          className={`flex items-center justify-between px-4 py-2 cursor-pointer rounded-md transition-colors duration-150 ${
+                            isSelected
+                              ? "bg-[#1a1a1a] text-white shadow-md"
+                              : "hover:bg-gray-700 text-gray-300"
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="w-3 h-3 rounded-full bg-blue-500 flex-shrink-0" />
+                            <span className="select-none">#{channel.name}</span>
+                          </div>
+                          {isSelected && (
+                            <Check className="h-5 w-5 text-white" />
+                          )}
+                        </DropdownMenuItem>
+                      );
+                    })}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+
+                {selectedLogChannel && (
+                  <div className="mt-4 flex flex-wrap gap-2 items-center">
+                    <div
+                      className="flex items-center gap-2 px-3 py-1 rounded-md text-sm font-medium cursor-pointer group bg-blue-900/30 text-white"
+                      title="Remove selection"
+                      onClick={() => setSelectedLogChannel(null)}
                     >
-                      {logSaving ? (
-                        "Saving..."
-                      ) : (
-                        <>
-                          <Check className="w-4 h-4" />
-                          Save
-                        </>
-                      )}
+                      <span className="w-2 h-2 rounded-full bg-blue-500" />#
+                      {channels.find((c) => c.id === selectedLogChannel)
+                        ?.name || "Unknown"}
+                      <X className="w-3 h-3 ml-1 text-white opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </div>
+                    <button
+                      onClick={() => setSelectedLogChannel(null)}
+                      className="ml-2 px-3 py-1 text-sm rounded-md font-medium text-red-400 bg-red-700/20 hover:bg-red-700/40 transition cursor-pointer"
+                    >
+                      Clear
                     </button>
                   </div>
-                </DialogContent>
-              </Dialog>
-            </div>
+                )}
+
+                <div className="mt-6 flex justify-end gap-4">
+                  <button
+                    onClick={handleLogChannelCancel}
+                    disabled={logSaving}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-red-700/20 hover:bg-red-700/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <X className="w-4 h-4" />
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleLogChannelSave}
+                    disabled={logSaving || !selectedLogChannel}
+                    className="flex items-center gap-2 px-4 py-2 rounded-md text-sm font-semibold cursor-pointer bg-green-600/20 hover:bg-green-600/40 text-white transition disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    {logSaving ? (
+                      "Saving..."
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4" />
+                        Save
+                      </>
+                    )}
+                  </button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </CardContent>
         </Card>
       </main>
