@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 type DiscordGuild = {
   id: string;
@@ -125,7 +126,7 @@ export default function StaffOverview() {
 
       {currentGuild && (
         <Sidebar
-          current="Dashboard"
+          current="Staff Overview"
           guildName={currentGuild.name}
           guildAvatar={
             currentGuild.icon
@@ -142,6 +143,19 @@ export default function StaffOverview() {
           Staff Overview
         </h1>
         <hr className="border-gray-600 mb-6 block md:hidden" />
+
+        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-4">
+          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Total Checks</CardTitle>
+              {/* <Activity className="text-red-400" /> */}
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">1</p>
+              <p className="text-xs text-gray-400">Total checks made.</p>
+            </CardContent>
+          </Card>
+        </div>
       </main>
     </div>
   );
