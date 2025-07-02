@@ -7,6 +7,144 @@ import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { User, ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import * as React from "react";
+
+// ---- DataTable imports ----
+import {
+  Table,
+  TableHeader,
+  TableRow,
+  TableHead,
+  TableBody,
+  TableCell,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import {
+  DropdownMenu,
+  DropdownMenuCheckboxItem,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  ColumnDef,
+  ColumnFiltersState,
+  flexRender,
+  getCoreRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+  SortingState,
+  useReactTable,
+  VisibilityState,
+} from "@tanstack/react-table";
+
+// ---- DataTable setup ----
+const staffRows = [
+  {
+    id: "1",
+    name: "Joe Staff",
+    role: "Admin",
+    joined: "2024-01-03",
+    online: true,
+  },
+  {
+    id: "2",
+    name: "Jane Helper",
+    role: "Moderator",
+    joined: "2023-11-15",
+    online: false,
+  },
+  {
+    id: "3",
+    name: "Max Mod",
+    role: "Moderator",
+    joined: "2024-03-09",
+    online: true,
+  },
+  {
+    id: "4",
+    name: "Eve Helper",
+    role: "Helper",
+    joined: "2023-12-25",
+    online: false,
+  },
+];
+
+type Staff = (typeof staffRows)[0];
+
+export const staffColumns: ColumnDef<Staff>[] = [
+  {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        checked={
+          table.getIsAllPageRowsSelected() ||
+          (table.getIsSomePageRowsSelected() && "indeterminate")
+        }
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  },
+  { accessorKey: "id", header: "ID" },
+  { accessorKey: "name", header: "Name" },
+  { accessorKey: "role", header: "Role" },
+  { accessorKey: "joined", header: "Joined" },
+  {
+    accessorKey: "online",
+    header: "Online?",
+    cell: ({ row }) =>
+      row.original.online ? (
+        <span className="text-green-400 font-bold">Online</span>
+      ) : (
+        <span className="text-gray-400">Offline</span>
+      ),
+  },
+  {
+    id: "actions",
+    enableHiding: false,
+    cell: ({ row }) => {
+      const staff = row.original;
+      return (
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" className="h-8 w-8 p-0">
+              <span className="sr-only">Open menu</span>
+              <MoreHorizontal />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+            <DropdownMenuItem
+              onClick={() => navigator.clipboard.writeText(staff.id)}
+            >
+              Copy ID
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>View profile</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+      );
+    },
+  },
+];
+
+// ---- End DataTable setup ----
 
 type DiscordGuild = {
   id: string;
@@ -147,16 +285,193 @@ export default function StaffOverview() {
         <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-4 p-4">
           <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
             <CardHeader className="flex flex-row items-center justify-between pb-2">
-              <CardTitle>Total Checks</CardTitle>
-              {/* <Activity className="text-red-400" /> */}
+              <CardTitle>Total Staff</CardTitle>
+              <User className="text-red-400" />
             </CardHeader>
             <CardContent>
               <p className="text-2xl font-bold">1</p>
-              <p className="text-xs text-gray-400">Total checks made.</p>
+              <p className="text-xs text-gray-400">Total staff.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Test</CardTitle>
+              <User className="text-red-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">1</p>
+              <p className="text-xs text-gray-400">Test.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Test</CardTitle>
+              <User className="text-red-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">1</p>
+              <p className="text-xs text-gray-400">Test.</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-[#1e1e1e] text-white transform transition-transform duration-300 ease-in-out hover:scale-105 hover:shadow-xl">
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle>Test</CardTitle>
+              <User className="text-red-400" />
+            </CardHeader>
+            <CardContent>
+              <p className="text-2xl font-bold">1</p>
+              <p className="text-xs text-gray-400">Test.</p>
             </CardContent>
           </Card>
         </div>
+
+        <div className="mt-8 bg-[#18181b] rounded-xl p-6 shadow border border-[#232329]">
+          <h2 className="text-2xl font-bold mb-4">Staff Members</h2>
+          <StaffDataTable />
+        </div>
       </main>
+    </div>
+  );
+}
+
+// ---- StaffDataTable component ----
+function StaffDataTable() {
+  const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  );
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({});
+  const [rowSelection, setRowSelection] = React.useState({});
+
+  const table = useReactTable({
+    data: staffRows,
+    columns: staffColumns,
+    onSortingChange: setSorting,
+    onColumnFiltersChange: setColumnFilters,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    getFilteredRowModel: getFilteredRowModel(),
+    onColumnVisibilityChange: setColumnVisibility,
+    onRowSelectionChange: setRowSelection,
+    state: {
+      sorting,
+      columnFilters,
+      columnVisibility,
+      rowSelection,
+    },
+  });
+
+  return (
+    <div className="w-full">
+      <div className="flex items-center py-4">
+        <Input
+          placeholder="Filter by name..."
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          onChange={(event) =>
+            table.getColumn("name")?.setFilterValue(event.target.value)
+          }
+          className="max-w-sm"
+        />
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline" className="ml-auto">
+              Columns <ChevronDown />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            {table
+              .getAllColumns()
+              .filter((column) => column.getCanHide())
+              .map((column) => (
+                <DropdownMenuCheckboxItem
+                  key={column.id}
+                  className="capitalize"
+                  checked={column.getIsVisible()}
+                  onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                >
+                  {column.id}
+                </DropdownMenuCheckboxItem>
+              ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+      </div>
+      <div className="rounded-md border border-neutral-800">
+        <Table>
+          <TableHeader>
+            {table.getHeaderGroups().map((headerGroup) => (
+              <TableRow key={headerGroup.id}>
+                {headerGroup.headers.map((header) => (
+                  <TableHead key={header.id}>
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                          header.column.columnDef.header,
+                          header.getContext()
+                        )}
+                  </TableHead>
+                ))}
+              </TableRow>
+            ))}
+          </TableHeader>
+          <TableBody>
+            {table.getRowModel().rows?.length ? (
+              table.getRowModel().rows.map((row) => (
+                <TableRow
+                  key={row.id}
+                  data-state={row.getIsSelected() && "selected"}
+                >
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
+                    </TableCell>
+                  ))}
+                </TableRow>
+              ))
+            ) : (
+              <TableRow>
+                <TableCell
+                  colSpan={staffColumns.length}
+                  className="h-24 text-center"
+                >
+                  No results.
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+      </div>
+      <div className="flex items-center justify-end space-x-2 py-4">
+        <div className="text-muted-foreground flex-1 text-sm">
+          {table.getFilteredSelectedRowModel().rows.length} of{" "}
+          {table.getFilteredRowModel().rows.length} row(s) selected.
+        </div>
+        <div className="space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.previousPage()}
+            disabled={!table.getCanPreviousPage()}
+          >
+            Previous
+          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => table.nextPage()}
+            disabled={!table.getCanNextPage()}
+          >
+            Next
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }
