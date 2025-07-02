@@ -83,20 +83,20 @@ export default function GuildCard({
 
         <Button
           type="button"
-          variant="outline"
+          variant="default"
           size="lg"
           disabled={isLoading}
           onClick={handleDashboardClick}
           className={`
-            mt-2 w-full flex items-center justify-center gap-3 rounded-full text-lg font-bold
-            border-[#00f8ff] text-[#00f8ff] bg-[#181818]
-            hover:bg-[#00f8ff]/10 hover:text-white hover:border-white
-            active:scale-95
-            focus:outline-none focus:ring-2 focus:ring-[#00f8ff]/40
-            transition-all duration-150
-            ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
-            ${arrowAnim ? "scale-95" : ""}
-          `}
+    mt-2 w-full flex items-center justify-center gap-3 rounded-md text-base font-semibold
+    bg-blue-600 text-white
+    hover:bg-blue-700
+    active:scale-95
+    focus:outline-none focus:ring-2 focus:ring-blue-400/70
+    transition-all duration-150
+    ${isLoading ? "opacity-60 cursor-not-allowed" : ""}
+    ${arrowAnim ? "scale-95" : ""}
+  `}
         >
           {isLoading ? (
             <>
@@ -108,13 +108,9 @@ export default function GuildCard({
               Dashboard
               <span
                 className={`
-                  text-xl leading-none transition-all duration-300
-                  ${
-                    arrowAnim
-                      ? "translate-x-3 opacity-0"
-                      : "translate-x-0 opacity-100"
-                  }
-                `}
+          text-xl leading-none transition-all duration-300
+          ${arrowAnim ? "translate-x-3 opacity-0" : "translate-x-0 opacity-100"}
+        `}
                 style={{ display: "inline-block" }}
               >
                 ➜
