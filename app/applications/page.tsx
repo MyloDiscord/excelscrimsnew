@@ -342,8 +342,9 @@ export default function ApplicationsPage() {
               <SelectValue placeholder="Select your region" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="NA-East">NA-East</SelectItem>
-              <SelectItem value="NA-West">NA-West</SelectItem>
+              <SelectItem value="NA-East">NA Central</SelectItem>
+              <SelectItem value="NA-East">NA East</SelectItem>
+              <SelectItem value="NA-West">NA West</SelectItem>
               <SelectItem value="Europe">Europe</SelectItem>
               <SelectItem value="Oceania">Oceania</SelectItem>
               <SelectItem value="Brazil">Brazil</SelectItem>
