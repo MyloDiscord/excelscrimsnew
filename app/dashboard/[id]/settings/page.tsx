@@ -193,6 +193,7 @@ export default function SettingsGuildPage() {
           }),
         }
       );
+
       const data = await res.json();
       if (res.ok) {
         toast.success(data.message || "Staff roles saved successfully");
@@ -207,6 +208,12 @@ export default function SettingsGuildPage() {
       setSaving(false);
     }
   };
+
+  useEffect(() => {
+    if (!loading && !error && !unauthorized) {
+      toast.success("Successfully loaded settings.");
+    }
+  }, [loading, error, unauthorized]);
 
   const saveLogChannel = async () => {
     if (!guildId || !selectedChannel) return;
