@@ -7,7 +7,7 @@ import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { User, ArrowUpDown, ChevronDown, MoreHorizontal } from "lucide-react";
+import { User, ChevronDown, MoreHorizontal } from "lucide-react";
 import * as React from "react";
 
 // ---- DataTable imports ----
