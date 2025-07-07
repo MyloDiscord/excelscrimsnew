@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../components/Sidebar";
 import { toast } from "sonner";
+import { GridBackgroundDemo } from "@/components/ui/grid-background";
 
 type DiscordGuild = {
   id: string;
@@ -121,7 +122,7 @@ export default function GuildDashboardPage() {
 
   return (
     <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
-      <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
+      <GridBackgroundDemo />
 
       {currentGuild && (
         <Sidebar
