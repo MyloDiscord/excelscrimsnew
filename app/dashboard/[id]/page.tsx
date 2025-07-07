@@ -121,7 +121,7 @@ export default function GuildDashboardPage() {
   }
 
   return (
-    <div className="relative min-h-screen text-white bg-transparent overflow-hidden flex">
+    <div className="relative min-h-screen text-white bg-black dark:bg-black overflow-hidden flex">
       <GridBackgroundDemo />
 
       {currentGuild && (
