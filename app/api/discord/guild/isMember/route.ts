@@ -7,10 +7,6 @@ export async function POST(req: NextRequest) {
     const guildId = process.env.GUILD_ID;
     const botToken = process.env.DISCORD_BOT_TOKEN;
 
-    if (!guildId || !botToken) {
-        return NextResponse.json({ error: "Missing env vars" }, { status: 500 });
-    }
-
     try {
         const resp = await fetch(
             `https://discord.com/api/v10/guilds/${guildId}/members/${discordId}`,
