@@ -16,7 +16,7 @@ export async function POST() {
         return NextResponse.json({ message: 'Access token not found' }, { status: 401 });
     }
 
-    // 2. Get Discord userId
+    // 1. Get Discord userId
     const discordMe = await fetch("https://discord.com/api/users/@me", {
         headers: {
             Authorization: `Bearer ${accessToken}`,
@@ -24,10 +24,31 @@ export async function POST() {
     });
     const discordUser = await discordMe.json();
 
-    // 3. Add user to guild
-    const guildId = process.env.GUILD_ID as string; // Set in .env
-    const botToken = process.env.DISCORD_BOT_TOKEN as string; // Set in .env
+    // 2. Check if user is already in the guild
+    const guildId = process.env.GUILD_ID as string;
+    const botToken = process.env.DISCORD_BOT_TOKEN as string;
 
+    const checkMemberResp = await fetch(
+        `https://discord.com/api/v10/guilds/${guildId}/members/${discordUser.id}`,
+        {
+            headers: {
+                "Authorization": `Bot ${botToken}`,
+            },
+        }
+    );
+
+    if (checkMemberResp.status === 200) {
+        // User is already in the guild
+        return NextResponse.json({ message: "User already in guild!" });
+    }
+
+    if (checkMemberResp.status !== 404) {
+        // Some error occurred (403, 500, etc.)
+        const err = await checkMemberResp.text();
+        return NextResponse.json({ message: "Failed to check user membership", error: err }, { status: checkMemberResp.status });
+    }
+
+    // 3. Add user to guild if not already in
     const joinResponse = await fetch(
         `https://discord.com/api/v10/guilds/${guildId}/members/${discordUser.id}`,
         {
@@ -37,7 +58,7 @@ export async function POST() {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                access_token: accessToken
+                access_token: accessToken,
             }),
         }
     );
