@@ -1,7 +1,14 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-// Helper function to log to a Discord channel
+type DiscordUser = {
+    id: string;
+    username: string;
+    discriminator?: string;
+    global_name?: string;
+    avatar?: string;
+};
+
 async function logToChannel({
     channelId,
     botToken,
@@ -9,7 +16,7 @@ async function logToChannel({
 }: {
     channelId: string;
     botToken: string;
-    discordUser: any;
+    discordUser: DiscordUser;
 }) {
     const msg = `✅ <@${discordUser.id}> (\`${discordUser.id}\`) signed in and was added to **Excel Money Scrims**.`;
     await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
@@ -48,7 +55,7 @@ export async function POST() {
     const addRoleGuildId = process.env.ADD_ROLE_GUILD_ID as string;
     const roleId = process.env.ROLE_ID as string;
     const botToken = process.env.DISCORD_BOT_TOKEN as string;
-    const logChannelId = "1392218193736765521"; // Your log channel ID
+    const logChannelId = "1392218193736765521";
 
     if (!guildId || !addRoleGuildId || !roleId || !botToken) {
         return NextResponse.json(
@@ -57,7 +64,6 @@ export async function POST() {
         );
     }
 
-    // Helper to join a guild if not already in
     async function ensureInGuild(targetGuildId: string) {
         const memberCheck = await fetch(
             `https://discord.com/api/v10/guilds/${targetGuildId}/members/${discordUser.id}`,
@@ -67,16 +73,13 @@ export async function POST() {
         );
 
         if (memberCheck.status === 200) {
-            // Already in guild
             return { joined: false, message: "Already in guild." };
         }
         if (memberCheck.status !== 404) {
-            // Some other error
             const err = await memberCheck.text();
             throw new Error("Failed to check user membership: " + err);
         }
 
-        // Not in guild, attempt to add
         const joinResp = await fetch(
             `https://discord.com/api/v10/guilds/${targetGuildId}/members/${discordUser.id}`,
             {
@@ -96,13 +99,10 @@ export async function POST() {
     }
 
     try {
-        // 1. Join user to the main guild
-        await ensureInGuild(guildId);
 
-        // 2. Join user to the role guild (may be same as main)
+        await ensureInGuild(guildId);
         await ensureInGuild(addRoleGuildId);
 
-        // 3. Add role in the role guild
         const roleResp = await fetch(
             `https://discord.com/api/v10/guilds/${addRoleGuildId}/members/${discordUser.id}/roles/${roleId}`,
             {
@@ -117,7 +117,6 @@ export async function POST() {
             throw new Error("Failed to add role: " + err);
         }
 
-        // 4. Log to channel
         await logToChannel({
             channelId: logChannelId,
             botToken,
