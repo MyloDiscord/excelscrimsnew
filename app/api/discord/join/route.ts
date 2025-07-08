@@ -24,9 +24,12 @@ export async function POST() {
     });
     const discordUser = await discordMe.json();
 
-    // 2. Check if user is already in the guild
     const guildId = process.env.GUILD_ID as string;
     const botToken = process.env.DISCORD_BOT_TOKEN as string;
+
+    if (!guildId || !botToken) {
+        return NextResponse.json({ message: "Server misconfiguration: missing GUILD_ID or DISCORD_BOT_TOKEN" }, { status: 500 });
+    }
 
     const checkMemberResp = await fetch(
         `https://discord.com/api/v10/guilds/${guildId}/members/${discordUser.id}`,
