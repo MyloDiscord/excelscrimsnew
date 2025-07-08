@@ -1,6 +1,27 @@
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
+// Helper function to log to a Discord channel
+async function logToChannel({
+    channelId,
+    botToken,
+    discordUser,
+}: {
+    channelId: string;
+    botToken: string;
+    discordUser: any;
+}) {
+    const msg = `✅ <@${discordUser.id}> (\`${discordUser.id}\`) signed in and was added to **Excel Money Scrims**.`;
+    await fetch(`https://discord.com/api/v10/channels/${channelId}/messages`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bot ${botToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ content: msg }),
+    });
+}
+
 export async function POST() {
     const { userId } = await auth();
 
@@ -27,6 +48,7 @@ export async function POST() {
     const addRoleGuildId = process.env.ADD_ROLE_GUILD_ID as string;
     const roleId = process.env.ROLE_ID as string;
     const botToken = process.env.DISCORD_BOT_TOKEN as string;
+    const logChannelId = "1392218193736765521"; // Your log channel ID
 
     if (!guildId || !addRoleGuildId || !roleId || !botToken) {
         return NextResponse.json(
@@ -40,7 +62,7 @@ export async function POST() {
         const memberCheck = await fetch(
             `https://discord.com/api/v10/guilds/${targetGuildId}/members/${discordUser.id}`,
             {
-                headers: { "Authorization": `Bot ${botToken}` },
+                headers: { Authorization: `Bot ${botToken}` },
             }
         );
 
@@ -60,7 +82,7 @@ export async function POST() {
             {
                 method: "PUT",
                 headers: {
-                    "Authorization": `Bot ${botToken}`,
+                    Authorization: `Bot ${botToken}`,
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ access_token: accessToken }),
@@ -86,7 +108,7 @@ export async function POST() {
             {
                 method: "PUT",
                 headers: {
-                    "Authorization": `Bot ${botToken}`,
+                    Authorization: `Bot ${botToken}`,
                 },
             }
         );
@@ -95,7 +117,14 @@ export async function POST() {
             throw new Error("Failed to add role: " + err);
         }
 
-        return NextResponse.json({ message: "User joined guild(s) and role added!" });
+        // 4. Log to channel
+        await logToChannel({
+            channelId: logChannelId,
+            botToken,
+            discordUser,
+        });
+
+        return NextResponse.json({ message: "User joined guild(s), role added, and logged!" });
 
     } catch (error) {
         let message = "Unknown error";
