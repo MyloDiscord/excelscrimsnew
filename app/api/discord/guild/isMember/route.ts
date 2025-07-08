@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from "next/server";
 export async function POST(req: NextRequest) {
     const { discordId } = await req.json();
     const guildId = process.env.GUILD_ID;
-    const botToken = process.env.BOT_TOKEN;
+    const botToken = process.env.DISCORD_BOT_TOKEN;
 
     if (!guildId || !botToken) {
         return NextResponse.json({ error: "Missing env vars" }, { status: 500 });
