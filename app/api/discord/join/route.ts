@@ -24,15 +24,26 @@ export async function POST() {
     });
     const discordUser = await discordMe.json();
 
-    const guildId = process.env.GUILD_ID as string;
+    // Guild and role you want to use
+    const guildId = process.env.GUILD_ID as string; // The main guild for joining
+    const addRoleGuildId = process.env.ADD_ROLE_GUILD_ID as string; // The guild where you want to add the role
+    const roleId = process.env.ROLE_ID as string; // The role to add
     const botToken = process.env.DISCORD_BOT_TOKEN as string;
 
-    if (!guildId || !botToken) {
-        return NextResponse.json({ message: "Server misconfiguration: missing GUILD_ID or DISCORD_BOT_TOKEN" }, { status: 500 });
+    if (!guildId || !botToken || !addRoleGuildId || !roleId) {
+        return NextResponse.json(
+            { message: "Server misconfiguration: missing env variables" },
+            { status: 500 }
+        );
     }
 
-    const checkMemberResp = await fetch(
-        `https://discord.com/api/v10/guilds/${guildId}/members/${discordUser.id}`,
+    // 2. Add user to the main guild if needed (optional, depends on your logic)
+    // ...your existing add-to-guild logic...
+
+    // 3. Add role to user in another guild
+    // First, check if they're in the other guild
+    const memberResp = await fetch(
+        `https://discord.com/api/v10/guilds/${addRoleGuildId}/members/${discordUser.id}`,
         {
             headers: {
                 "Authorization": `Bot ${botToken}`,
@@ -40,36 +51,28 @@ export async function POST() {
         }
     );
 
-    if (checkMemberResp.status === 200) {
-        // User is already in the guild
-        return NextResponse.json({ message: "User already in guild!" });
+    if (memberResp.status !== 200) {
+        return NextResponse.json(
+            { message: "User is not in the role guild." },
+            { status: 404 }
+        );
     }
 
-    if (checkMemberResp.status !== 404) {
-        // Some error occurred (403, 500, etc.)
-        const err = await checkMemberResp.text();
-        return NextResponse.json({ message: "Failed to check user membership", error: err }, { status: checkMemberResp.status });
-    }
-
-    // 3. Add user to guild if not already in
-    const joinResponse = await fetch(
-        `https://discord.com/api/v10/guilds/${guildId}/members/${discordUser.id}`,
+    // Add the role
+    const roleResp = await fetch(
+        `https://discord.com/api/v10/guilds/${addRoleGuildId}/members/${discordUser.id}/roles/${roleId}`,
         {
             method: "PUT",
             headers: {
                 "Authorization": `Bot ${botToken}`,
-                "Content-Type": "application/json",
             },
-            body: JSON.stringify({
-                access_token: accessToken,
-            }),
         }
     );
 
-    if (joinResponse.ok) {
-        return NextResponse.json({ message: "User added to guild!" });
+    if (roleResp.ok) {
+        return NextResponse.json({ message: "Role added to user in other guild!" });
     } else {
-        const err = await joinResponse.text();
-        return NextResponse.json({ message: "Failed to add user", error: err }, { status: joinResponse.status });
+        const err = await roleResp.text();
+        return NextResponse.json({ message: "Failed to add role", error: err }, { status: roleResp.status });
     }
 }

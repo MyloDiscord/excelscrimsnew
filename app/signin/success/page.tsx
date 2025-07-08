@@ -17,7 +17,7 @@ export default function Success() {
         const data = await res.json();
         if (res.ok) {
           setStatus("success");
-          setMessage("Successfully joined the Discord server!");
+          setMessage("Successfully joined the Discord server. You can now access Nexo Scrims.");
         } else {
           setStatus("error");
           setMessage(data?.error || "Failed to join Discord server.");
