@@ -16,7 +16,11 @@ export default function LoginPage() {
       </div>
 
       <div className="flex flex-col items-center justify-center min-h-screen relative z-10">
-        <SignInButton mode="redirect" fallbackRedirectUrl="/signin/success">
+        <SignInButton
+          mode="redirect"
+          forceRedirectUrl="/signin/success"
+          signUpForceRedirectUrl="/signin/success"
+        >
           <Button className="w-56" disabled={pending}>
             {pending ? (
               <>
