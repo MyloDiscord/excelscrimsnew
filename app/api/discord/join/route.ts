@@ -97,7 +97,11 @@ export async function POST() {
 
         return NextResponse.json({ message: "User joined guild(s) and role added!" });
 
-    } catch (error: any) {
-        return NextResponse.json({ message: error.message || "Unknown error" }, { status: 500 });
+    } catch (error) {
+        let message = "Unknown error";
+        if (error instanceof Error) {
+            message = error.message;
+        }
+        return NextResponse.json({ message }, { status: 500 });
     }
 }
