@@ -4,6 +4,16 @@ import db from "@/lib/mongoose";
 
 const YUNITE_API_TOKEN = process.env.YUNITE_API_TOKEN;
 
+type YuniteTournament = {
+    id: string;
+    name: string;
+    description: string;
+    queueSize: number;
+    startDate: string;
+    endDate: string;
+    [key: string]: any;
+};
+
 export async function GET(req: NextRequest) {
     const { userId } = await auth();
     if (!userId) {
@@ -44,11 +54,12 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "Failed to fetch Yunite tournaments" }, { status: yuniteRes.status });
         }
 
-        const tournaments = await yuniteRes.json();
+        const tournaments: YuniteTournament[] = await yuniteRes.json();
 
-        tournaments.sort((a: any, b: any) => {
+        tournaments.sort((a, b) => {
             return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
         });
+
 
         return NextResponse.json({ tournaments }, { status: 200 });
 
