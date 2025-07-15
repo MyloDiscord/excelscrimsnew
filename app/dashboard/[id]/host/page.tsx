@@ -18,11 +18,7 @@ export default function HostPage() {
       }
 
       const data = await res.json();
-
-      if (!data.logChannel) {
-        router.push("/unauthorized");
-        return;
-      }
+      console.log(data);
 
       setLoading(false); // Access granted
     };
