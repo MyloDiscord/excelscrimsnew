@@ -42,7 +42,7 @@ export default function HostPage() {
 
   const fetchPanels = async () => {
     try {
-      const res = await fetch(`/api/discord/guild/${guildId}/create-host-panels`);
+      const res = await fetch(`/api/discord/guild/${guildId}/fetch-host-panels`);
       if (!res.ok) throw new Error("Failed to fetch panels");
       const data = await res.json();
       setPanels(data.panels || []);
