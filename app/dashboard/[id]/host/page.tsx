@@ -239,6 +239,7 @@ export default function HostPage() {
                     </DialogContent>
                 </Dialog>
 
+                {/* Panels */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 w-full">
                     {panels.length === 0 && !error && (
                         <>
@@ -251,54 +252,52 @@ export default function HostPage() {
                     {panels.map((panel) => (
                         <div
                             key={panel._id}
-                            className="bg-[#1c1c1e] border border-[#2a2a2e] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition hover:border-green-500"
+                            className="bg-[#1a1a1a] border border-[#2a2a2e] rounded-xl p-4 shadow-md space-y-4 hover:border-green-500 transition"
                         >
-                            <div className="mb-4">
-                                <h3 className="text-lg font-bold text-white">{panel.tournamentName}</h3>
-                                <p className="text-xs text-gray-400">
-                                    {new Date(panel.createdAt).toLocaleString()}
-                                </p>
+                            <div className="flex justify-between items-center text-sm text-white font-semibold">
+                                <span>{panel.tournamentName}</span>
+                                <span className="text-neutral-400 text-xs">
+                                    {new Date(panel.createdAt).toLocaleDateString()}
+                                </span>
                             </div>
 
-                            <div className="mb-6">
-                                <h4 className="text-xs text-green-400 font-semibold uppercase tracking-wide mb-2">
+                            <div>
+                                <div className="text-xs text-green-400 font-bold uppercase tracking-wider mb-2">
                                     Helpers
-                                </h4>
-                                <div className="grid grid-cols-2 gap-3">
+                                </div>
+                                <div className="flex flex-wrap gap-2 text-sm">
                                     {["Leak", "Need Host", "Code Bug", "Promo"].map((label) => (
                                         <Button
                                             key={label}
                                             variant="secondary"
-                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-white text-black hover:bg-gray-100 transition cursor-pointer"
+                                            className="bg-white text-black px-3 py-1 rounded-md text-xs hover:bg-gray-100 transition cursor-pointer"
                                         >
                                             {label}
                                         </Button>
                                     ))}
                                 </div>
+                            </div>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
-                                    {[
-                                        "Reminder",
-                                        "10 Min",
-                                        "Push LB",
-                                        "Create Event",
-                                    ].map((label) => (
+                            <hr className="border-t border-neutral-700" />
+
+                            <div>
+                                <div className="text-xs text-blue-400 font-bold uppercase tracking-wider mb-2">
+                                    Admin Actions
+                                </div>
+                                <div className="flex flex-wrap gap-2 text-sm">
+                                    {["Reminder", "10 Min", "Push LB", "Create Event"].map((label) => (
                                         <Button
                                             key={label}
-                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition text-center break-words"
+                                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer"
                                         >
                                             {label}
                                         </Button>
                                     ))}
 
-                                    <Button
-                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
-                                    >
+                                    <Button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
                                         Conclude
                                     </Button>
-                                    <Button
-                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
-                                    >
+                                    <Button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
                                         Terminate
                                     </Button>
                                 </div>
@@ -306,6 +305,7 @@ export default function HostPage() {
                         </div>
                     ))}
                 </div>
+
             </main>
         </div>
     );
