@@ -15,11 +15,19 @@ export async function GET(req: NextRequest) {
     const discordTokenResponse = await client.users.getUserOauthAccessToken(userId, "discord");
 
     const discordAccessToken = discordTokenResponse.data[0]?.token;
-    const discordUserId = discordTokenResponse.data[0]?.externalAccountId;
+    const discordUserRes = await fetch("https://discord.com/api/users/@me", {
+        headers: {
+            Authorization: `Bearer ${discordAccessToken}`,
+        },
+    });
 
-    if (!discordAccessToken || !discordUserId) {
-        return NextResponse.json({ message: "Discord not linked or access token missing" }, { status: 401 });
+    if (!discordUserRes.ok) {
+        return NextResponse.json({ message: "Failed to fetch Discord user info" }, { status: 500 });
     }
+
+    const discordUser = await discordUserRes.json();
+    const discordUserId = discordUser.id as string;
+
 
     await db.connect();
 
