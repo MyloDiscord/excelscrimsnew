@@ -301,7 +301,7 @@ export default function SettingsGuildPage() {
         <Card className="w-full bg-[#1c1c1c] border border-neutral-700 shadow-lg rounded-lg">
           <CardHeader>
             <CardTitle className="text-xl font-semibold text-gray-300">
-              Set Discord Staff Roles
+              Set Host Roles
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -334,10 +334,10 @@ export default function SettingsGuildPage() {
               </DialogTrigger>
               <DialogContent className="bg-[#1e1e1e] border border-neutral-700 text-white focus:outline-none">
                 <DialogHeader>
-                  <DialogTitle>Set Discord Staff Roles</DialogTitle>
+                  <DialogTitle>Set Host Roles</DialogTitle>
                   <DialogDescription>
                     Choose one or more Discord roles that should be recognized
-                    as staff.
+                    as host roles.
                   </DialogDescription>
                 </DialogHeader>
 
