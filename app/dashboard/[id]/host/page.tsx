@@ -207,7 +207,7 @@ export default function HostPage() {
                 </Dialog>
 
                 {/* Panels */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 w-full">
                     {panels.map((panel) => (
                         <div
                             key={panel._id}
@@ -236,7 +236,7 @@ export default function HostPage() {
                                     ))}
                                 </div>
 
-                                <div className="grid grid-cols-2 gap-3 mt-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                     {[
                                         "First Code Reminder",
                                         "10 Minute Reminder",
@@ -245,24 +245,24 @@ export default function HostPage() {
                                     ].map((label) => (
                                         <Button
                                             key={label}
-                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition cursor-pointer"
+                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition text-center break-words"
                                         >
                                             {label}
                                         </Button>
                                     ))}
 
                                     <Button
-                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
+                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
                                     >
                                         Conclude Scrims
                                     </Button>
-
                                     <Button
-                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
+                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
                                     >
                                         Terminate
                                     </Button>
                                 </div>
+
 
                             </div>
                         </div>
