@@ -39,13 +39,18 @@ export default function HostPage() {
     const [mode, setMode] = useState<string | null>(null);
     const [tournaments, setTournaments] = useState<{ id: string; name: string }[]>([]);
     const [panels, setPanels] = useState<Panel[]>([]);
+    const [creating, setCreating] = useState(false);
 
     const fetchPanels = async () => {
         try {
             const res = await fetch(`/api/discord/guild/${guildId}/fetch-host-panels`);
             if (!res.ok) throw new Error("Failed to fetch panels");
             const data = await res.json();
-            setPanels(data.panels || []);
+
+            const sorted = [...(data.panels || [])].sort(
+                (a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+            );
+            setPanels(sorted);
         } catch (err) {
             toast.error("Failed to load panels.");
             console.error("Error fetching panels:", err);
@@ -97,6 +102,8 @@ export default function HostPage() {
         const selected = tournaments.find((t) => t.id === mode);
         if (!selected) return;
 
+        setCreating(true);
+
         try {
             const res = await fetch(`/api/discord/guild/${guildId}/create-host-panels`, {
                 method: "POST",
@@ -114,9 +121,12 @@ export default function HostPage() {
             toast.success(`Created panel for ${selected.name}`);
             setMode(null);
             fetchPanels(); // ✅ Refresh panel list
+            document.body.click(); // closes DialogTrigger
         } catch (err) {
             toast.error("Failed to create panel");
             console.error(err);
+        } finally {
+            setCreating(false);
         }
     };
 
@@ -187,15 +197,16 @@ export default function HostPage() {
                             </Button>
                             <Button
                                 onClick={handleCreate}
-                                disabled={!mode}
-                                className="bg-green-500 hover:bg-green-600 text-white"
+                                disabled={!mode || creating}
+                                className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md font-medium transition duration-150 disabled:opacity-50"
                             >
-                                Create
+                                {creating ? "Creating..." : "Create"}
                             </Button>
                         </DialogFooter>
                     </DialogContent>
                 </Dialog>
 
+                {/* Panels */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                     {panels.map((panel) => (
                         <div
@@ -214,27 +225,45 @@ export default function HostPage() {
                                     Helpers
                                 </h4>
                                 <div className="grid grid-cols-2 gap-3">
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Leak</Button>
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Need Host</Button>
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Code Bug</Button>
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Promo</Button>
+                                    {["Leak", "Need Host", "Code Bug", "Promo"].map((label) => (
+                                        <Button
+                                            key={label}
+                                            variant="secondary"
+                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-white text-black hover:bg-gray-100 transition cursor-pointer"
+                                        >
+                                            {label}
+                                        </Button>
+                                    ))}
                                 </div>
-                            </div>
 
-                            <div>
-                                <h4 className="text-xs text-blue-400 font-semibold uppercase tracking-wide mb-2">
-                                    Admins
-                                </h4>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Code Reminder</Button>
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">10 Min</Button>
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Push LB</Button>
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Create Event</Button>
-                                    <Button variant="destructive" className="w-full text-xs cursor-pointer">Conclude</Button>
-                                    <Button variant="destructive" className="w-full text-sm font-semibold py-2 cursor-pointer">
+                                <div className="grid grid-cols-2 gap-3 mt-4">
+                                    {[
+                                        "First Code Reminder",
+                                        "10 Minute Reminder",
+                                        "Push Leaderboard",
+                                        "Create Event",
+                                    ].map((label) => (
+                                        <Button
+                                            key={label}
+                                            className="w-full text-sm font-medium py-2 px-3 rounded-md bg-indigo-500 text-white hover:bg-indigo-600 transition cursor-pointer"
+                                        >
+                                            {label}
+                                        </Button>
+                                    ))}
+
+                                    <Button
+                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
+                                    >
+                                        Conclude Scrims
+                                    </Button>
+
+                                    <Button
+                                        className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition cursor-pointer"
+                                    >
                                         Terminate
                                     </Button>
                                 </div>
+
                             </div>
                         </div>
                     ))}
