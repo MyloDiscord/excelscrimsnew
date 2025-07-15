@@ -65,7 +65,8 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "You do not have permission" }, { status: 403 });
         }
 
-        return NextResponse.json({ logChannel: settings.logChannel });
+        return NextResponse.json({ message: "Authorized" }, { status: 200 });
+        
     } catch (error) {
         let errorMessage = "Failed to fetch log channel";
         if (error && typeof error === "object" && "message" in error) {
