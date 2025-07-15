@@ -55,6 +55,19 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "Failed to fetch user from guild", status: memberRes.status }, { status: 403 });
         }
 
+        const guildInfoRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}`, {
+            headers: {
+                Authorization: `Bot ${BOT_TOKEN}`,
+            },
+        });
+
+        if (!guildInfoRes.ok) {
+            return NextResponse.json({ message: "Failed to fetch guild info" }, { status: 500 });
+        }
+
+        const guild = await guildInfoRes.json();
+
+
         const memberData = await memberRes.json();
         const userRoles: string[] = memberData.roles;
 
@@ -65,14 +78,10 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "You do not have permission" }, { status: 403 });
         }
 
-        console.log("[API] User roles:", userRoles);
-        console.log("[API] Staff role IDs:", staffRoleIds);
-        console.log("[API] isStaff:", isStaff);
-        console.log("[API] Clerk userId:", userId);
-        console.log("[API] Discord ID from /users/@me:", discordUserId);
-
-
-        return NextResponse.json({ message: "Authorized" }, { status: 200 });
+        return NextResponse.json({
+            message: "Authorized",
+            guildName: guild.name,
+        });
 
     } catch (error) {
         let errorMessage = "Failed to fetch user roles";

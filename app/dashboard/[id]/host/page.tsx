@@ -56,12 +56,15 @@ export default function HostPage() {
 
     return (
         <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
-            <BackgroundBeams className="absolute inset-0 z-0 pointer-events-none" />
 
             <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6 max-w-3xl mx-auto w-full">
-                <h1 className="text-5xl font-bold mb-6 text-center md:text-left">
-                    Host Dashboard for Guild {guildId}
+                <h1 className="text-4xl font-bold mb-4 text-center md:text-left">
+                    Host Dashboard
                 </h1>
+                <p className="text-lg text-neutral-300 text-center md:text-left">
+                    You are managing a server (ID: <span className="text-sm text-neutral-400">{guildId}</span>)
+                </p>
+
             </main>
         </div>
     );
