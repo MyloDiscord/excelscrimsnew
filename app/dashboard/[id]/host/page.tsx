@@ -240,7 +240,7 @@ export default function HostPage() {
                 </Dialog>
 
                 {/* Panels */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5 mt-8 w-full">
+<div className="grid gap-5 mt-8 w-full justify-center grid-cols-[repeat(auto-fit,_minmax(300px,_1fr))]">
                     {panels.length === 0 && !error && (
                         <>
                             <PanelSkeleton />
