@@ -9,6 +9,7 @@ export default function HostPage() {
     const { id: guildId } = useParams();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+const [guildName, setGuildName] = useState<string | null>(null);
 
     useEffect(() => {
         const checkAccess = async () => {
@@ -24,8 +25,7 @@ export default function HostPage() {
                 }
 
                 const data = await res.json();
-                console.log(data);
-
+                setGuildName(data.guildName || "Unknown Guild");
                 setLoading(false);
             } catch {
                 console.error("Error fetching");
@@ -59,11 +59,13 @@ export default function HostPage() {
 
             <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6 max-w-3xl mx-auto w-full">
                 <h1 className="text-4xl font-bold mb-4 text-center md:text-left">
-                    Host Dashboard
+                    Welcome to the Host Dashboard
                 </h1>
-                <p className="text-lg text-neutral-300 text-center md:text-left">
-                    You are managing a server (ID: <span className="text-sm text-neutral-400">{guildId}</span>)
-                </p>
+                {guildName && (
+                    <p className="text-lg text-neutral-300 text-center md:text-left">
+                        Managing server: <span className="font-semibold text-white">{guildName}</span>
+                    </p>
+                )}
 
             </main>
         </div>
