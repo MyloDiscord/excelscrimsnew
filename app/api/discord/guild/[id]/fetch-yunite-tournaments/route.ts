@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import db from "@/lib/mongoose";
-import GuildSettings from "@/schemas/guildSettings";
 
-const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
 const YUNITE_API_TOKEN = process.env.YUNITE_API_TOKEN;
 
 export async function GET(req: NextRequest) {
@@ -25,9 +23,6 @@ export async function GET(req: NextRequest) {
   if (!discordUserRes.ok) {
     return NextResponse.json({ message: "Failed to fetch Discord user info" }, { status: 500 });
   }
-
-  const discordUser = await discordUserRes.json();
-  const discordUserId = discordUser.id as string;
 
   await db.connect();
 
