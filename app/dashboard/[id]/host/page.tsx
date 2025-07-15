@@ -58,7 +58,7 @@ export default function HostPage() {
 
     const fetchTournaments = async () => {
       try {
-        const res = await fetch(`/api/discord/guild/${guildId}/tournaments`);
+        const res = await fetch(`/api/discord/guild/${guildId}/fetch-yunite-tournaments`);
         if (!res.ok) throw new Error("Failed to fetch tournaments");
 
         const data = await res.json();
