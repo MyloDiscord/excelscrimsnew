@@ -1,21 +1,36 @@
-import { redirect } from "next/navigation";
+"use client";
 
-export default async function HostPage({ params }: { params: { id: string } }) {
-  const guildId = params.id;
+import { useEffect, useState } from "react";
+import { useParams, useRouter } from "next/navigation";
 
-  const res = await fetch(`/api/discord/guild/${guildId}/fetch-user-roles`, {
-    cache: "no-store",
-  });
+export default function HostPage() {
+  const { id: guildId } = useParams();
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-  if (!res.ok) {
-    redirect("/unauthorized");
-  }
+  useEffect(() => {
+    const checkAccess = async () => {
+      const res = await fetch(`/api/discord/guild/${guildId}/fetch-user-roles`);
 
-  const data = await res.json();
+      if (!res.ok) {
+        router.push("/unauthorized");
+        return;
+      }
 
-  if (!data.logChannel) {
-    redirect("/unauthorized");
-  }
+      const data = await res.json();
+
+      if (!data.logChannel) {
+        router.push("/unauthorized");
+        return;
+      }
+
+      setLoading(false); // Access granted
+    };
+
+    checkAccess();
+  }, [guildId, router]);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
     <div>
