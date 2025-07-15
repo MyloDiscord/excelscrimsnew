@@ -216,8 +216,8 @@ export default function HostPage() {
                                 <div className="grid grid-cols-2 gap-3">
                                     <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Leak</Button>
                                     <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Need Host</Button>
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Bugged Code</Button>
-                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Interested Promo</Button>
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Code Bug</Button>
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Promo</Button>
                                 </div>
                             </div>
 
@@ -227,8 +227,8 @@ export default function HostPage() {
                                 </h4>
                                 <div className="grid grid-cols-2 gap-2">
                                     <Button variant="secondary" className="w-full text-xs cursor-pointer">Code Reminder</Button>
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">10 Min Reminder</Button>
-                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Push Leaderboard</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">10 Min</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Push LB</Button>
                                     <Button variant="secondary" className="w-full text-xs cursor-pointer">Create Event</Button>
                                     <Button variant="destructive" className="w-full text-xs cursor-pointer">Conclude</Button>
                                     <Button variant="destructive" className="w-full text-sm font-semibold py-2 cursor-pointer">
