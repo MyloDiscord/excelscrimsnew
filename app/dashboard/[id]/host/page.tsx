@@ -7,7 +7,6 @@ import ClipLoader from "react-spinners/ClipLoader";
 
 export default function HostPage() {
     const { id: guildId } = useParams();
-    const router = useRouter();
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
