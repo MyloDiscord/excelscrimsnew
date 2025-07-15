@@ -31,6 +31,7 @@ export default function HostPage() {
   const [error, setError] = useState<string | null>(null);
   const [guildName, setGuildName] = useState<string | null>(null);
   const [mode, setMode] = useState<string | null>(null);
+  const [tournaments, setTournaments] = useState<{ id: string; name: string }[]>([]);
 
   useEffect(() => {
     const checkAccess = async () => {
@@ -47,19 +48,35 @@ export default function HostPage() {
 
         const data = await res.json();
         setGuildName(data.guildName || "Unknown Guild");
-        setLoading(false);
       } catch {
-        console.error("Error fetching");
-        setError("Something went wrong while verifying access. Please try again later.");
+        console.error("Error verifying user access");
+        setError("Something went wrong while verifying access.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const fetchTournaments = async () => {
+      try {
+        const res = await fetch(`/api/discord/guild/${guildId}/tournaments`);
+        if (!res.ok) throw new Error("Failed to fetch tournaments");
+
+        const data = await res.json();
+        setTournaments(data.tournaments || []);
+      } catch (err) {
+        console.error("Error fetching tournaments:", err);
+        toast.error("Failed to load tournaments.");
       }
     };
 
     checkAccess();
+    fetchTournaments();
   }, [guildId]);
 
   const handleCreate = () => {
-    toast.success(`Successfully created a ${mode} panel.`);
-    setMode(null); // Reset selection
+    const selected = tournaments.find((t) => t.id === mode);
+    toast.success(`Created panel for ${selected?.name || "Unknown Tournament"}`);
+    setMode(null);
   };
 
   if (loading) {
@@ -107,17 +124,18 @@ export default function HostPage() {
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <label htmlFor="mode" className="text-sm font-medium text-gray-300">
-                  Select Mode
+                  Select Tournament
                 </label>
                 <Select onValueChange={(value) => setMode(value)} value={mode || undefined}>
                   <SelectTrigger id="mode" className="w-full">
-                    <SelectValue placeholder="Choose an option..." />
+                    <SelectValue placeholder="Choose a tournament..." />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="solos">Solos</SelectItem>
-                    <SelectItem value="duos">Duos</SelectItem>
-                    <SelectItem value="trios">Trios</SelectItem>
-                    <SelectItem value="squads">Squads</SelectItem>
+                    {tournaments.map((tournament) => (
+                      <SelectItem key={tournament.id} value={tournament.id}>
+                        {tournament.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
               </div>
