@@ -148,6 +148,36 @@ export default function HostPage() {
         );
     }
 
+    const PanelSkeleton = () => (
+        <div className="bg-[#1c1c1e] border border-[#2a2a2e] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.4)] animate-pulse space-y-4">
+            <div className="h-5 w-1/2 bg-neutral-700 rounded" />
+            <div className="h-4 w-1/3 bg-neutral-800 rounded" />
+
+            <div className="space-y-2 mt-4">
+                <div className="h-4 w-24 bg-green-800 rounded" />
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                </div>
+            </div>
+
+            <div className="space-y-2 mt-4">
+                <div className="h-4 w-20 bg-blue-800 rounded" />
+                <div className="grid grid-cols-2 gap-3">
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-neutral-700 rounded" />
+                    <div className="h-10 bg-red-800 rounded" />
+                    <div className="h-10 bg-red-800 rounded" />
+                </div>
+            </div>
+        </div>
+    );
+
+
     return (
         <div className="relative min-h-screen text-white bg-[#121212] overflow-hidden flex">
             <main className="relative z-10 flex-grow p-6 md:p-6 pl-12 md:pl-6 max-w-3xl mx-auto w-full">
@@ -164,7 +194,7 @@ export default function HostPage() {
                 {/* Create Panel Dialog */}
                 <Dialog>
                     <DialogTrigger asChild>
-                        <Button className="fixed bottom-6 right-6 rounded-full bg-green-500 hover:bg-green-600 text-white w-14 h-14 shadow-lg flex items-center justify-center text-3xl">
+                        <Button className="fixed bottom-6 right-6 rounded-full bg-green-500 hover:bg-green-600 text-white w-14 h-14 shadow-lg flex items-center justify-center text-3xl animate-bounce transition duration-300">
                             +
                         </Button>
                     </DialogTrigger>
@@ -208,6 +238,14 @@ export default function HostPage() {
 
                 {/* Panels */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 w-full">
+                    {panels.length === 0 && !error && (
+                        <>
+                            <PanelSkeleton />
+                            <PanelSkeleton />
+                            <PanelSkeleton />
+                        </>
+                    )}
+
                     {panels.map((panel) => (
                         <div
                             key={panel._id}
@@ -238,9 +276,9 @@ export default function HostPage() {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                     {[
-                                        "First Code Reminder",
-                                        "10 Minute Reminder",
-                                        "Push Leaderboard",
+                                        "Code Reminder",
+                                        "10 Min",
+                                        "Push LB",
                                         "Create Event",
                                     ].map((label) => (
                                         <Button
@@ -254,7 +292,7 @@ export default function HostPage() {
                                     <Button
                                         className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
                                     >
-                                        Conclude Scrims
+                                        Conclude
                                     </Button>
                                     <Button
                                         className="w-full text-sm font-semibold py-2 px-3 rounded-md bg-red-600 text-white hover:bg-red-700 transition text-center"
@@ -262,8 +300,6 @@ export default function HostPage() {
                                         Terminate
                                     </Button>
                                 </div>
-
-
                             </div>
                         </div>
                     ))}
