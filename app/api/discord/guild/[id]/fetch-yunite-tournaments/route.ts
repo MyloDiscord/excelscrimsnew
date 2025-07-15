@@ -5,14 +5,45 @@ import db from "@/lib/mongoose";
 const YUNITE_API_TOKEN = process.env.YUNITE_API_TOKEN;
 
 type YuniteTournament = {
-    id: string;
-    name: string;
-    description: string;
-    queueSize: number;
-    startDate: string;
-    endDate: string;
-    [key: string]: any;
+  id: string;
+  name: string;
+  description: string;
+  queueSize: number;
+  startDate: string;
+  endDate: string;
+  pointSystem: {
+    pointsPerKill: number;
+    pointsPerPlacement: Record<string, number>;
+  };
+  requireAllMembersOnDiscord: boolean;
+  resetPointsOnTeamChange: boolean;
+  allowFillOnlySessions: boolean;
+  allowRankDuplicates: boolean;
+  consensusMin: number;
+  allowTeamMateSwap: boolean;
+  maxGamesScored: number;
+  maxGamesPlayable: number;
+  tiebreakers: string[];
+  matchTemplate: {
+    type: string;
+    region: string;
+    ruleText: string;
+    leakDetectionEnabled: boolean;
+    useComplexCode: boolean;
+    priorityLevels: {
+      roles: string[];
+      timeout: number;
+    }[];
+    allowedPlatforms: string[];
+    roleToPing: string;
+    resultChannelID: string;
+    signUpChannelID: string;
+    leakDetectionChannelID: string;
+    liveTrackingChannelID: string;
+    maxPlayers: number;
+  };
 };
+
 
 export async function GET(req: NextRequest) {
     const { userId } = await auth();
