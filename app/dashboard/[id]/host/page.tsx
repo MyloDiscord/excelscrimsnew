@@ -27,9 +27,9 @@ export default function HostPage() {
                 console.log(data);
 
                 setLoading(false);
-            } catch (err: any) {
-                console.error("Error fetching:", err);
-                setError("Something went wrong while verifying access.");
+            } catch {
+                console.error("Error fetching");
+                setError("Something went wrong while verifying access. Please try again later.");
             }
         };
 
