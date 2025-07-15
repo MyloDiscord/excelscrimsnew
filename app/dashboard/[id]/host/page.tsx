@@ -10,7 +10,9 @@ export default function HostPage() {
 
   useEffect(() => {
     const checkAccess = async () => {
-      const res = await fetch(`/api/discord/guild/${guildId}/fetch-user-roles`);
+      const res = await fetch(`/api/discord/guild/${guildId}/fetch-user-roles`, {
+  credentials: "include",
+});
 
       if (!res.ok) {
         router.push("/unauthorized");

@@ -65,10 +65,17 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "You do not have permission" }, { status: 403 });
         }
 
+        console.log("[API] User roles:", userRoles);
+        console.log("[API] Staff role IDs:", staffRoleIds);
+        console.log("[API] isStaff:", isStaff);
+        console.log("[API] Clerk userId:", userId);
+        console.log("[API] Discord ID from /users/@me:", discordUserId);
+
+
         return NextResponse.json({ message: "Authorized" }, { status: 200 });
-        
+
     } catch (error) {
-        let errorMessage = "Failed to fetch log channel";
+        let errorMessage = "Failed to fetch user roles";
         if (error && typeof error === "object" && "message" in error) {
             errorMessage = (error as { message?: string }).message || errorMessage;
         }
