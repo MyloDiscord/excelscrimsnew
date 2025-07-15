@@ -40,6 +40,7 @@ export default function HostPage() {
     const [tournaments, setTournaments] = useState<{ id: string; name: string }[]>([]);
     const [panels, setPanels] = useState<Panel[]>([]);
     const [creating, setCreating] = useState(false);
+    const [dialogOpen, setDialogOpen] = useState(false);
 
     const fetchPanels = async () => {
         try {
@@ -95,7 +96,7 @@ export default function HostPage() {
 
         checkAccess();
         fetchTournaments();
-        fetchPanels(); // ✅ Fetch panels on load
+        fetchPanels();
     }, [guildId]);
 
     const handleCreate = async () => {
@@ -120,8 +121,8 @@ export default function HostPage() {
             await res.json();
             toast.success(`Created panel for ${selected.name}`);
             setMode(null);
-            fetchPanels(); // ✅ Refresh panel list
-            document.body.click(); // closes DialogTrigger
+            fetchPanels();
+            setDialogOpen(false);
         } catch (err) {
             toast.error("Failed to create panel");
             console.error(err);
@@ -129,6 +130,7 @@ export default function HostPage() {
             setCreating(false);
         }
     };
+
 
     if (loading) {
         return (
@@ -191,10 +193,11 @@ export default function HostPage() {
                     </p>
                 )}
 
-                {/* Create Panel Dialog */}
-                <Dialog>
+                <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                     <DialogTrigger asChild>
-                        <Button className="fixed bottom-6 right-6 rounded-full bg-green-500 hover:bg-green-600 text-white w-14 h-14 shadow-lg flex items-center justify-center text-3xl animate-bounce transition duration-300">
+                        <Button
+                            className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-green-500 hover:bg-green-600 shadow-lg text-white text-3xl leading-none flex items-center justify-center transition-transform duration-150 hover:scale-105"
+                        >
                             +
                         </Button>
                     </DialogTrigger>
@@ -236,7 +239,6 @@ export default function HostPage() {
                     </DialogContent>
                 </Dialog>
 
-                {/* Panels */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8 w-full">
                     {panels.length === 0 && !error && (
                         <>
@@ -276,7 +278,7 @@ export default function HostPage() {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4">
                                     {[
-                                        "Code Reminder",
+                                        "Reminder",
                                         "10 Min",
                                         "Push LB",
                                         "Create Event",
