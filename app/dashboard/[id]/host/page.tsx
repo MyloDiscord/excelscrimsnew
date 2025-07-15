@@ -197,48 +197,50 @@ export default function HostPage() {
                 </Dialog>
 
                 {/* Panels Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-8">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                     {panels.map((panel) => (
                         <div
-                            key={panel._id || panel.tournamentName}
-                            className="bg-zinc-900/80 border border-zinc-700 backdrop-blur-md p-5 rounded-xl shadow-md flex flex-col justify-between hover:border-zinc-500 transition"
+                            key={panel._id}
+                            className="bg-[#1c1c1e] border border-[#2a2a2e] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition hover:border-green-500"
                         >
-                            <div>
-                                <h2 className="text-lg font-semibold text-white mb-1">
-                                    {panel.tournamentName}
-                                </h2>
-                                <p className="text-sm text-zinc-400 mb-4">
+                            {/* Header */}
+                            <div className="mb-4">
+                                <h3 className="text-lg font-bold text-white">{panel.tournamentName}</h3>
+                                <p className="text-xs text-gray-400">
                                     {new Date(panel.createdAt).toLocaleString()}
                                 </p>
+                            </div>
 
-                                <div className="space-y-3">
-                                    <div>
-                                        <p className="text-xs font-semibold uppercase text-green-400 mb-1">Helpers</p>
-                                        <div className="flex flex-col gap-2">
-                                            <Button variant="secondary" className="w-full">Leak</Button>
-                                            <Button variant="secondary" className="w-full">Need Host</Button>
-                                            <Button variant="secondary" className="w-full">Bugged Code</Button>
-                                            <Button variant="secondary" className="w-full">Interested Promo</Button>
-                                        </div>
-                                    </div>
+                            {/* Helpers Section */}
+                            <div className="mb-6">
+                                <h4 className="text-xs text-green-400 font-semibold uppercase tracking-wide mb-2">
+                                    Helpers
+                                </h4>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Button variant="secondary" className="w-full text-xs">Leak</Button>
+                                    <Button variant="secondary" className="w-full text-xs">Need Host</Button>
+                                    <Button variant="secondary" className="w-full text-xs">Bugged Code</Button>
+                                    <Button variant="secondary" className="w-full text-xs">Interested Promo</Button>
+                                </div>
+                            </div>
 
-                                    <div className="mt-4">
-                                        <p className="text-xs font-semibold uppercase text-blue-400 mb-1">Admins</p>
-                                        <div className="flex flex-col gap-2">
-                                            <Button variant="outline" className="w-full">First Code Reminder</Button>
-                                            <Button variant="outline" className="w-full">10 Minute Reminder</Button>
-                                            <Button variant="outline" className="w-full">Push Leaderboard</Button>
-                                            <Button variant="outline" className="w-full">Create Event</Button>
-                                            <Button variant="outline" className="w-full">Conclude Scrims</Button>
-                                            <Button variant="outline" className="w-full">Terminate</Button>
-                                        </div>
-                                    </div>
+                            {/* Admins Section */}
+                            <div>
+                                <h4 className="text-xs text-blue-400 font-semibold uppercase tracking-wide mb-2">
+                                    Admins
+                                </h4>
+                                <div className="grid grid-cols-2 gap-2">
+                                    <Button variant="secondary" className="w-full text-xs">Code Reminder</Button>
+                                    <Button variant="secondary" className="w-full text-xs">10 Min Reminder</Button>
+                                    <Button variant="secondary" className="w-full text-xs">Push Leaderboard</Button>
+                                    <Button variant="secondary" className="w-full text-xs">Create Event</Button>
+                                    <Button variant="destructive" className="w-full text-xs">Conclude</Button>
+                                    <Button variant="destructive" className="w-full text-xs">Terminate</Button>
                                 </div>
                             </div>
                         </div>
                     ))}
                 </div>
-
             </main>
         </div>
     );
