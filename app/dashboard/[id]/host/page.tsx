@@ -1,12 +1,8 @@
 
-import { redirect } from "next/navigation";
+import { redirect, useParams } from "next/navigation";
 
-type Props = {
-  params: { id: string };
-};
-
-export default async function HostPage({ params }: Props) {
-  const guildId = params.id;
+export default async function HostPage() {
+  const { id: guildId } = useParams();
 
   const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/discord/guild/${guildId}/fetch-user-roles`, {
     headers: {
