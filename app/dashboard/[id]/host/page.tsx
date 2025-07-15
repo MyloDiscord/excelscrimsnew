@@ -196,14 +196,12 @@ export default function HostPage() {
                     </DialogContent>
                 </Dialog>
 
-                {/* Panels Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                     {panels.map((panel) => (
                         <div
                             key={panel._id}
                             className="bg-[#1c1c1e] border border-[#2a2a2e] rounded-2xl p-5 shadow-[0_4px_12px_rgba(0,0,0,0.4)] transition hover:border-green-500"
                         >
-                            {/* Header */}
                             <div className="mb-4">
                                 <h3 className="text-lg font-bold text-white">{panel.tournamentName}</h3>
                                 <p className="text-xs text-gray-400">
@@ -211,31 +209,31 @@ export default function HostPage() {
                                 </p>
                             </div>
 
-                            {/* Helpers Section */}
                             <div className="mb-6">
                                 <h4 className="text-xs text-green-400 font-semibold uppercase tracking-wide mb-2">
                                     Helpers
                                 </h4>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <Button variant="secondary" className="w-full text-xs">Leak</Button>
-                                    <Button variant="secondary" className="w-full text-xs">Need Host</Button>
-                                    <Button variant="secondary" className="w-full text-xs">Bugged Code</Button>
-                                    <Button variant="secondary" className="w-full text-xs">Interested Promo</Button>
+                                <div className="grid grid-cols-2 gap-3">
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Leak</Button>
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Need Host</Button>
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Bugged Code</Button>
+                                    <Button variant="secondary" className="w-full text-sm font-medium py-2 cursor-pointer">Interested Promo</Button>
                                 </div>
                             </div>
 
-                            {/* Admins Section */}
                             <div>
                                 <h4 className="text-xs text-blue-400 font-semibold uppercase tracking-wide mb-2">
                                     Admins
                                 </h4>
                                 <div className="grid grid-cols-2 gap-2">
-                                    <Button variant="secondary" className="w-full text-xs">Code Reminder</Button>
-                                    <Button variant="secondary" className="w-full text-xs">10 Min Reminder</Button>
-                                    <Button variant="secondary" className="w-full text-xs">Push Leaderboard</Button>
-                                    <Button variant="secondary" className="w-full text-xs">Create Event</Button>
-                                    <Button variant="destructive" className="w-full text-xs">Conclude</Button>
-                                    <Button variant="destructive" className="w-full text-xs">Terminate</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Code Reminder</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">10 Min Reminder</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Push Leaderboard</Button>
+                                    <Button variant="secondary" className="w-full text-xs cursor-pointer">Create Event</Button>
+                                    <Button variant="destructive" className="w-full text-xs cursor-pointer">Conclude</Button>
+                                    <Button variant="destructive" className="w-full text-sm font-semibold py-2 cursor-pointer">
+                                        Terminate
+                                    </Button>
                                 </div>
                             </div>
                         </div>
