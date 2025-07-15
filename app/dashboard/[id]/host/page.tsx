@@ -1,19 +1,14 @@
-"use client";
+import { redirect } from "next/navigation";
 
-import { redirect, useParams } from "next/navigation";
+export default async function HostPage({ params }: { params: { id: string } }) {
+  const guildId = params.id;
 
-export default async function HostPage() {
-  const { id: guildId } = useParams();
-
-  const res = await fetch(`${process.env.NEXT_PUBLIC_SITE_URL}/api/discord/guild/${guildId}/fetch-user-roles`, {
-    headers: {
-      Cookie: "",
-    },
+  const res = await fetch(`/api/discord/guild/${guildId}/fetch-user-roles`, {
     cache: "no-store",
   });
 
   if (!res.ok) {
-    redirect("/unauthorized"); // user not allowed
+    redirect("/unauthorized");
   }
 
   const data = await res.json();
