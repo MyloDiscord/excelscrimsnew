@@ -37,7 +37,6 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ message: "Staff roles not set", staffRoles: null });
         }
 
-        // Fetch the user's roles in the guild via bot
         const memberRes = await fetch(`https://discord.com/api/v10/guilds/${guildId}/members/${discordUserId}`, {
             headers: {
                 Authorization: `Bot ${BOT_TOKEN}`,
