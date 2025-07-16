@@ -134,26 +134,26 @@ export default function HostPage() {
     };
 
     const handleReminder = async (panelId: string, tournamentId: string) => {
-    setReminderLoadingId(panelId);
-    try {
-        const res = await fetch(`/api/discord/guild/${guildId}/panel/${panelId}/reminder`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ tournamentId }),
-        });
+        setReminderLoadingId(panelId);
+        try {
+            const res = await fetch(`/api/discord/guild/${guildId}/panel/${panelId}/reminder`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ tournamentId }),
+            });
 
-        if (!res.ok) throw new Error("Failed to send reminder");
+            if (!res.ok) throw new Error("Failed to send reminder");
 
-        toast.success("Reminder sent!");
-    } catch (err) {
-        toast.error("Failed to send reminder");
-        console.error("Reminder error:", err);
-    } finally {
-        setReminderLoadingId(null);
-    }
-};
+            toast.success("Reminder sent!");
+        } catch (err) {
+            toast.error("Failed to send reminder");
+            console.error("Reminder error:", err);
+        } finally {
+            setReminderLoadingId(null);
+        }
+    };
 
 
 
@@ -310,14 +310,47 @@ export default function HostPage() {
                                     Admin Actions
                                 </div>
                                 <div className="flex flex-wrap gap-2 text-sm">
-                                    {["Reminder", "10 Min", "Push LB", "Create Event"].map((label) => (
-                                        <Button
-                                            key={label}
-                                            className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer"
-                                        >
-                                            {label}
-                                        </Button>
-                                    ))}
+                                    {/* Reminder Button */}
+                                    <Button
+                                        onClick={() => handleReminder(panel._id, panel.tournamentId)}
+                                        disabled={reminderLoadingId === panel._id}
+                                        className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+                                    >
+                                        {reminderLoadingId === panel._id && (
+                                            <svg
+                                                className="w-4 h-4 animate-spin"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 24 24"
+                                            >
+                                                <circle
+                                                    className="opacity-25"
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                    stroke="currentColor"
+                                                    strokeWidth="4"
+                                                />
+                                                <path
+                                                    className="opacity-75"
+                                                    fill="currentColor"
+                                                    d="M4 12a8 8 0 018-8v8H4z"
+                                                />
+                                            </svg>
+                                        )}
+                                        Reminder
+                                    </Button>
+
+                                    {/* Other action buttons (placeholder logic) */}
+                                    <Button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
+                                        10 Min
+                                    </Button>
+                                    <Button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
+                                        Push LB
+                                    </Button>
+                                    <Button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
+                                        Create Event
+                                    </Button>
 
                                     <Button className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
                                         Conclude
@@ -327,6 +360,7 @@ export default function HostPage() {
                                     </Button>
                                 </div>
                             </div>
+
                         </div>
                     ))}
                 </div>
