@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     const startTime = new Date(startDate);
     const endTime = new Date(startTime.getTime() + 5 * 60 * 60 * 1000);
 
-    const signupChannelId = tournamentData?.matchTemplate?.signUpChannelID;
+    const signupChannelId = tournamentData?.matchTemplate[0]?.signUpChannelID;
 
     if (!signupChannelId) {
       return NextResponse.json(
