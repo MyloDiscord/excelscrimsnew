@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     if (!signupChannelId) {
       return NextResponse.json(
-        { message: "Missing signup channel or invalid start date" },
+        { message: "Missing signup channel" },
         { status: 400 }
       );
     }
