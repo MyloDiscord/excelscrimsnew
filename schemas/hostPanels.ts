@@ -16,6 +16,7 @@ const hostPanelSchema = new mongoose.Schema({
   eventLink: String,
   createdAt: { type: Date, default: Date.now },
   createdBy: String,
+  tournamentData: { type: Object }
 });
 
 export default mongoose.models.HostPanel || mongoose.model("HostPanel", hostPanelSchema);

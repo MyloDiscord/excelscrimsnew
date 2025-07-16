@@ -62,7 +62,7 @@ export async function POST(req: NextRequest) {
     const unixTimestamp = Math.floor(new Date(startDateISO).getTime() / 1000);
 
     const discordMessage = {
-      content: `**${tournamentData.name}**\nStart Time: <t:${unixTimestamp}:F>`,
+      content: `<@&1389603025747836948>\n\n> The **First Match** is @ __<t:${unixTimestamp}:t>__ ~ __<t:${unixTimestamp}:t>__! <a:ESTrophy:1057454527940399114>`,
     };
 
     const discordRes = await fetch(`https://discord.com/api/v10/channels/${signupChannelId}/messages`, {

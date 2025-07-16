@@ -115,6 +115,7 @@ export default function HostPage() {
                     guildId,
                     tournamentId: selected.id,
                     tournamentName: selected.name,
+                    tournamentData: selected,
                 }),
             });
 
@@ -135,6 +136,9 @@ export default function HostPage() {
 
     const handleReminder = async (panelId: string, tournamentId: string) => {
         setReminderLoadingId(panelId);
+
+        const toastId = toast.loading("Sending reminder...");
+
         try {
             const res = await fetch(`/api/discord/guild/${guildId}/panel/${panelId}/reminder`, {
                 method: "POST",
@@ -146,7 +150,8 @@ export default function HostPage() {
 
             if (!res.ok) throw new Error("Failed to send reminder");
 
-            toast.success("Reminder sent!");
+            toast.success("Reminder sent!", { id: toastId });
+
         } catch (err) {
             toast.error("Failed to send reminder. Either the tournament does not have a signup channel or the start date is missing.");
             console.error("Reminder error:", err);
