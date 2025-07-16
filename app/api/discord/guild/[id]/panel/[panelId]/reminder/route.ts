@@ -4,7 +4,6 @@ import db from "@/lib/mongoose";
 
 const YUNITE_API_TOKEN = process.env.YUNITE_API_TOKEN;
 const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
-const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
 
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
@@ -89,9 +88,6 @@ export async function POST(req: NextRequest) {
         success: true,
         guildId,
         panelId,
-        tournamentId,
-        startTimestamp: unixTimestamp,
-        tournamentData,
         discordMessageSent: true,
       },
       { status: 200 }
