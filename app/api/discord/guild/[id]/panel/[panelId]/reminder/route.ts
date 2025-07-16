@@ -12,7 +12,8 @@ export async function POST(req: NextRequest) {
 
     try {
         const segments = req.nextUrl.pathname.split("/").filter(Boolean);
-        const guildId = segments[segments.length - 2];
+        const guildId = segments[segments.length - 4];
+        const panelId = segments[segments.length - 2];
 
         if (!guildId) {
             return NextResponse.json({ message: "Missing guild ID" }, { status: 400 });
@@ -24,7 +25,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ message: "Missing tournament ID" }, { status: 400 });
         }
 
-        return NextResponse.json({ tournamentId }, { status: 200 });
+        return NextResponse.json({ tournamentId, guildId, panelId }, { status: 200 });
 
     } catch (error) {
         let errorMessage = "Failed to send reminder.";
