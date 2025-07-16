@@ -341,7 +341,6 @@ export default function HostPage() {
                                         Reminder
                                     </Button>
 
-                                    {/* Other action buttons (placeholder logic) */}
                                     <Button className="bg-indigo-500 hover:bg-indigo-600 text-white px-3 py-1 rounded-md text-xs transition cursor-pointer">
                                         10 Min
                                     </Button>
