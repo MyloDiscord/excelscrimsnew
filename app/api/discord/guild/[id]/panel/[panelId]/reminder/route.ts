@@ -2,6 +2,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 import db from "@/lib/mongoose";
 
+const YUNITE_API_TOKEN = process.env.YUNITE_API_TOKEN;
+const DISCORD_BOT_TOKEN = process.env.DISCORD_BOT_TOKEN;
+const DISCORD_CHANNEL_ID = process.env.DISCORD_CHANNEL_ID;
+
 export async function POST(req: NextRequest) {
   const { userId } = await auth();
   if (!userId) {
@@ -22,8 +26,82 @@ export async function POST(req: NextRequest) {
 
   await db.connect();
 
-  return NextResponse.json(
-    { success: true, guildId, panelId, tournamentId },
-    { status: 200 }
-  );
+  try {
+    const yuniteRes = await fetch(`https://yunite.xyz/api/v3/guild/${guildId}/tournaments/${tournamentId}`, {
+      method: "GET",
+      headers: {
+        "Y-Api-Token": YUNITE_API_TOKEN!,
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!yuniteRes.ok) {
+      return NextResponse.json(
+        { message: `Yunite API error`, status: yuniteRes.status },
+        { status: yuniteRes.status }
+      );
+    }
+
+    const tournamentData = await yuniteRes.json();
+
+    const signupChannelId = tournamentData.signUpChannelID;
+    if (!signupChannelId) {
+      return NextResponse.json(
+        { message: "Tournament does not have a signup channel" },
+        { status: 400 }
+      );
+    }
+
+    const startDateISO: string | undefined = tournamentData.startDate;
+    if (!startDateISO) {
+      return NextResponse.json(
+        { message: "Missing startDate in tournament data" },
+        { status: 400 }
+      );
+    }
+
+    const unixTimestamp = Math.floor(new Date(startDateISO).getTime() / 1000);
+
+    const discordMessage = {
+      content: `**${tournamentData.name}**\nStart Time: <t:${unixTimestamp}:F>`,
+    };
+
+    const discordRes = await fetch(`https://discord.com/api/v10/channels/${signupChannelId}/messages`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bot ${DISCORD_BOT_TOKEN}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(discordMessage),
+    });
+
+    if (!discordRes.ok) {
+      const errorText = await discordRes.text();
+      console.error("Discord API error:", errorText);
+      return NextResponse.json(
+        { message: "Failed to send Discord message", status: discordRes.status },
+        { status: discordRes.status }
+      );
+    }
+
+    return NextResponse.json(
+      {
+        success: true,
+        guildId,
+        panelId,
+        tournamentId,
+        startTimestamp: unixTimestamp,
+        tournamentData,
+        discordMessageSent: true,
+      },
+      { status: 200 }
+    );
+
+  } catch (err) {
+    console.error("Error:", err);
+    return NextResponse.json(
+      { message: "Internal server error" },
+      { status: 500 }
+    );
+  }
 }
