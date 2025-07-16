@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
 
     const signupChannelId = tournamentData?.matchTemplate?.signUpChannelID;
 
-    if (!signupChannelId || isNaN(startTime.getTime())) {
+    if (!signupChannelId) {
       return NextResponse.json(
         { message: "Missing signup channel or invalid start date" },
         { status: 400 }
