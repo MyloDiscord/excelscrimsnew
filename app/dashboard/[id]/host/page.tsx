@@ -28,6 +28,7 @@ import { toast } from "sonner";
 type Panel = {
     _id: string;
     tournamentName: string;
+    tournamentId: string;
     createdAt: string;
 };
 
@@ -41,6 +42,7 @@ export default function HostPage() {
     const [panels, setPanels] = useState<Panel[]>([]);
     const [creating, setCreating] = useState(false);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [reminderLoadingId, setReminderLoadingId] = useState<string | null>(null);
 
     const fetchPanels = async () => {
         try {
@@ -130,6 +132,30 @@ export default function HostPage() {
             setCreating(false);
         }
     };
+
+    const handleReminder = async (panelId: string, tournamentId: string) => {
+    setReminderLoadingId(panelId);
+    try {
+        const res = await fetch(`/api/discord/guild/${guildId}/panel/${panelId}/reminder`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tournamentId }),
+        });
+
+        if (!res.ok) throw new Error("Failed to send reminder");
+
+        toast.success("Reminder sent!");
+    } catch (err) {
+        toast.error("Failed to send reminder");
+        console.error("Reminder error:", err);
+    } finally {
+        setReminderLoadingId(null);
+    }
+};
+
+
 
 
     if (loading) {

@@ -69,7 +69,6 @@ export default function ApplicationsPage() {
   const [hideDiscordCard, setHideDiscordCard] = useState(false);
   const [cardVisible, setCardVisible] = useState(false);
 
-  // Admin form fields
   const [age, setAge] = useState("");
   const [adminRegion, setAdminRegion] = useState("");
   const [adminWhyJob, setAdminWhyJob] = useState("");
