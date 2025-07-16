@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     const tournamentData = await yuniteRes.json();
 
-    const signupChannelId = tournamentData.matchTemplate?.signUpChannelID;
+    const signupChannelId = tournamentData.matchTemplate[0]?.signUpChannelID;
     if (!signupChannelId) {
       return NextResponse.json(
         { message: "Tournament does not have a signup channel" },
