@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
@@ -12,16 +13,26 @@ type ChatMessage = {
 };
 
 export default function ChatBox() {
+  const { user, isLoaded } = useUser();
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [feedback, setFeedback] = useState("");
 
   useEffect(() => {
+    if (!isLoaded || !user) return;
+
     console.log(`🔌 Connecting to ${SOCKET_URL}...`);
 
     socket.on("connect", () => {
+      const discordId =
+        user?.externalAccounts?.find((acc) => acc.provider === "discord")
+          ?.providerUserId || "Unavailable";
+
       console.log(`✅ Connected to ${SOCKET_URL}`);
-      socket.emit("new-connection", { timestamp: new Date().toISOString() });
+      socket.emit("new-connection", {
+        userId: discordId,
+        timestamp: new Date().toISOString(),
+      });
     });
 
     socket.on("connect_error", (err) => {
@@ -43,12 +54,17 @@ export default function ChatBox() {
     return () => {
       socket.disconnect();
     };
-  }, []);
+  }, [isLoaded, user]);
 
   const sendMessage = () => {
+
+    const discordId =
+      user?.externalAccounts?.find((acc) => acc.provider === "discord")
+        ?.providerUserId || "Unavailable";
+
     const data: ChatMessage = {
       content: message,
-      userId: "253680525619757057",
+      userId: discordId,
     };
 
     socket.emit("message", data);
