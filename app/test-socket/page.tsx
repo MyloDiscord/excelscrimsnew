@@ -92,30 +92,45 @@ export default function ChatBox() {
 
   return (
     <div>
-      <ul className="space-y-2">
-        {messages.map((msg, i) => (
-          <li
-            key={i}
-            className="flex items-center gap-3 bg-gray-800 p-3 rounded-xl shadow text-white max-w-[400px]"
-          >
-            <img
-              src={msg.avatar}
-              alt={msg.username}
-              className="w-10 h-10 rounded-full border-2 border-white"
-            />
-            <div>
-              <div className="font-semibold">{msg.username}</div>
-              <div className="text-sm text-gray-300">{msg.content}</div>
-              <button
-                onClick={() => giveRole(msg.userId)}
-                className="text-xs text-blue-400 mt-1"
-              >
-                Give Role
-              </button>
+      <div className="flex flex-col h-screen max-w-2xl mx-auto p-4">
+        <div className="flex-1 overflow-y-auto space-y-3 mb-4">
+          {messages.map((msg, i) => (
+            <div key={i} className="flex items-start gap-3 bg-gray-800 p-3 rounded-xl text-white">
+              <img
+                src={msg.avatar}
+                alt={msg.username}
+                className="w-10 h-10 rounded-full border-2 border-white"
+              />
+              <div>
+                <div className="font-semibold">{msg.username}</div>
+                <div className="text-sm text-gray-300">{msg.content}</div>
+                <button
+                  onClick={() => giveRole(msg.userId)}
+                  className="text-xs text-blue-400 mt-1"
+                >
+                  Give Role
+                </button>
+              </div>
             </div>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+
+        <div className="flex gap-2">
+          <input
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="Type a message..."
+            className="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none"
+          />
+          <button
+            onClick={sendMessage}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+          >
+            Send
+          </button>
+        </div>
+      </div>
+
 
       <input value={message} onChange={(e) => setMessage(e.target.value)} />
       <button onClick={sendMessage}>Send</button>
