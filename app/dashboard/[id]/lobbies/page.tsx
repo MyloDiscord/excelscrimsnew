@@ -6,8 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import ClipLoader from "react-spinners/ClipLoader";
 import Sidebar from "../../../components/Sidebar";
 import { toast } from "sonner";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { User } from "lucide-react";
 
 type DiscordGuild = {
     id: string;
