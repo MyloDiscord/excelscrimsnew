@@ -10,6 +10,8 @@ const socket = io(SOCKET_URL);
 type ChatMessage = {
   content: string;
   userId: string;
+  username: string;
+  avatar: string;
 };
 
 export default function ChatBox() {
@@ -64,14 +66,14 @@ export default function ChatBox() {
   };
 
   const sendMessage = () => {
-
     const discordId =
-      user?.externalAccounts?.find((acc) => acc.provider === "discord")
-        ?.providerUserId || "Unavailable";
+      user?.externalAccounts?.find((acc) => acc.provider === "discord")?.providerUserId || "Unavailable";
 
     const data: ChatMessage = {
       content: message,
       userId: discordId,
+      username: user?.username || "Unknown",
+      avatar: user?.imageUrl || "",
     };
 
     socket.emit("message", data);
@@ -90,14 +92,31 @@ export default function ChatBox() {
 
   return (
     <div>
-      <ul>
+      <ul className="space-y-2">
         {messages.map((msg, i) => (
-          <li key={i}>
-            {msg.content}{" "}
-            <button onClick={() => giveRole(msg.userId)}>Give Role</button>
+          <li
+            key={i}
+            className="flex items-center gap-3 bg-gray-800 p-3 rounded-xl shadow text-white max-w-[400px]"
+          >
+            <img
+              src={msg.avatar}
+              alt={msg.username}
+              className="w-10 h-10 rounded-full border-2 border-white"
+            />
+            <div>
+              <div className="font-semibold">{msg.username}</div>
+              <div className="text-sm text-gray-300">{msg.content}</div>
+              <button
+                onClick={() => giveRole(msg.userId)}
+                className="text-xs text-blue-400 mt-1"
+              >
+                Give Role
+              </button>
+            </div>
           </li>
         ))}
       </ul>
+
       <input value={message} onChange={(e) => setMessage(e.target.value)} />
       <button onClick={sendMessage}>Send</button>
 
