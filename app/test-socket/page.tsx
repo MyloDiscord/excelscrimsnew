@@ -56,6 +56,13 @@ export default function ChatBox() {
     };
   }, [isLoaded, user]);
 
+  const createChannels = () => {
+    socket.emit("create-channels", {
+      guildId: "1368170957860241418", // your guild ID
+      channels: ["scrim-chat", "mod-logs", "announcements"], // any names you want
+    });
+  };
+
   const sendMessage = () => {
 
     const discordId =
@@ -95,6 +102,7 @@ export default function ChatBox() {
       <button onClick={sendMessage}>Send</button>
 
       {feedback && <p>{feedback}</p>}
+      <button onClick={createChannels}>Create 3 Channels</button>
     </div>
   );
 }
